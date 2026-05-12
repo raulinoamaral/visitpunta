@@ -49,7 +49,7 @@ export default async function ArticlePage({ params }: Props) {
       <article className={styles.article}>
         <header className={styles.header}>
           <h1 className={styles.title}>{article.title}</h1>
-          {article.excerpt && <p className={styles.excerpt}>{article.excerpt}</p>}
+          {article.tagline && <p className={styles.excerpt}>{article.tagline}</p>}
         </header>
 
         {article.content && (
