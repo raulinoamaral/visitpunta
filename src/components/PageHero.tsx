@@ -12,7 +12,7 @@ export default function PageHero({ image, title, subtitle }: Props) {
     <section className={styles.hero}>
       <Image src={image} alt={title} fill className={styles.image} priority />
       <div className={styles.overlay} />
-      <div className={styles.text}>
+      <div className={`${styles.text} ${styles.textAnimate}`}>
         {title && <h1 className={styles.title}>{title}</h1>}
         {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
       </div>
