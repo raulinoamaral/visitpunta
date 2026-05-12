@@ -1,0 +1,335 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 3rem 2rem 2rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.name {
+  font-family: var(--font-playfair);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1;
+}
+
+.summary {
+  font-family: var(--font-playfair);
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+  font-weight: 400;
+  color: #555;
+  line-height: 1.6;
+  padding-top: 1.5rem;
+}
+
+.locationInline {
+  font-family: var(--font-playfair);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-style: italic;
+  font-weight: 400;
+  color: #777;
+  padding-bottom: 1.5rem;
+}
+
+.zone {
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  color: #999;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  padding-top: 0.4rem;
+  flex-shrink: 0;
+}
+
+.ctaButton {
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--color-blue);
+  background: none;
+  text-decoration: none;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--color-blue);
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ctaButton:hover {
+  background-color: var(--color-blue);
+  color: #fff;
+}
+
+.ctaNote {
+  font-family: var(--font-inter);
+  font-size: 0.7rem;
+  color: #bbb;
+  letter-spacing: 0.05em;
+}
+
+.description {
+  padding: 3rem 2rem;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.descriptionText {
+  font-family: var(--font-inter);
+  font-size: 0.975rem;
+  font-weight: 400;
+  color: #444;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 2rem;
+  overflow: hidden;
+}
+
+.galleryRow2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.galleryRow3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.galleryFeaturedBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.galleryFeaturedSide {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0.75rem;
+}
+
+.galleryFeaturedSideStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.galleryImage {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+}
+
+.galleryImg {
+  object-fit: cover;
+}
+
+.galleryCredit {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  font-family: var(--font-inter);
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.04em;
+  z-index: 1;
+}
+
+.highlights {
+  padding: 4rem 2rem;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.highlightsTitle {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 2.5rem;
+}
+
+.highlightsList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.highlightsItem {
+  font-family: var(--font-playfair);
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  font-weight: 400;
+  color: #333;
+  line-height: 1.5;
+}
+
+.location {
+  padding: 3rem 2rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.locationTitle {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 1.5rem;
+}
+
+.locationText {
+  font-family: var(--font-inter);
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.8;
+  max-width: 860px;
+  white-space: pre-wrap;
+}
+
+.ctaSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 4rem 2rem;
+  border-top: 1px solid #e5e5e5;
+}
+
+.ctaButtonLarge {
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--color-blue);
+  background: none;
+  text-decoration: none;
+  padding: 0.85rem 2rem;
+  border: 1px solid var(--color-blue);
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ctaButtonLarge:hover {
+  background-color: var(--color-blue);
+  color: #fff;
+}
+
+.mapsLink {
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  color: #999;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.2s ease;
+}
+
+.mapsLink:hover {
+  color: #555;
+}
+
+/* ── Recommendations (editorial related) ────────────────── */
+.recommendations {
+  padding: 4rem 2rem 2rem;
+}
+
+.recommendation {
+  margin-bottom: 3rem;
+}
+
+.recommendationTitle {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Related places ──────────────────────────────────────── */
+.related {
+  padding: 4rem 2rem 5rem;
+  border-top: 1px solid #e5e5e5;
+}
+
+.relatedTitle {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 2rem;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .related {
+    padding: 4rem 0 5rem 2rem;
+  }
+
+  .relatedGrid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+  }
+
+  .relatedGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .relatedGrid > * {
+    flex: 0 0 80%;
+    scroll-snap-align: start;
+    padding-right: 1rem;
+  }
+}
+
+/* ── Related articles ───────────────────────────────────── */
+.relatedArticles {
+  padding: 4rem 2rem 5rem;
+}
+
+.relatedArticlesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .relatedArticlesGrid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}

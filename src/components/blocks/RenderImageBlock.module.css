@@ -1,0 +1,25 @@
+.figure {
+  margin: 2rem 0;
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.large .imageWrapper {
+  aspect-ratio: 21 / 9;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.caption {
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 0.6rem;
+  line-height: 1.5;
+}

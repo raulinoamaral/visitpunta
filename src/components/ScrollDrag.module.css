@@ -1,0 +1,8 @@
+.scrollDrag {
+  cursor: grab;
+  user-select: none;
+}
+
+.scrollDrag:active {
+  cursor: grabbing;
+}

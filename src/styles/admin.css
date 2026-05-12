@@ -1,0 +1,19 @@
+/* Visit Punta — Admin styles */
+
+/* Constrain any SVG in the nav/header area */
+[data-theme] nav svg,
+[data-theme] header svg {
+  max-width: 200px;
+  max-height: 80px;
+}
+
+/* Login page button */
+[data-theme] .form-submit .btn {
+  background-color: #3D4B66;
+  border-color: #3D4B66;
+}
+
+[data-theme] .form-submit .btn:hover {
+  background-color: #2e3a52;
+  border-color: #2e3a52;
+}

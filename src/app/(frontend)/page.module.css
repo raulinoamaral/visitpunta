@@ -1,0 +1,479 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 10vh;
+  overflow: hidden;
+}
+
+@keyframes heroZoom {
+  from { transform: scale(1.08); }
+  to   { transform: scale(1); }
+}
+
+.heroImage {
+  object-fit: cover;
+  object-position: center;
+  animation: heroZoom 1.8s ease-out both;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.heroAnimate {
+  animation: heroFadeIn 1s ease 0.4s both;
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #fff;
+}
+
+.heroTitle {
+  font-family: var(--font-playfair);
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.5rem;
+}
+
+.heroSmall {
+  display: block;
+  margin-top: 0.2em;
+  font-size: clamp(1rem, 3vw, 0.4em);
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+.heroSubtitle {
+  font-family: var(--font-inter);
+  font-size: clamp(0.7rem, 1vw, 0.8rem);
+  font-weight: 400;
+  opacity: 0.6;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Scroll indicator */
+.scrollIndicator {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  text-decoration: none;
+}
+
+.scrollLine {
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.4);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+}
+
+/* Intro */
+
+.intro {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.introText {
+  font-family: var(--font-playfair);
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #555;
+  line-height: 1.8;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* Destacados */
+
+.destacados {
+  padding: 5rem 2rem;
+  background: #fff;
+}
+
+
+.destacadosGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.destacadoCard {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.destacadoImage {
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.destacadoCard:hover .destacadoImage {
+  transform: scale(1.04);
+}
+
+.destacadoOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.destacadoTitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+  text-align: center;
+  font-family: var(--font-playfair);
+  font-size: clamp(1.4rem, 2.5vw, 2.4rem);
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.2;
+  white-space: pre-line;
+}
+
+.destacadoSubtitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  text-align: center;
+  font-family: var(--font-playfair);
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media (max-width: 768px) {
+  .destacados {
+    overflow: hidden;
+  }
+
+  .destacadosGrid {
+    grid-template-columns: none;
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+  }
+
+  .destacadosGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .destacadoCard {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+    margin-right: 0.75rem;
+    text-decoration: none;
+  }
+
+  .destacadoTitle {
+    font-size: 2rem;
+  }
+
+  .destacadoSubtitle {
+    transform: translate(-50%, 150%);
+    font-size: 1rem;
+  }
+}
+
+/* Zonas */
+
+.zonas {
+  display: flex;
+  flex-direction: column;
+  padding: 4rem 2rem 2rem;
+}
+
+
+.zonaCardFull {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 2;
+  overflow: hidden;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.zonaCardFull:hover .zonaCardImage {
+  transform: scale(1.03);
+}
+
+.zonasGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.zonasGrid .zonaCard {
+  aspect-ratio: 3 / 4;
+}
+
+.zonaCard {
+  position: relative;
+  overflow: hidden;
+}
+
+.zonaCardImage {
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s ease;
+}
+
+.zonaCard:hover .zonaCardImage {
+  transform: scale(1.03);
+}
+
+.zonaCardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.zonaCardLabel {
+  display: block;
+  font-family: var(--font-inter);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.5rem;
+}
+
+.zonaCardText {
+  position: absolute;
+  bottom: 20%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 1;
+}
+
+.zonaCardName {
+  font-family: var(--font-playfair);
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-weight: 400;
+  color: #fff;
+}
+
+.zonaCardTagline {
+  font-family: var(--font-playfair);
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 0.4rem;
+}
+
+@media (max-width: 768px) {
+  .zonas {
+    height: auto;
+    overflow: hidden;
+  }
+
+  .zonaCardFull {
+    aspect-ratio: 3 / 2;
+  }
+
+  .zonasGrid {
+    grid-template-columns: none;
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+    flex: none;
+  }
+
+  .zonasGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .zonasGrid .zonaCard {
+    aspect-ratio: 2 / 3;
+  }
+
+  .zonaCard {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+    margin-right: 0.75rem;
+  }
+
+  .zonaCardOverlay {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .zonaCardText {
+    bottom: 25%;
+  }
+
+  .zonaCardName {
+    font-size: 1.8rem;
+  }
+}
+
+/* ── Explorar (featured articles) ───────────────────────── */
+
+.explorar {
+  padding: 5rem 2rem;
+}
+
+
+.explorarGrid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 2rem;
+}
+
+.explorarMain {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.explorarMainImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.explorarImg {
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.explorarMain:hover .explorarImg,
+.explorarSecondary:hover .explorarImg {
+  transform: scale(1.03);
+}
+
+.explorarMainText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.explorarType {
+  align-self: flex-start;
+  font-family: var(--font-inter);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: rgb(61, 75, 102);
+  padding: 0.3rem 0.7rem;
+}
+
+.explorarMainName {
+  font-family: var(--font-playfair);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1.2;
+}
+
+.explorarMainTagline {
+  font-family: var(--font-inter);
+  font-size: 0.925rem;
+  color: #777;
+  line-height: 1.6;
+}
+
+/* Secondary articles (stacked right) */
+
+.explorarSide {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.explorarSecondary {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.explorarSecondaryImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+}
+
+.explorarSecondaryText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.explorarSecondaryName {
+  font-family: var(--font-playfair);
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1.3;
+}
+
+.explorarSecondaryTagline {
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  color: #777;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .explorarGrid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .explorarSide {
+    gap: 3rem;
+  }
+}

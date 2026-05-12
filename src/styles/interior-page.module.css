@@ -1,0 +1,57 @@
+.intro {
+  padding: 4rem 2rem;
+  max-width: 680px;
+}
+
+.introText {
+  font-family: var(--font-playfair);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1.7;
+}
+
+.section {
+  padding: 3rem 2rem 5rem;
+}
+
+
+.destacadosGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.miniGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.articulosGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .destacadosGrid {
+    grid-template-columns: none;
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+  }
+
+  .destacadosGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .destacadosGrid > * {
+    flex: 0 0 80%;
+    scroll-snap-align: start;
+    padding-right: 1rem;
+  }
+}

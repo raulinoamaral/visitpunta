@@ -1,0 +1,104 @@
+/* ── Hero ────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  height: 70vh;
+  overflow: hidden;
+}
+
+.heroImage {
+  object-fit: cover;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.heroText {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  z-index: 1;
+}
+
+.heroTitle {
+  font-family: var(--font-playfair);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+
+.heroSummary {
+  font-family: var(--font-playfair);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+  max-width: 600px;
+}
+
+/* ── Description ─────────────────────────────────────────── */
+.description {
+  padding: 3rem 2rem;
+  max-width: 860px;
+}
+
+.descriptionText {
+  font-family: var(--font-inter);
+  font-size: 0.975rem;
+  font-weight: 400;
+  color: #444;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+/* ── Sections ────────────────────────────────────────────── */
+.section {
+  padding: 3rem 2rem 5rem;
+}
+
+/* ── Experiences grid ────────────────────────────────────── */
+.experiencesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+/* ── Articles grid ───────────────────────────────────────── */
+.articlesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .experiencesGrid {
+    grid-template-columns: none;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+  }
+
+  .experiencesGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .experiencesGrid > * {
+    flex: 0 0 75%;
+    scroll-snap-align: start;
+    padding-right: 1rem;
+  }
+
+  .articlesGrid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}

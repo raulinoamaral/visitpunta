@@ -1,0 +1,208 @@
+.hotelHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 3rem 2rem 2rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.hotelInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.hotelName {
+  font-family: var(--font-playfair);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1;
+}
+
+.hotelLocation {
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  color: #999;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hotelCta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+
+.ctaButton {
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: var(--color-pink);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s ease;
+}
+
+.ctaButton:hover {
+  opacity: 0.85;
+}
+
+.ctaNote {
+  font-family: var(--font-inter);
+  font-size: 0.7rem;
+  color: #bbb;
+  letter-spacing: 0.05em;
+}
+
+.description {
+  padding: 3rem 2rem;
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.descriptionText {
+  font-family: var(--font-playfair);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 400;
+  color: #333;
+  line-height: 1.8;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 2rem;
+}
+
+.galleryRow2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.galleryRow3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.galleryImage {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+}
+
+.galleryImg {
+  object-fit: cover;
+}
+
+.galleryCredit {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  font-family: var(--font-inter);
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.04em;
+  z-index: 1;
+}
+
+.reasons {
+  padding: 3rem 2rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.reasonsTitle {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 1.5rem;
+}
+
+.reasonsList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+}
+
+.reasonsItem {
+  font-family: var(--font-inter);
+  font-size: 0.95rem;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.check {
+  color: var(--color-blue);
+  font-size: 0.85rem;
+}
+
+.ctaSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 4rem 2rem;
+  border-top: 1px solid #e5e5e5;
+}
+
+.ctaButtonLarge {
+  font-family: var(--font-inter);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: var(--color-pink);
+  text-decoration: none;
+  padding: 1rem 2.5rem;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s ease;
+}
+
+.ctaButtonLarge:hover {
+  opacity: 0.85;
+}
+
+.section {
+  padding: 3rem 2rem 5rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 2rem;
+}
+
+.miniGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.placeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.articulosGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}

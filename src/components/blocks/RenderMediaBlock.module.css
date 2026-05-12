@@ -1,0 +1,75 @@
+.figure {
+  margin: 2.5rem 0;
+}
+
+/* ── Desktop grid ────────────────────────────────────────── */
+.grid {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr;
+}
+
+.grid[data-count="2"] {
+  grid-template-columns: 1fr 1fr;
+}
+
+.grid[data-count="3"] {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+}
+
+.large .imageWrapper {
+  aspect-ratio: 16 / 7;
+}
+
+.grid[data-count="2"] .imageWrapper,
+.grid[data-count="3"] .imageWrapper {
+  aspect-ratio: 4 / 3;
+}
+
+.image {
+  object-fit: cover;
+}
+
+/* When all images are portrait, use a taller container */
+.portrait .imageWrapper {
+  aspect-ratio: 3 / 4;
+}
+
+.portrait[data-count="2"] .imageWrapper,
+.portrait[data-count="3"] .imageWrapper {
+  aspect-ratio: 3 / 4;
+}
+
+.caption {
+  display: block;
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 0.4rem;
+  line-height: 1.5;
+}
+
+/* ── Responsive: swap grid ↔ carousel ───────────────────── */
+.mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .grid:not(.stacked) {
+    display: none;
+  }
+
+  .stacked {
+    grid-template-columns: 1fr !important;
+  }
+
+  .mobile {
+    display: block;
+  }
+}

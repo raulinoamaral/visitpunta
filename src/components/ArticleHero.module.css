@@ -1,0 +1,86 @@
+/* ── Desktop: two columns ───────────────────────────────── */
+.hero {
+  display: grid;
+  grid-template-columns: 60fr 40fr;
+  min-height: 70vh;
+  position: relative;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 3rem 2rem 3rem;
+  gap: 1.25rem;
+  z-index: 1;
+}
+
+.title {
+  font-family: var(--font-playfair);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1.1;
+}
+
+.excerpt {
+  font-family: var(--font-inter);
+  font-size: 1.05rem;
+  color: #555;
+  line-height: 1.7;
+  max-width: 540px;
+}
+
+.imageWrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.mobileOverlay {
+  display: none;
+}
+
+/* ── Mobile: full-bleed image with overlay ──────────────── */
+@media (max-width: 768px) {
+  .hero {
+    display: block;
+    position: relative;
+    min-height: 80vh;
+  }
+
+  .imageWrapper {
+    position: absolute;
+    inset: 0;
+  }
+
+  .mobileOverlay {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 20%, rgba(0, 0, 0, 0.65) 100%);
+    z-index: 1;
+  }
+
+  .text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    z-index: 2;
+  }
+
+  .title {
+    color: #fff;
+  }
+
+  .excerpt {
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 100%;
+  }
+}

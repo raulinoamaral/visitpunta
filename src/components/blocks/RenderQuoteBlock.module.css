@@ -1,0 +1,24 @@
+.quote {
+  margin: 2.5rem 0;
+  padding-left: 1.5rem;
+  border-left: 2px solid #d5d0c8;
+}
+
+.text {
+  font-family: var(--font-playfair);
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  font-style: italic;
+  font-weight: 400;
+  color: #333;
+  line-height: 1.7;
+}
+
+.attribution {
+  display: block;
+  margin-top: 0.75rem;
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  font-style: normal;
+  color: #999;
+  letter-spacing: 0.05em;
+}

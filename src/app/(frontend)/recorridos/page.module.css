@@ -1,0 +1,48 @@
+/* ── Grid vertical — 3 columnas, cards portrait ─────────── */
+.verticalGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.verticalGrid > :global(*) > div:first-child {
+  aspect-ratio: 3 / 4;
+}
+
+/* ── Grid featured — 2 columnas, cards landscape ────────── */
+.featuredGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.featuredGrid > :global(*) > div:first-child {
+  aspect-ratio: 16 / 9;
+}
+
+/* ── Mobile ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .verticalGrid {
+    grid-template-columns: none;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+  }
+
+  .verticalGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .verticalGrid > * {
+    flex: 0 0 65%;
+    scroll-snap-align: start;
+    padding-right: 1rem;
+  }
+
+  .featuredGrid {
+    grid-template-columns: 1fr;
+  }
+}
