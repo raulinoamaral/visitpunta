@@ -45,7 +45,7 @@ export default async function ComerPage() {
         limit: 1,
       })
       const tag = tags[0]
-      if (!tag) return { title, places: [] }
+      if (!tag) return { title, featured: [], rest: [] }
 
       const { docs: featuredPlaces } = await payload.find({
         collection: 'places',
