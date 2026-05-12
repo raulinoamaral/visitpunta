@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!article) return {}
   return {
     title: `${article.seoTitle || article.title} — Visit Punta`,
-    description: article.seoDescription || article.excerpt || '',
+    description: article.seoDescription || article.tagline || '',
   }
 }
 
