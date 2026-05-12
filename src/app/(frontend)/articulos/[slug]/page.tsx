@@ -52,9 +52,14 @@ export default async function ArticlePage({ params }: Props) {
           {article.tagline && <p className={styles.excerpt}>{article.tagline}</p>}
         </header>
 
-        {article.content && (
+        {article.layout && (
           <div className={styles.content}>
-            <RichText data={article.content} />
+            {(article.layout as any[]).map((block: any) => {
+              if (block.blockType === 'textBlock') {
+                return <RichText key={block.id} data={block.content} />
+              }
+              return null
+            })}
           </div>
         )}
       </article>
