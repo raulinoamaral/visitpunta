@@ -9,7 +9,7 @@ type Args = {
   children: React.ReactNode
 }
 
-const serverFunction = async function (args: Parameters<typeof handleServerFunctions>[0]) {
+const serverFunction = async function (args: any) {
   'use server'
   return handleServerFunctions({
     ...args,
@@ -23,7 +23,7 @@ const Layout = ({ children }: Args) =>
     children,
     config,
     importMap,
-    serverFunction,
+    serverFunction: serverFunction as any,
   })
 
 export default Layout
