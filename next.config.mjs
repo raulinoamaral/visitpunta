@@ -20,6 +20,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'pub-3ca9af00cc3b4034b7d7d3232089d941.r2.dev',
       },
+      {
+        protocol: 'https',
+        hostname: 'visitpunta.nyc3.cdn.digitaloceanspaces.com',
+      },
     ],
   },
 }
