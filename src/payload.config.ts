@@ -37,6 +37,7 @@ export default buildConfig({
           },
         },
       },
+      acl: 'public-read',
       bucket: process.env.R2_BUCKET || '',
       config: {
         endpoint: process.env.R2_ENDPOINT || '',
@@ -44,7 +45,7 @@ export default buildConfig({
           accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
           secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
         },
-        region: 'auto',
+        region: 'nyc3',
         requestHandler: { requestTimeout: 120000 },
       },
     }),
