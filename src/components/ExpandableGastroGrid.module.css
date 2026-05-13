@@ -19,6 +19,10 @@
   animation: cardReveal 0.6s ease both;
 }
 
+.moreInline {
+  display: none;
+}
+
 .more {
   display: block;
   margin-top: 2rem;
@@ -58,8 +62,23 @@
     padding-right: 1rem;
   }
 
+  .moreInline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 60%;
+    scroll-snap-align: start;
+    padding-right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-inter);
+    font-size: 0.85rem;
+    color: #999;
+    letter-spacing: 0.05em;
+  }
+
   .more {
-    display: block;
-    margin-top: 1.5rem;
+    display: none;
   }
 }

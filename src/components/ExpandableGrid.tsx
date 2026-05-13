@@ -34,6 +34,11 @@ export default function ExpandableGrid({ featured, rest }: Props) {
             href={place.href}
           />
         ))}
+        {!expanded && rest.length > 0 && (
+          <button className={styles.moreInline} onClick={() => setExpanded(true)}>
+            Seguir viendo →
+          </button>
+        )}
         {expanded && rest.map((place, i) => (
           <div
             key={place.id}

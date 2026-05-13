@@ -36,6 +36,11 @@ export default function ExpandableGastroGrid({ featured, rest }: Props) {
             href={place.href}
           />
         ))}
+        {!expanded && rest.length > 0 && (
+          <button className={styles.moreInline} onClick={() => setExpanded(true)}>
+            Seguir viendo →
+          </button>
+        )}
         {expanded && rest.map((place, i) => (
           <div
             key={place.id}
@@ -47,6 +52,7 @@ export default function ExpandableGastroGrid({ featured, rest }: Props) {
               destination={place.destination}
               description={place.description}
               image={place.image}
+              tag={place.tag}
               href={place.href}
             />
           </div>
