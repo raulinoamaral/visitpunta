@@ -98,6 +98,13 @@
   100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
 }
 
+@media (max-width: 768px) {
+  .hero {
+    align-items: center;
+    padding-bottom: 0;
+  }
+}
+
 /* Intro */
 
 .intro {
@@ -312,32 +319,18 @@
   }
 
   .zonaCardFull {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 2 / 3;
   }
 
   .zonasGrid {
-    grid-template-columns: none;
     display: flex;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 0;
+    flex-direction: column;
+    gap: 1rem;
     flex: none;
-  }
-
-  .zonasGrid::-webkit-scrollbar {
-    display: none;
   }
 
   .zonasGrid .zonaCard {
     aspect-ratio: 2 / 3;
-  }
-
-  .zonaCard {
-    flex: 0 0 85%;
-    scroll-snap-align: start;
-    margin-right: 0.75rem;
   }
 
   .zonaCardOverlay {

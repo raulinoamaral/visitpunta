@@ -35,3 +35,11 @@ h1, h2, h3, h4 {
   color: #888;
   margin-bottom: 2rem;
 }
+
+@media (max-width: 768px) {
+  main > section,
+  main > div > section {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
