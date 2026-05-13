@@ -70,7 +70,7 @@ export default async function Home() {
       <Reveal>
         <section id="contenido" className={styles.intro}>
           <p className={styles.introText}>
-            Lugares elegidos con criterio. Hoteles donde da ganas de quedarse, restaurantes que dan ganas de volver, cafés que se vuelven rutina.
+            Lugares elegidos con criterio. Hoteles donde dan ganas de quedarse, restaurantes que dan ganas de volver, cafés que se vuelven rutina.
           </p>
         </section>
       </Reveal>
