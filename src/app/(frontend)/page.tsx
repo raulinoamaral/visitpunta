@@ -140,8 +140,10 @@ export default async function Home() {
                   className={styles.destacadoImage}
                 />
                 <div className={styles.destacadoOverlay} />
-                <h2 className={styles.destacadoTitle}>{title}</h2>
-                <p className={styles.destacadoSubtitle}>{subtitle}</p>
+                <div className={styles.destacadoText}>
+                  <h2 className={styles.destacadoTitle}>{title}</h2>
+                  <p className={styles.destacadoSubtitle}>{subtitle}</p>
+                </div>
               </Link>
             ))}
           </ScrollDrag>

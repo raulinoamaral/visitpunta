@@ -8,7 +8,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 2rem;
-  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.hidden {
+  transform: translateY(-100%);
 }
 
 .scrolled .navLink {
@@ -38,9 +42,14 @@
   object-fit: contain;
 }
 
+.logoMobile {
+  display: none;
+  object-fit: contain;
+}
+
 @media (max-width: 768px) {
   .header {
-    position: relative;
+    position: sticky;
     padding: 1rem 1rem;
     background-color: #fff;
   }
@@ -55,6 +64,10 @@
   }
 
   .logo {
-    width: 120px !important;
+    display: none !important;
+  }
+
+  .logoMobile {
+    display: block !important;
   }
 }

@@ -1,16 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Header.module.css'
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  const lastScrollY = useRef(0)
 
   useEffect(() => {
     function handleScroll() {
-      setScrolled(window.scrollY > window.innerHeight * 0.7)
+      const currentY = window.scrollY
+      setScrolled(currentY > window.innerHeight * 0.7)
+      setHidden(currentY > 100 && currentY > lastScrollY.current)
+      lastScrollY.current = currentY
     }
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -18,7 +23,7 @@ export default function Header() {
   }, [])
 
   return (
-    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''} ${hidden ? styles.hidden : ''}`}>
       <Link href="/">
         <Image
           src="/visit-punta-del-este.svg"
@@ -26,6 +31,14 @@ export default function Header() {
           width={180}
           height={52}
           className={styles.logo}
+          priority
+        />
+        <Image
+          src="/ISO-COLOR.svg"
+          alt="Visit Punta del Este"
+          width={40}
+          height={40}
+          className={styles.logoMobile}
           priority
         />
       </Link>

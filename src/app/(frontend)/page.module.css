@@ -152,26 +152,28 @@
   background: rgba(0, 0, 0, 0.4);
 }
 
-.destacadoTitle {
+.destacadoText {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -70%);
+  transform: translate(-50%, -50%);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 80%;
+}
+
+.destacadoTitle {
   font-family: var(--font-playfair);
   font-size: clamp(1.4rem, 2.5vw, 2.4rem);
   font-weight: 400;
   color: #fff;
   line-height: 1.2;
-  white-space: pre-line;
 }
 
 .destacadoSubtitle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, 50%);
-  text-align: center;
   font-family: var(--font-playfair);
   font-size: clamp(0.9rem, 1.5vw, 1.1rem);
   font-style: italic;
@@ -210,7 +212,6 @@
   }
 
   .destacadoSubtitle {
-    transform: translate(-50%, 150%);
     font-size: 1rem;
   }
 }
