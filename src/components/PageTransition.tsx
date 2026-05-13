@@ -31,6 +31,8 @@ export default function PageTransition() {
   }, [])
 
   return (
-    <div className={`${styles.transition} ${isVisible ? styles.active : ''}`} />
+    <div className={`${styles.transition} ${isVisible ? styles.active : ''}`}>
+      <img src="/ISO-COLOR.svg" alt="" className={styles.logo} />
+    </div>
   )
 }
