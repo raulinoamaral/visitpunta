@@ -19,6 +19,7 @@ import GalleryGrid from '@/components/gallery/GalleryGrid'
 import GalleryFeaturedBottom from '@/components/gallery/GalleryFeaturedBottom'
 import GalleryFeaturedSide from '@/components/gallery/GalleryFeaturedSide'
 import PlaceCard from '@/components/PlaceCard'
+import TrackedLink from '@/components/TrackedLink'
 import JsonLd from '@/components/JsonLd'
 import ArticleCard2 from '@/components/ArticleCard2'
 import MiniCard from '@/components/MiniCard'
@@ -707,14 +708,14 @@ export default async function SlugPage({ params }: Props) {
           </div>
           {place.cta?.url && (
             <div className={styles.cta}>
-              <a
+              <TrackedLink
                 href={place.cta.url}
+                event={place.type === PLACE_TYPES.DORMIR ? 'click_booking' : 'click_reserva'}
+                label={place.name}
                 className={styles.ctaButton}
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 {place.type === PLACE_TYPES.DORMIR ? 'Consultar disponibilidad' : 'Reservar mesa'}
-              </a>
+              </TrackedLink>
               {place.type === PLACE_TYPES.DORMIR && <span className={styles.ctaNote}>en booking.com</span>}
             </div>
           )}
@@ -772,25 +773,25 @@ export default async function SlugPage({ params }: Props) {
         <Reveal>
           <section className={styles.ctaSection}>
             {place.cta.url && (
-              <a
+              <TrackedLink
                 href={place.cta.url}
+                event={place.type === PLACE_TYPES.DORMIR ? 'click_booking' : 'click_reserva'}
+                label={place.name}
                 className={styles.ctaButtonLarge}
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 {place.type === PLACE_TYPES.DORMIR ? 'Consultar disponibilidad' : 'Reservar mesa'}
-              </a>
+              </TrackedLink>
             )}
             {place.type === PLACE_TYPES.DORMIR && place.cta.url && <span className={styles.ctaNote}>en booking.com</span>}
             {place.cta.mapsUrl && (
-              <a
+              <TrackedLink
                 href={place.cta.mapsUrl}
+                event="click_maps"
+                label={place.name}
                 className={styles.mapsLink}
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 Ver en Google Maps →
-              </a>
+              </TrackedLink>
             )}
           </section>
         </Reveal>
