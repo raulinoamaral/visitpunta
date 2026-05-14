@@ -25,6 +25,7 @@ import ArticleCard2 from '@/components/ArticleCard2'
 import MiniCard from '@/components/MiniCard'
 import ExpandableGrid from '@/components/ExpandableGrid'
 import ExpandableGastroGrid from '@/components/ExpandableGastroGrid'
+import ExpandableMiniGrid from '@/components/ExpandableMiniGrid'
 import ScrollDrag from '@/components/ScrollDrag'
 import Reveal from '@/components/Reveal'
 import Image from 'next/image'
@@ -337,12 +338,26 @@ export default async function SlugPage({ params }: Props) {
       })
 
       // Experiencias
-      const { docs: destExperiences } = await payload.find({
+      const { docs: expFeatured } = await payload.find({
         collection: 'experiences',
         where: {
           and: [
             { destination: { equals: dest.id } },
             { published: { equals: true } },
+            { featured: { equals: true } },
+          ],
+        },
+        sort: 'order',
+        depth: 1,
+        limit: 6,
+      })
+      const { docs: expRest } = await payload.find({
+        collection: 'experiences',
+        where: {
+          and: [
+            { destination: { equals: dest.id } },
+            { published: { equals: true } },
+            { featured: { not_equals: true } },
           ],
         },
         sort: 'order',
@@ -446,20 +461,24 @@ export default async function SlugPage({ params }: Props) {
             </Reveal>
           )}
 
-          {destExperiences.length > 0 && (
+          {(expFeatured.length > 0 || expRest.length > 0) && (
             <Reveal>
               <section className={destStyles.section}>
                 <h2 className="section-title">Para recorrer</h2>
-                <div className={destStyles.experiencesGrid}>
-                  {destExperiences.map((exp: any) => (
-                    <MiniCard
-                      key={exp.id}
-                      name={exp.title}
-                      image={(exp.heroImage as any)?.url || ''}
-                      href={`/${exp.slug}`}
-                    />
-                  ))}
-                </div>
+                <ExpandableMiniGrid
+                  featured={expFeatured.map((e: any) => ({
+                    id: String(e.id),
+                    name: e.title,
+                    image: (e.heroImage as any)?.url || '',
+                    href: `/${e.slug}`,
+                  }))}
+                  rest={expRest.map((e: any) => ({
+                    id: String(e.id),
+                    name: e.title,
+                    image: (e.heroImage as any)?.url || '',
+                    href: `/${e.slug}`,
+                  }))}
+                />
               </section>
             </Reveal>
           )}
