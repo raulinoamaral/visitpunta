@@ -338,26 +338,12 @@ export default async function SlugPage({ params }: Props) {
       })
 
       // Experiencias
-      const { docs: expFeatured } = await payload.find({
+      const { docs: destExperiences } = await payload.find({
         collection: 'experiences',
         where: {
           and: [
             { destination: { equals: dest.id } },
             { published: { equals: true } },
-            { featured: { equals: true } },
-          ],
-        },
-        sort: 'order',
-        depth: 1,
-        limit: 6,
-      })
-      const { docs: expRest } = await payload.find({
-        collection: 'experiences',
-        where: {
-          and: [
-            { destination: { equals: dest.id } },
-            { published: { equals: true } },
-            { featured: { not_equals: true } },
           ],
         },
         sort: 'order',
@@ -461,18 +447,12 @@ export default async function SlugPage({ params }: Props) {
             </Reveal>
           )}
 
-          {(expFeatured.length > 0 || expRest.length > 0) && (
+          {destExperiences.length > 0 && (
             <Reveal>
               <section className={destStyles.section}>
                 <h2 className="section-title">Para recorrer</h2>
                 <ExpandableMiniGrid
-                  featured={expFeatured.map((e: any) => ({
-                    id: String(e.id),
-                    name: e.title,
-                    image: (e.heroImage as any)?.url || '',
-                    href: `/${e.slug}`,
-                  }))}
-                  rest={expRest.map((e: any) => ({
+                  items={destExperiences.map((e: any) => ({
                     id: String(e.id),
                     name: e.title,
                     image: (e.heroImage as any)?.url || '',
