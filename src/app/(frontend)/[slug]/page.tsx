@@ -34,6 +34,12 @@ import articleStyles from './article.module.css'
 import destStyles from './destination.module.css'
 import expStyles from './experience.module.css'
 
+const BOOKING_AID = '7864342'
+
+function withBookingAid(url: string): string {
+  return url.includes('?') ? `${url}&aid=${BOOKING_AID}` : `${url}?aid=${BOOKING_AID}`
+}
+
 const highlightsTitle: Record<string, string> = {
   [PLACE_TYPES.DORMIR]: 'Por qué alojarse aquí',
   [PLACE_TYPES.COMER]: 'Tené en cuenta',
@@ -708,7 +714,7 @@ export default async function SlugPage({ params }: Props) {
           {place.cta?.url && (
             <div className={styles.cta}>
               <TrackedLink
-                href={place.cta.url}
+                href={place.type === PLACE_TYPES.DORMIR ? withBookingAid(place.cta.url) : place.cta.url}
                 event={place.type === PLACE_TYPES.DORMIR ? 'click_booking' : 'click_reserva'}
                 label={place.name}
                 className={styles.ctaButton}
@@ -773,7 +779,7 @@ export default async function SlugPage({ params }: Props) {
           <section className={styles.ctaSection}>
             {place.cta.url && (
               <TrackedLink
-                href={place.cta.url}
+                href={place.type === PLACE_TYPES.DORMIR ? withBookingAid(place.cta.url) : place.cta.url}
                 event={place.type === PLACE_TYPES.DORMIR ? 'click_booking' : 'click_reserva'}
                 label={place.name}
                 className={styles.ctaButtonLarge}
