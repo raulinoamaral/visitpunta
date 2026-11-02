@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import FadeImage from '@/components/FadeImage'
 import MediaCarousel from './MediaCarousel'
 import styles from './RenderMediaBlock.module.css'
 
@@ -31,7 +31,7 @@ export default function RenderMediaBlock({ images, variant, stack }: Props) {
       >
         {images.map((item, i) => (
           <div key={item.id ?? i} className={styles.imageWrapper}>
-            <Image
+            <FadeImage
               src={item.image.url}
               alt={item.image.alt || item.caption || ''}
               fill

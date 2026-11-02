@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import FadeImage from '@/components/FadeImage'
 import Link from 'next/link'
 import styles from './MiniCard.module.css'
 
@@ -11,7 +11,7 @@ type Props = {
 export default function MiniCard({ image, name, href }: Props) {
   const content = (
     <div className={styles.imageWrapper}>
-      {image && <Image src={image} alt={name} fill className={styles.image} />}
+      {image && <FadeImage src={image} alt={name} fill className={styles.image} />}
       <div className={styles.overlay} />
       <h3 className={styles.name}>{name}</h3>
     </div>

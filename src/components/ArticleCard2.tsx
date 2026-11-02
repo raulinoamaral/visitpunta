@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import FadeImage from '@/components/FadeImage'
 import Link from 'next/link'
 import { ARTICLE_TYPE_LABELS } from '@/lib/constants'
 import styles from './ArticleCard2.module.css'
@@ -16,7 +16,7 @@ export default function ArticleCard2({ title, slug, type, tagline, image }: Prop
     <Link href={`/${slug}`} className={styles.card}>
       {image && (
         <div className={styles.imageWrapper}>
-          <Image src={image} alt={title} fill className={styles.image} />
+          <FadeImage src={image} alt={title} fill className={styles.image} />
         </div>
       )}
       <div className={styles.text}>

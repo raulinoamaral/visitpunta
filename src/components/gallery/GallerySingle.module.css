@@ -6,7 +6,7 @@
 
 .img {
   object-fit: cover;
-  transition: transform 0.6s ease;
+  transition: transform 0.6s ease, opacity 0.6s ease;
 }
 
 .image:hover .img {

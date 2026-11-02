@@ -1,0 +1,21 @@
+.fade {
+  transition: opacity 0.6s ease;
+}
+
+/* Hidden until loaded only when scripts run: without JS the photo shows normally */
+@media (scripting: enabled) {
+  .fade:not(.loaded) {
+    opacity: 0;
+  }
+}
+
+.loaded {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* img.fade outranks the card classes that also set a transition */
+  img.fade {
+    transition: none;
+  }
+}

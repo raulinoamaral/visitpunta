@@ -17,7 +17,12 @@
 .heroImage {
   object-fit: cover;
   object-position: center;
-  animation: heroZoom 1.8s ease-out both;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .heroImage {
+    animation: heroZoom 1.8s ease-out both;
+  }
 }
 
 .heroOverlay {

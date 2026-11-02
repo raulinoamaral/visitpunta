@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import FadeImage from '@/components/FadeImage'
 import Link from 'next/link'
 import styles from './RenderPlaceBlock.module.css'
 
@@ -18,7 +18,7 @@ export default function RenderPlaceBlock({ place, context }: Props) {
     <Link href={`/${place.slug}`} className={styles.card}>
       {place.heroImage?.url && (
         <div className={styles.imageWrapper}>
-          <Image
+          <FadeImage
             src={place.heroImage.url}
             alt={place.heroImage.alt || place.name}
             fill

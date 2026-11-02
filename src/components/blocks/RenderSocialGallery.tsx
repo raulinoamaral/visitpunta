@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import FadeImage from '@/components/FadeImage'
 import { useRef, useState } from 'react'
 import styles from './RenderSocialGallery.module.css'
 
@@ -71,7 +71,7 @@ export default function RenderSocialGallery({ images }: Props) {
         >
           {images.map((item, i) => (
             <div key={item.id ?? i} className={styles.slide}>
-              <Image
+              <FadeImage
                 src={item.image.url}
                 alt={item.image.alt || item.caption || ''}
                 fill

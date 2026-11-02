@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import FadeImage from '@/components/FadeImage'
 import Link from 'next/link'
 import styles from './PlaceCard.module.css'
 
@@ -15,7 +15,7 @@ export default function PlaceCard({ image, name, destination, description, href 
     <>
       {image && (
         <div className={styles.imageWrapper}>
-          <Image src={image} alt={name} fill className={styles.image} />
+          <FadeImage src={image} alt={name} fill className={styles.image} />
         </div>
       )}
       <div className={styles.body}>

@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import FadeImage from '@/components/FadeImage'
 import styles from './GallerySingle.module.css'
 
 type GalleryImage = {
@@ -12,7 +12,7 @@ export default function GallerySingle({ images }: { images: GalleryImage[] }) {
   if (!img) return null
   return (
     <div className={styles.image}>
-      <Image src={img.url} alt={img.alt || ''} fill className={styles.img} />
+      <FadeImage src={img.url} alt={img.alt || ''} fill className={styles.img} />
       {img.credit && <span className={styles.credit}>{img.credit}</span>}
     </div>
   )

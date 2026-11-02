@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import FadeImage from '@/components/FadeImage'
 import GalleryCarousel from './GalleryCarousel'
 import styles from './GalleryGrid.module.css'
 
@@ -15,7 +15,7 @@ export default function GalleryGrid({ images }: { images: GalleryImage[] }) {
       <div className={styles.grid}>
         {imgs.map((img, i) => (
           <div key={i} className={styles.image}>
-            <Image src={img.url} alt={img.alt || ''} fill className={styles.img} />
+            <FadeImage src={img.url} alt={img.alt || ''} fill className={styles.img} />
             {img.credit && <span className={styles.credit}>{img.credit}</span>}
           </div>
         ))}

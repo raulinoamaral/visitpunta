@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import FadeImage from '@/components/FadeImage'
 import { useRef, useState } from 'react'
 import styles from './RenderSocialCarousel.module.css'
 
@@ -71,7 +71,7 @@ export default function RenderSocialCarousel({ title, slides }: Props) {
         >
           {slides.map((slide, i) => (
             <div key={slide.id ?? i} className={styles.slide}>
-              <Image
+              <FadeImage
                 src={slide.image.url}
                 alt={slide.image.alt || slide.text}
                 fill
