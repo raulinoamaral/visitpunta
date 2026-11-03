@@ -1,6 +1,9 @@
 import type { CollectionConfig } from 'payload'
 import sharp from 'sharp'
 
+// Longest side of a stored photo: enough for a full-width hero on a retina screen
+export const MAX_DIMENSION = 2560
+
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
@@ -16,17 +19,24 @@ export const Media: CollectionConfig = {
         const file = req.file
         console.log('[Media Hook] file:', file.name, file.mimetype, file.data?.length)
 
-        const skip = file.mimetype === 'image/webp' || file.mimetype === 'image/heic' || file.mimetype === 'image/heif'
+        // Vector and animated images stay as they are; sharp cannot decode iPhone HEIC
+        const skip = ['image/svg+xml', 'image/gif', 'image/heic', 'image/heif'].includes(file.mimetype)
         if (skip) return
 
         try {
           const originalSize = file.data.length
+          const { width = 0, height = 0 } = await sharp(file.data).metadata()
+          const tooLarge = Math.max(width, height) > MAX_DIMENSION
+          // A WebP that is already small enough is kept untouched
+          if (file.mimetype === 'image/webp' && !tooLarge) return
+
           const converted = await sharp(file.data)
             .rotate()
+            .resize({ width: MAX_DIMENSION, height: MAX_DIMENSION, fit: 'inside', withoutEnlargement: true })
             .webp({ quality: 80 })
             .toBuffer()
 
-          if (converted.length < originalSize) {
+          if (converted.length < originalSize || tooLarge) {
             file.name = file.name.replace(/\.[^.]+$/, '.webp')
             file.data = converted
             file.size = converted.length
