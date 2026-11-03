@@ -98,10 +98,10 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('es' | 'pt') | ('es' | 'pt')[];
   globals: {};
   globalsSelect: {};
-  locale: null;
+  locale: 'es' | 'pt';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -188,6 +188,7 @@ export interface Place {
   type: 'dormir' | 'comer' | 'spots';
   destination?: (number | null) | Destination;
   featured?: boolean | null;
+  published?: boolean | null;
   tags?: (number | Tag)[] | null;
   /**
    * Frase corta para cards y listados.
@@ -277,6 +278,7 @@ export interface Destination {
   id: number;
   name: string;
   slug: string;
+  published?: boolean | null;
   /**
    * Frase breve que define el destino. Ej: "Entre la arena y el campo"
    */
@@ -799,6 +801,7 @@ export interface PlacesSelect<T extends boolean = true> {
   type?: T;
   destination?: T;
   featured?: T;
+  published?: T;
   tags?: T;
   summary?: T;
   location?: T;
@@ -958,6 +961,7 @@ export interface ArticlesSelect<T extends boolean = true> {
 export interface DestinationsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
+  published?: T;
   tagline?: T;
   summary?: T;
   description?: T;

@@ -51,6 +51,15 @@ export default buildConfig({
     }),
   ],
   collections: [Users, Media, Places, Tags, Articles, Destinations, Pages, Experiences],
+  localization: {
+    locales: [
+      { label: 'Español', code: 'es' },
+      { label: 'Português', code: 'pt' },
+    ],
+    defaultLocale: 'es',
+    // No fallback: a page without Portuguese content must not exist under /pt
+    fallback: false,
+  },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -6,40 +6,54 @@ import MiniCard from '@/components/MiniCard'
 import Reveal from '@/components/Reveal'
 import styles from '@/styles/interior-page.module.css'
 import pageStyles from './page.module.css'
+import { notFound } from 'next/navigation'
+import { isLocale, localePath, type Locale } from '@/i18n/config'
+import { getDictionary } from '@/i18n/dictionaries'
+import { alternatesMetadata, staticAlternates } from '@/lib/alternates'
+import { PUBLISHED } from '@/lib/published'
 
-export const metadata: Metadata = {
-  title: 'Qué hacer en Punta del Este: playas, recorridos y lugares clave',
-  description: 'Playas, recorridos y lugares para visitar en Punta del Este. Una guía de experiencias que terminan armando el mapa del Este.',
-  openGraph: {
-    title: 'Qué hacer en Punta del Este: playas, recorridos y lugares clave',
-    description: 'Playas, recorridos y lugares para visitar en Punta del Este. Una guía de experiencias que terminan armando el mapa del Este.',
-    images: [{ url: '/images/que-hacer.jpg' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Qué hacer en Punta del Este: playas, recorridos y lugares clave',
-    description: 'Playas, recorridos y lugares para visitar en Punta del Este. Una guía de experiencias que terminan armando el mapa del Este.',
-    images: ['/images/que-hacer.jpg'],
-  },
+// Rebuilt in the background at most every 5 minutes, so edits and new translations show up without a deploy
+export const revalidate = 300
+
+type Props = {
+  params: Promise<{ locale: string }>
 }
 
-function renderCard(exp: any) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
+  const t = getDictionary(locale).explore
+  return {
+    title: t.metaTitle,
+    description: t.metaDescription,
+    alternates: alternatesMetadata(staticAlternates('explore'), locale),
+    openGraph: { title: t.metaTitle, description: t.metaDescription, images: [{ url: '/images/que-hacer.jpg' }] },
+    twitter: { card: 'summary_large_image', title: t.metaTitle, description: t.metaDescription, images: ['/images/que-hacer.jpg'] },
+  }
+}
+
+const renderCard = (locale: Locale) => (exp: any) => {
   return (
     <MiniCard
       key={exp.id}
       name={exp.title}
       image={(exp.heroImage as any)?.url || ''}
-      href={`/${exp.slug}`}
+      href={localePath(locale, exp.slug)}
     />
   )
 }
 
-export default async function ExperienciasPage() {
+export default async function ExperienciasPage({ params }: Props) {
+  const { locale } = await params
+  if (!isLocale(locale)) notFound()
+  const t = getDictionary(locale).explore
+  const card = renderCard(locale)
   const payload = await getPayload({ config })
 
   const { docs: experiences } = await payload.find({
     collection: 'experiences',
-    where: { published: { equals: true } },
+    locale,
+    where: PUBLISHED,
     sort: 'order',
     depth: 1,
     limit: 100,
@@ -48,7 +62,7 @@ export default async function ExperienciasPage() {
   // Punta del Este: featured → "Para empezar", rest → 4+2+4 blocks
   const pdeExps = experiences.filter((e) => {
     const dest = typeof e.destination === 'object' ? e.destination : null
-    return (dest as any)?.slug === 'punta-del-este'
+    return (dest as any)?.name === 'Punta del Este'
   })
   const pdeFeatured = pdeExps.filter((e) => e.featured)
   const pdeRest = pdeExps.filter((e) => !e.featured)
@@ -56,14 +70,14 @@ export default async function ExperienciasPage() {
   // Other destinations: simple card grid
   const otherExps = experiences.filter((e) => {
     const dest = typeof e.destination === 'object' ? e.destination : null
-    return (dest as any)?.slug !== 'punta-del-este'
+    return (dest as any)?.name !== 'Punta del Este'
   })
 
   const grouped = new Map<string, { destName: string; items: typeof otherExps }>()
 
   for (const exp of otherExps) {
     const dest = typeof exp.destination === 'object' ? exp.destination : null
-    const destName = dest?.name || 'Otros'
+    const destName = dest?.name || t.others
     const destId = dest?.id?.toString() || 'otros'
 
     if (!grouped.has(destId)) {
@@ -76,24 +90,22 @@ export default async function ExperienciasPage() {
     <main>
       <PageHero
         image="/images/recorridos.jpg"
-        title="Para recorrer"
-        subtitle="Para ver y entender el ritmo del Este"
+        title={t.title}
+        subtitle={t.subtitle}
       />
 
       <Reveal>
         <section className={styles.intro}>
-          <p className={styles.introText}>
-            Playas y algunos lugares que, juntos, terminan armando el mapa del Este.
-          </p>
+          <p className={styles.introText}>{t.intro}</p>
         </section>
       </Reveal>
 
       {pdeFeatured.length > 0 && (
         <Reveal>
           <section className={styles.section}>
-            <h2 className="section-title">Para empezar</h2>
+            <h2 className="section-title">{t.start}</h2>
             <div className={pageStyles.verticalGrid}>
-              {pdeFeatured.slice(0, 3).map(renderCard)}
+              {pdeFeatured.slice(0, 3).map(card)}
             </div>
           </section>
         </Reveal>
@@ -111,7 +123,7 @@ export default async function ExperienciasPage() {
                 <section className={styles.section}>
                   <h2 className="section-title">Punta del Este</h2>
                   <div className={styles.destacadosGrid}>
-                    {first4.map(renderCard)}
+                    {first4.map(card)}
                   </div>
                 </section>
               </Reveal>
@@ -121,7 +133,7 @@ export default async function ExperienciasPage() {
               <Reveal>
                 <section className={styles.section}>
                   <div className={pageStyles.featuredGrid}>
-                    {featured2.map(renderCard)}
+                    {featured2.map(card)}
                   </div>
                 </section>
               </Reveal>
@@ -131,7 +143,7 @@ export default async function ExperienciasPage() {
               <Reveal>
                 <section className={styles.section}>
                   <div className={styles.destacadosGrid}>
-                    {last4.map(renderCard)}
+                    {last4.map(card)}
                   </div>
                 </section>
               </Reveal>
@@ -145,7 +157,7 @@ export default async function ExperienciasPage() {
           <section className={styles.section}>
             <h2 className="section-title">{destName}</h2>
             <div className={styles.destacadosGrid}>
-              {items.map(renderCard)}
+              {items.map(card)}
             </div>
           </section>
         </Reveal>

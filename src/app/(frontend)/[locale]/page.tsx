@@ -1,45 +1,70 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import ScrollDrag from '@/components/ScrollDrag'
 import Reveal from '@/components/Reveal'
-import { ARTICLE_TYPE_LABELS } from '@/lib/constants'
+import { isLocale, localePath } from '@/i18n/config'
+import { getDictionary } from '@/i18n/dictionaries'
+import { sectionHref } from '@/i18n/routes'
+import { alternatesMetadata, staticAlternates } from '@/lib/alternates'
+import { PUBLISHED } from '@/lib/published'
 import styles from './page.module.css'
 
-export const metadata: Metadata = {
-  title: 'Punta del Este y alrededores: guía curada de lugares que valen la pena',
-  description: 'Una guía curada de Punta del Este, José Ignacio y La Barra: alojamientos, restaurantes, cafés y experiencias elegidas por su calidad y estilo.',
-  openGraph: {
-    title: 'Punta del Este y alrededores: guía curada de lugares que valen la pena',
-    description: 'Una guía curada de Punta del Este, José Ignacio y La Barra: alojamientos, restaurantes, cafés y experiencias elegidas por su calidad y estilo.',
-    images: [{ url: '/images/home-punta-del-este.jpg' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Punta del Este y alrededores: guía curada de lugares que valen la pena',
-    description: 'Una guía curada de Punta del Este, José Ignacio y La Barra: alojamientos, restaurantes, cafés y experiencias elegidas por su calidad y estilo.',
-    images: ['/images/home-punta-del-este.jpg'],
-  },
+// Rebuilt in the background at most every 5 minutes, so edits and new translations show up without a deploy
+export const revalidate = 300
+
+type Props = {
+  params: Promise<{ locale: string }>
 }
 
-export default async function Home() {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
+  const t = getDictionary(locale)
+  return {
+    title: t.meta.homeTitle,
+    description: t.meta.homeDescription,
+    alternates: alternatesMetadata(staticAlternates(), locale),
+    openGraph: {
+      title: t.meta.homeTitle,
+      description: t.meta.homeDescription,
+      images: [{ url: '/images/home-punta-del-este.jpg' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t.meta.homeTitle,
+      description: t.meta.homeDescription,
+      images: ['/images/home-punta-del-este.jpg'],
+    },
+  }
+}
+
+export default async function Home({ params }: Props) {
+  const { locale } = await params
+  if (!isLocale(locale)) notFound()
+  const t = getDictionary(locale)
   const payload = await getPayload({ config })
   const { docs: allDestinations } = await payload.find({
     collection: 'destinations',
+    locale,
+    where: PUBLISHED,
     sort: 'createdAt',
     depth: 1,
     limit: 10,
   })
-  const pde = allDestinations.find((d: any) => d.slug === 'punta-del-este')
-  const destinations = allDestinations.filter((d: any) => d.slug !== 'punta-del-este')
+  // Punta del Este leads by name: its slug may differ per language
+  const pde = allDestinations.find((d: any) => d.name === 'Punta del Este')
+  const destinations = allDestinations.filter((d: any) => d.name !== 'Punta del Este')
 
   const { docs: featuredArticles } = await payload.find({
     collection: 'articles',
+    locale,
     where: {
       and: [
-        { published: { equals: true } },
+        PUBLISHED,
         { featured: { equals: true } },
       ],
     },
@@ -59,8 +84,8 @@ export default async function Home() {
         />
         <div className={styles.heroOverlay} />
         <div className={`${styles.heroText} ${styles.heroAnimate}`}>
-          <h1 className={styles.heroTitle}>Punta del Este<br /><span className={styles.heroSmall}>& alrededores</span></h1>
-          <p className={styles.heroSubtitle}>Una guía curada del Este</p>
+          <h1 className={styles.heroTitle}>Punta del Este<br /><span className={styles.heroSmall}>{t.home.heroSmall}</span></h1>
+          <p className={styles.heroSubtitle}>{t.home.heroSubtitle}</p>
         </div>
         <a href="#contenido" className={styles.scrollIndicator}>
           <span className={styles.scrollLine} />
@@ -69,20 +94,18 @@ export default async function Home() {
 
       <Reveal>
         <section id="contenido" className={styles.intro}>
-          <p className={styles.introText}>
-            Lugares elegidos con criterio. Hoteles donde dan ganas de quedarse, restaurantes que dan ganas de volver, cafés que se vuelven rutina.
-          </p>
+          <p className={styles.introText}>{t.home.intro}</p>
         </section>
       </Reveal>
 
       {(pde || destinations.length > 0) && (
         <section className={styles.zonas}>
           <Reveal>
-            <h2 className="section-title">El Este, zona por zona</h2>
+            <h2 className="section-title">{t.home.zonesTitle}</h2>
           </Reveal>
           {pde && (
             <Reveal delay={0.1}>
-              <Link href={`/${(pde as any).slug}`} className={styles.zonaCardFull}>
+              <Link href={localePath(locale, (pde as any).slug)} className={styles.zonaCardFull}>
                 <Image
                   src={((pde as any).heroImage as any)?.url || ''}
                   alt={(pde as any).name}
@@ -91,7 +114,7 @@ export default async function Home() {
                 />
                 <div className={styles.zonaCardOverlay} />
                 <div className={styles.zonaCardText}>
-                  <span className={styles.zonaCardLabel}>Guía</span>
+                  <span className={styles.zonaCardLabel}>{t.home.guideLabel}</span>
                   <h2 className={styles.zonaCardName}>{(pde as any).name}</h2>
                   {(pde as any).tagline && <p className={styles.zonaCardTagline}>{(pde as any).tagline}</p>}
                 </div>
@@ -101,7 +124,7 @@ export default async function Home() {
           <Reveal delay={0.2}>
             <ScrollDrag className={styles.zonasGrid}>
               {destinations.map((dest: any) => (
-                <Link key={dest.id} href={`/${dest.slug}`} className={styles.zonaCard}>
+                <Link key={dest.id} href={localePath(locale, dest.slug)} className={styles.zonaCard}>
                   <Image
                     src={(dest.heroImage as any)?.url || ''}
                     alt={dest.name}
@@ -110,7 +133,7 @@ export default async function Home() {
                   />
                   <div className={styles.zonaCardOverlay} />
                   <div className={styles.zonaCardText}>
-                    <span className={styles.zonaCardLabel}>Guía</span>
+                    <span className={styles.zonaCardLabel}>{t.home.guideLabel}</span>
                     <h2 className={styles.zonaCardName}>{dest.name}</h2>
                     {dest.tagline && <p className={styles.zonaCardTagline}>{dest.tagline}</p>}
                   </div>
@@ -123,14 +146,14 @@ export default async function Home() {
 
       <section className={styles.destacados}>
         <Reveal>
-          <h2 className="section-title">Para disfrutarlo bien</h2>
+          <h2 className="section-title">{t.home.enjoyTitle}</h2>
         </Reveal>
         <Reveal delay={0.1}>
           <ScrollDrag className={styles.destacadosGrid}>
             {[
-              { title: 'Refugios', subtitle: 'Hoteles, villas y lugares para quedarse', href: '/alojamientos', img: '/images/dormir.jpg' },
-              { title: 'Mesa & café', subtitle: 'Restaurantes, beach clubs y specialty coffee', href: '/gastronomia', img: '/images/comer-en-punta.jpg' },
-              { title: 'Recorridos', subtitle: 'Playas, planes y spots para descubrir', href: '/recorridos', img: '/images/que-hacer.jpg' },
+              { ...t.home.enjoy.stay, href: sectionHref('stay', locale), img: '/images/dormir.jpg' },
+              { ...t.home.enjoy.eat, href: sectionHref('eat', locale), img: '/images/comer-en-punta.jpg' },
+              { ...t.home.enjoy.explore, href: sectionHref('explore', locale), img: '/images/que-hacer.jpg' },
             ].map(({ title, subtitle, href, img }) => (
               <Link key={title} href={href} className={styles.destacadoCard}>
                 <Image
@@ -153,12 +176,12 @@ export default async function Home() {
       {featuredArticles.length > 0 && (
         <section className={styles.explorar}>
           <Reveal>
-            <h2 className="section-title">Para explorar ahora</h2>
+            <h2 className="section-title">{t.home.exploreTitle}</h2>
           </Reveal>
           <Reveal delay={0.1}>
             <div className={styles.explorarGrid}>
               {featuredArticles[0] && (
-                <Link href={`/${featuredArticles[0].slug}`} className={styles.explorarMain}>
+                <Link href={localePath(locale, featuredArticles[0].slug)} className={styles.explorarMain}>
                   {(featuredArticles[0].heroImage as any)?.url && (
                     <div className={styles.explorarMainImage}>
                       <Image
@@ -171,7 +194,7 @@ export default async function Home() {
                   )}
                   <div className={styles.explorarMainText}>
                     {featuredArticles[0].type && (
-                      <span className={styles.explorarType}>{ARTICLE_TYPE_LABELS[featuredArticles[0].type] || featuredArticles[0].type}</span>
+                      <span className={styles.explorarType}>{t.article.types[featuredArticles[0].type] || featuredArticles[0].type}</span>
                     )}
                     <h3 className={styles.explorarMainName}>{featuredArticles[0].title}</h3>
                     {featuredArticles[0].tagline && (
@@ -182,7 +205,7 @@ export default async function Home() {
               )}
               <div className={styles.explorarSide}>
                 {featuredArticles.slice(1, 3).map((article: any) => (
-                  <Link key={article.id} href={`/${article.slug}`} className={styles.explorarSecondary}>
+                  <Link key={article.id} href={localePath(locale, article.slug)} className={styles.explorarSecondary}>
                     {(article.heroImage as any)?.url && (
                       <div className={styles.explorarSecondaryImage}>
                         <Image
@@ -195,7 +218,7 @@ export default async function Home() {
                     )}
                     <div className={styles.explorarSecondaryText}>
                       {article.type && (
-                        <span className={styles.explorarType}>{ARTICLE_TYPE_LABELS[article.type] || article.type}</span>
+                        <span className={styles.explorarType}>{t.article.types[article.type] || article.type}</span>
                       )}
                       <h3 className={styles.explorarSecondaryName}>{article.title}</h3>
                       {article.tagline && (

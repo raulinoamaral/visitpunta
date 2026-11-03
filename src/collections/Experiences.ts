@@ -14,11 +14,13 @@ export const Experiences: CollectionConfig = {
     {
       name: 'title',
       type: 'text',
+      localized: true,
       required: true,
     },
     {
       name: 'slug',
       type: 'text',
+      localized: true,
       required: true,
       unique: true,
       admin: {
@@ -76,8 +78,10 @@ export const Experiences: CollectionConfig = {
         {
           name: 'published',
           type: 'checkbox',
-          label: 'Publicado',
-          defaultValue: true,
+          localized: true,
+          label: 'Publicado en este idioma',
+          // Per language: a page only exists in a language once it is published there
+          defaultValue: false,
           admin: { width: '25%' },
         },
       ],
@@ -92,6 +96,7 @@ export const Experiences: CollectionConfig = {
             {
               name: 'summary',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Frase corta para cards y listados.',
               },
@@ -99,6 +104,7 @@ export const Experiences: CollectionConfig = {
             {
               name: 'tagline',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Frase corta destacada, tipo subtítulo.',
               },
@@ -106,11 +112,13 @@ export const Experiences: CollectionConfig = {
             {
               name: 'content',
               type: 'blocks',
+              localized: true,
               blocks: [TextBlock, MediaBlock, QuoteBlock, PlaceBlock],
             },
             {
               name: 'highlights',
               type: 'array',
+              localized: true,
               admin: {
                 description: 'Puntos destacados de la experiencia.',
               },
@@ -169,6 +177,7 @@ export const Experiences: CollectionConfig = {
             {
               name: 'timingTitle',
               type: 'text',
+              localized: true,
               defaultValue: 'Cuándo ir',
               admin: {
                 description: 'Título de la sección (ej: "Cuándo ir", "Mejor momento").',
@@ -177,6 +186,7 @@ export const Experiences: CollectionConfig = {
             {
               name: 'timing',
               type: 'array',
+              localized: true,
               admin: {
                 description: 'Momentos del día con una descripción corta.',
               },
@@ -221,6 +231,7 @@ export const Experiences: CollectionConfig = {
             {
               name: 'seoTitle',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Si está vacío se usa el título.',
               },
@@ -228,6 +239,7 @@ export const Experiences: CollectionConfig = {
             {
               name: 'seoDescription',
               type: 'textarea',
+              localized: true,
               admin: {
                 description: 'Si está vacío se usa el summary.',
               },

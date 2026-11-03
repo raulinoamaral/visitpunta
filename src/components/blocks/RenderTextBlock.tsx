@@ -1,20 +1,23 @@
 'use client'
 
 import { RichText, defaultJSXConverters } from '@payloadcms/richtext-lexical/react'
+import { localePath, type Locale } from '@/i18n/config'
 import styles from './RenderTextBlock.module.css'
 
 type Props = {
   content: any
+  locale: Locale
 }
 
-const converters = {
+// Internal links point to the document in the page's language
+const buildConverters = (locale: Locale) => ({
   ...defaultJSXConverters,
   link: ({ node, nodesToJSX }: any) => {
     const children = nodesToJSX({ nodes: node.children })
     if (node.fields?.linkType === 'internal' && node.fields?.doc) {
       const doc = node.fields.doc as any
       const slug = doc?.value?.slug || doc?.slug
-      const href = slug ? `/${slug}` : '#'
+      const href = slug ? localePath(locale, slug) : '#'
       return <a href={href}>{children}</a>
     }
     return (
@@ -27,12 +30,12 @@ const converters = {
       </a>
     )
   },
-}
+})
 
-export default function RenderTextBlock({ content }: Props) {
+export default function RenderTextBlock({ content, locale }: Props) {
   return (
     <div className={styles.block}>
-      <RichText data={content} converters={converters} />
+      <RichText data={content} converters={buildConverters(locale)} />
     </div>
   )
 }

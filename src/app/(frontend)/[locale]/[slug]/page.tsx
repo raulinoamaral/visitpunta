@@ -12,7 +12,11 @@ import RenderPlaceBlock from '@/components/blocks/RenderPlaceBlock'
 import RenderSocialCarousel from '@/components/blocks/RenderSocialCarousel'
 import RenderSocialVideo from '@/components/blocks/RenderSocialVideo'
 import RenderSocialGallery from '@/components/blocks/RenderSocialGallery'
-import { PLACE_TYPES, ARTICLE_TYPE_LABELS } from '@/lib/constants'
+import { PLACE_TYPES } from '@/lib/constants'
+import { isLocale, localePath, type Locale } from '@/i18n/config'
+import { getDictionary } from '@/i18n/dictionaries'
+import { alternatesMetadata, documentAlternates } from '@/lib/alternates'
+import { isPublishedDoc, PUBLISHED } from '@/lib/published'
 import GallerySingle from '@/components/gallery/GallerySingle'
 import GalleryDuo from '@/components/gallery/GalleryDuo'
 import GalleryGrid from '@/components/gallery/GalleryGrid'
@@ -40,21 +44,30 @@ function withBookingAid(url: string): string {
   return url.includes('?') ? `${url}&aid=${BOOKING_AID}` : `${url}?aid=${BOOKING_AID}`
 }
 
-const highlightsTitle: Record<string, string> = {
-  [PLACE_TYPES.DORMIR]: 'Por qué alojarse aquí',
-  [PLACE_TYPES.COMER]: 'Tené en cuenta',
+type Props = {
+  params: Promise<{ locale: string; slug: string }>
 }
 
-type Props = {
-  params: Promise<{ slug: string }>
-}
+// A document is reachable in a language only through that language's slug, once published there
+const bySlug = (slug: string) => ({ and: [{ slug: { equals: slug } }, PUBLISHED] })
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
+  const { locale, slug } = await params
+  if (!isLocale(locale)) return {}
   const payload = await getPayload({ config })
 
-  function buildMeta(title: string, description?: string, imageUrl?: string) {
-    const meta: Metadata = { title, description }
+  async function buildMeta(
+    collection: 'places' | 'articles' | 'experiences' | 'destinations',
+    id: number,
+    title: string,
+    description?: string,
+    imageUrl?: string,
+  ) {
+    const meta: Metadata = {
+      title,
+      description,
+      alternates: alternatesMetadata(await documentAlternates(collection, id), locale as Locale),
+    }
     if (imageUrl) {
       meta.openGraph = { title, description, images: [{ url: imageUrl }] }
       meta.twitter = { card: 'summary_large_image', title, description, images: [imageUrl] }
@@ -64,7 +77,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { docs: places } = await payload.find({
     collection: 'places',
-    where: { slug: { equals: slug } },
+    locale,
+    where: bySlug(slug),
     depth: 1,
     limit: 1,
   })
@@ -72,12 +86,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const title = `${places[0].seoTitle || places[0].name} — Visit Punta`
     const description = places[0].seoDescription || places[0].summary || undefined
     const image = (places[0].heroImage as any)?.url
-    return buildMeta(title, description, image)
+    return buildMeta('places', places[0].id, title, description, image)
   }
 
   const { docs: articles } = await payload.find({
     collection: 'articles',
-    where: { slug: { equals: slug } },
+    locale,
+    where: bySlug(slug),
     depth: 1,
     limit: 1,
   })
@@ -85,12 +100,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const title = `${articles[0].seoTitle || articles[0].title} — Visit Punta`
     const description = articles[0].seoDescription || articles[0].tagline || undefined
     const image = (articles[0].heroImage as any)?.url
-    return buildMeta(title, description, image)
+    return buildMeta('articles', articles[0].id, title, description, image)
   }
 
   const { docs: experiences } = await payload.find({
     collection: 'experiences',
-    where: { slug: { equals: slug } },
+    locale,
+    where: bySlug(slug),
     depth: 1,
     limit: 1,
   })
@@ -98,12 +114,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const title = `${experiences[0].seoTitle || experiences[0].title} — Visit Punta`
     const description = experiences[0].seoDescription || experiences[0].summary || undefined
     const image = (experiences[0].heroImage as any)?.url
-    return buildMeta(title, description, image)
+    return buildMeta('experiences', experiences[0].id, title, description, image)
   }
 
   const { docs: destinations } = await payload.find({
     collection: 'destinations',
-    where: { slug: { equals: slug } },
+    locale,
+    where: bySlug(slug),
     depth: 1,
     limit: 1,
   })
@@ -111,20 +128,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const title = `${destinations[0].seoTitle || destinations[0].name} — Visit Punta`
     const description = destinations[0].seoDescription || destinations[0].summary || undefined
     const image = (destinations[0].heroImage as any)?.url
-    return buildMeta(title, description, image)
+    return buildMeta('destinations', destinations[0].id, title, description, image)
   }
 
   return {}
 }
 
 export default async function SlugPage({ params }: Props) {
-  const { slug } = await params
+  const { locale, slug } = await params
+  if (!isLocale(locale)) notFound()
+  const t = getDictionary(locale)
+  const href = (docSlug: string) => localePath(locale, docSlug)
   const payload = await getPayload({ config })
 
   // ── Try place first ───────────────────────────────────────
   const { docs: placeDocs } = await payload.find({
     collection: 'places',
-    where: { slug: { equals: slug } },
+    locale,
+    where: bySlug(slug),
     depth: 2,
     limit: 1,
   })
@@ -133,7 +154,8 @@ export default async function SlugPage({ params }: Props) {
     // ── Try article ─────────────────────────────────────────
     const { docs: articleDocs } = await payload.find({
       collection: 'articles',
-      where: { slug: { equals: slug } },
+      locale,
+      where: bySlug(slug),
       depth: 3,
       limit: 1,
     })
@@ -143,7 +165,8 @@ export default async function SlugPage({ params }: Props) {
       // ── Try experience ───────────────────────────────────
       const { docs: expDocs } = await payload.find({
         collection: 'experiences',
-        where: { slug: { equals: slug } },
+        locale,
+        where: bySlug(slug),
         depth: 2,
         limit: 1,
       })
@@ -151,11 +174,13 @@ export default async function SlugPage({ params }: Props) {
 
       if (experience) {
         const expHeroUrl = (experience.heroImage as any)?.url as string | undefined
-        const expDestName = typeof experience.destination === 'object' ? (experience.destination as any)?.name : null
-        const expDestSlug = typeof experience.destination === 'object' ? (experience.destination as any)?.slug : null
+        // The zone link only appears once the destination exists in this language
+        const expDest = isPublishedDoc(experience.destination) ? (experience.destination as any) : null
+        const expDestName = expDest?.name ?? null
+        const expDestSlug = expDest?.slug ?? null
 
         const relItems = (experience.related || [])
-          .filter((r: any) => typeof r?.value === 'object')
+          .filter((r: any) => isPublishedDoc(r?.value))
           .map((r: any) => ({
             ...r.value,
             collection: r.relationTo,
@@ -169,7 +194,7 @@ export default async function SlugPage({ params }: Props) {
               <section className={expStyles.header}>
                 <div className={expStyles.info}>
                   {expDestName && (
-                    <Link href={`/${expDestSlug}`} className={expStyles.zone}>{expDestName}</Link>
+                    <Link href={href(expDestSlug)} className={expStyles.zone}>{expDestName}</Link>
                   )}
                   <h1 className={expStyles.title}>{experience.title}</h1>
                   {experience.summary && (
@@ -207,7 +232,7 @@ export default async function SlugPage({ params }: Props) {
                     if (block.blockType === 'textBlock') {
                       return (
                         <div key={block.id} className={expStyles.contentText}>
-                          <RenderTextBlock content={block.content} />
+                          <RenderTextBlock content={block.content} locale={locale} />
                         </div>
                       )
                     }
@@ -235,17 +260,16 @@ export default async function SlugPage({ params }: Props) {
                     }
                     if (block.blockType === 'placeBlock') {
                       const placeData = block.place?.value ?? block.place
-                      if (typeof placeData === 'object' && placeData) {
+                      if (isPublishedDoc(placeData)) {
                         const p = {
                           name: placeData.name || placeData.title,
-                          slug: placeData.slug,
                           summary: placeData.summary,
                           heroImage: placeData.heroImage,
                           destination: placeData.destination,
                         }
                         return (
                           <div key={block.id} className={expStyles.contentText}>
-                            <RenderPlaceBlock place={p} context={block.context} />
+                            <RenderPlaceBlock href={href(placeData.slug)} place={p} context={block.context} />
                           </div>
                         )
                       }
@@ -272,7 +296,7 @@ export default async function SlugPage({ params }: Props) {
               <Reveal>
                 <section className={expStyles.timing}>
                   <h2 className={expStyles.timingTitle}>
-                    {experience.timingTitle || 'Cuándo ir'}
+                    {experience.timingTitle || t.experience.timingDefault}
                   </h2>
                   <div className={expStyles.timingGrid}>
                     {experience.timing.map((t: any, i: number) => (
@@ -289,7 +313,7 @@ export default async function SlugPage({ params }: Props) {
             {relItems.length > 0 && (
               <Reveal>
                 <section className={expStyles.related}>
-                  <h2 className={expStyles.relatedTitle}>Cerca</h2>
+                  <h2 className={expStyles.relatedTitle}>{t.experience.nearby}</h2>
                   <div className={expStyles.relatedGrid}>
                     {relItems.map((item: any) => (
                       <PlaceCard
@@ -297,7 +321,7 @@ export default async function SlugPage({ params }: Props) {
                         name={item.name || item.title}
                         description={item.summary || ''}
                         image={(item.heroImage as any)?.url || ''}
-                        href={`/${item.slug}`}
+                        href={href(item.slug)}
                       />
                     ))}
                   </div>
@@ -311,7 +335,8 @@ export default async function SlugPage({ params }: Props) {
       // ── Try destination ───────────────────────────────────
       const { docs: destDocs } = await payload.find({
         collection: 'destinations',
-        where: { slug: { equals: slug } },
+        locale,
+        where: bySlug(slug),
         depth: 1,
         limit: 1,
       })
@@ -321,8 +346,10 @@ export default async function SlugPage({ params }: Props) {
       // Dormir
       const { docs: dormirFeatured } = await payload.find({
         collection: 'places',
+        locale,
         where: {
           and: [
+            PUBLISHED,
             { destination: { equals: dest.id } },
             { type: { equals: PLACE_TYPES.DORMIR } },
             { featured: { equals: true } },
@@ -333,8 +360,10 @@ export default async function SlugPage({ params }: Props) {
       })
       const { docs: dormirRest } = await payload.find({
         collection: 'places',
+        locale,
         where: {
           and: [
+            PUBLISHED,
             { destination: { equals: dest.id } },
             { type: { equals: PLACE_TYPES.DORMIR } },
             { featured: { not_equals: true } },
@@ -346,10 +375,11 @@ export default async function SlugPage({ params }: Props) {
       // Experiencias
       const { docs: destExperiences } = await payload.find({
         collection: 'experiences',
+        locale,
         where: {
           and: [
+            PUBLISHED,
             { destination: { equals: dest.id } },
-            { published: { equals: true } },
           ],
         },
         sort: 'order',
@@ -359,8 +389,10 @@ export default async function SlugPage({ params }: Props) {
       // Comer
       const { docs: comerFeatured } = await payload.find({
         collection: 'places',
+        locale,
         where: {
           and: [
+            PUBLISHED,
             { destination: { equals: dest.id } },
             { type: { equals: PLACE_TYPES.COMER } },
             { featured: { equals: true } },
@@ -371,8 +403,10 @@ export default async function SlugPage({ params }: Props) {
       })
       const { docs: comerRest } = await payload.find({
         collection: 'places',
+        locale,
         where: {
           and: [
+            PUBLISHED,
             { destination: { equals: dest.id } },
             { type: { equals: PLACE_TYPES.COMER } },
             { featured: { not_equals: true } },
@@ -384,10 +418,11 @@ export default async function SlugPage({ params }: Props) {
       // Articles
       const { docs: destArticles } = await payload.find({
         collection: 'articles',
+        locale,
         where: {
           and: [
+            PUBLISHED,
             { destinations: { in: [dest.id] } },
-            { published: { equals: true } },
           ],
         },
         depth: 1,
@@ -403,7 +438,7 @@ export default async function SlugPage({ params }: Props) {
           destination: (p.destination as any)?.name || '',
           description: p.summary || '',
           image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
-          href: `/${p.slug}`,
+          href: href(p.slug),
         }
       }
 
@@ -416,7 +451,7 @@ export default async function SlugPage({ params }: Props) {
           description: p.summary || '',
           image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
           tag: firstTag?.label || '',
-          href: `/${p.slug}`,
+          href: href(p.slug),
         }
       }
 
@@ -444,7 +479,7 @@ export default async function SlugPage({ params }: Props) {
           {(dormirFeatured.length > 0 || dormirRest.length > 0) && (
             <Reveal>
               <section className={destStyles.section}>
-                <h2 className="section-title">Dónde dormir</h2>
+                <h2 className="section-title">{t.destination.stay}</h2>
                 <ExpandableGrid
                   featured={dormirFeatured.map(toPlaceData)}
                   rest={dormirRest.map(toPlaceData)}
@@ -456,13 +491,13 @@ export default async function SlugPage({ params }: Props) {
           {destExperiences.length > 0 && (
             <Reveal>
               <section className={destStyles.section}>
-                <h2 className="section-title">Para recorrer</h2>
+                <h2 className="section-title">{t.destination.explore}</h2>
                 <ExpandableMiniGrid
                   items={destExperiences.map((e: any) => ({
                     id: String(e.id),
                     name: e.title,
                     image: (e.heroImage as any)?.url || '',
-                    href: `/${e.slug}`,
+                    href: href(e.slug),
                   }))}
                 />
               </section>
@@ -472,7 +507,7 @@ export default async function SlugPage({ params }: Props) {
           {(comerFeatured.length > 0 || comerRest.length > 0) && (
             <Reveal>
               <section className={destStyles.section}>
-                <h2 className="section-title">Dónde comer y tomar algo</h2>
+                <h2 className="section-title">{t.destination.eat}</h2>
                 <ExpandableGastroGrid
                   featured={comerFeatured.map(toGastroData)}
                   rest={comerRest.map(toGastroData)}
@@ -484,14 +519,14 @@ export default async function SlugPage({ params }: Props) {
           {destArticles.length > 0 && (
             <Reveal>
               <section className={destStyles.section}>
-                <h2 className="section-title">Para seguir explorando</h2>
+                <h2 className="section-title">{t.destination.keepExploring}</h2>
                 <div className={destStyles.articlesGrid}>
                   {destArticles.map((a: any) => (
                     <ArticleCard2
                       key={a.id}
                       title={a.title}
-                      slug={a.slug}
-                      type={a.type}
+                      href={href(a.slug)}
+                      typeLabel={t.article.types[a.type] || a.type}
                       tagline={a.tagline}
                       image={(a.heroImage as any)?.url}
                     />
@@ -511,7 +546,7 @@ export default async function SlugPage({ params }: Props) {
       '@type': 'Article',
       headline: article.title,
       description: article.tagline || '',
-      url: `https://visitpunta.com/${article.slug}`,
+      url: `https://visitpunta.com${href(article.slug)}`,
       ...(heroUrl && { image: heroUrl }),
       publisher: {
         '@type': 'Organization',
@@ -539,7 +574,7 @@ export default async function SlugPage({ params }: Props) {
                 if (block.blockType === 'textBlock') {
                   return (
                     <div key={block.id} className={articleStyles.contentText}>
-                      <RenderTextBlock content={block.content} />
+                      <RenderTextBlock content={block.content} locale={locale} />
                     </div>
                   )
                 }
@@ -566,17 +601,16 @@ export default async function SlugPage({ params }: Props) {
                 }
                 if (block.blockType === 'placeBlock') {
                   const placeData = block.place?.value ?? block.place
-                  if (typeof placeData === 'object' && placeData) {
+                  if (isPublishedDoc(placeData)) {
                     const p = {
                       name: placeData.name || placeData.title,
-                      slug: placeData.slug,
                       summary: placeData.summary,
                       heroImage: placeData.heroImage,
                       destination: placeData.destination,
                     }
                     return (
                       <div key={block.id} className={articleStyles.contentText}>
-                        <RenderPlaceBlock place={p} context={block.context} />
+                        <RenderPlaceBlock href={href(placeData.slug)} place={p} context={block.context} />
                       </div>
                     )
                   }
@@ -611,17 +645,17 @@ export default async function SlugPage({ params }: Props) {
               })}
             </div>
           )}
-          {article.relatedArticles && article.relatedArticles.filter((a: any) => typeof a === 'object').length > 0 && (
+          {article.relatedArticles && article.relatedArticles.filter(isPublishedDoc).length > 0 && (
             <Reveal>
               <section className={articleStyles.relatedArticles}>
-                <h3 className={articleStyles.relatedTitle}>Seguir leyendo</h3>
+                <h3 className={articleStyles.relatedTitle}>{t.article.keepReading}</h3>
                 <div className={articleStyles.relatedGrid}>
-                  {article.relatedArticles.filter((a: any) => typeof a === 'object').map((rel: any) => (
+                  {article.relatedArticles.filter(isPublishedDoc).map((rel: any) => (
                     <ArticleCard2
                       key={rel.id}
                       title={rel.title}
-                      slug={rel.slug}
-                      type={rel.type}
+                      href={href(rel.slug)}
+                      typeLabel={t.article.types[rel.type] || rel.type}
                       tagline={rel.tagline}
                       image={(rel.heroImage as any)?.url}
                     />
@@ -638,15 +672,19 @@ export default async function SlugPage({ params }: Props) {
   const place = placeDocs[0]
 
   const destinationId = typeof place.destination === 'object' ? place.destination?.id : place.destination
-  const destinationName = typeof place.destination === 'object' ? (place.destination as any)?.name : null
-  const destinationSlug = typeof place.destination === 'object' ? (place.destination as any)?.slug : null
+  // The zone link only appears once the destination exists in this language
+  const publishedDestination = isPublishedDoc(place.destination) ? (place.destination as any) : null
+  const destinationName = publishedDestination?.name ?? null
+  const destinationSlug = publishedDestination?.slug ?? null
 
   const placeTags = (place.tags || []).map((t: any) => typeof t === 'object' ? t.id : t).filter(Boolean)
   let { docs: relatedPlaces } = placeTags.length > 0 && destinationId
     ? await payload.find({
         collection: 'places',
+        locale,
         where: {
           and: [
+            PUBLISHED,
             { type: { equals: place.type } },
             { destination: { equals: destinationId } },
             { tags: { in: placeTags } },
@@ -661,8 +699,10 @@ export default async function SlugPage({ params }: Props) {
   if (relatedPlaces.length === 0 && destinationId) {
     ;({ docs: relatedPlaces } = await payload.find({
       collection: 'places',
+      locale,
       where: {
         and: [
+          PUBLISHED,
           { type: { equals: place.type } },
           { destination: { equals: destinationId } },
           { id: { not_equals: place.id } },
@@ -681,7 +721,7 @@ export default async function SlugPage({ params }: Props) {
     '@type': place.type === PLACE_TYPES.DORMIR ? 'Hotel' : place.type === PLACE_TYPES.COMER ? 'Restaurant' : 'Place',
     name: place.name,
     description: place.summary || place.description || '',
-    url: `https://visitpunta.com/${place.slug}`,
+    url: `https://visitpunta.com${href(place.slug)}`,
     ...(heroUrl && { image: heroUrl }),
     ...(destinationName && {
       address: {
@@ -701,7 +741,7 @@ export default async function SlugPage({ params }: Props) {
         <section className={styles.header}>
           <div className={styles.info}>
             {destinationName && (
-              <Link href={`/${destinationSlug}`} className={styles.zone}>{destinationName}</Link>
+              <Link href={href(destinationSlug)} className={styles.zone}>{destinationName}</Link>
             )}
             <h1 className={styles.name}>{place.name}</h1>
             {place.summary && (
@@ -719,9 +759,9 @@ export default async function SlugPage({ params }: Props) {
                 label={place.name}
                 className={styles.ctaButton}
               >
-                {place.type === PLACE_TYPES.DORMIR ? 'Consultar disponibilidad' : 'Reservar mesa'}
+                {place.type === PLACE_TYPES.DORMIR ? t.place.checkAvailability : t.place.bookTable}
               </TrackedLink>
-              {place.type === PLACE_TYPES.DORMIR && <span className={styles.ctaNote}>en booking.com</span>}
+              {place.type === PLACE_TYPES.DORMIR && <span className={styles.ctaNote}>{t.place.onBooking}</span>}
             </div>
           )}
         </section>
@@ -761,7 +801,7 @@ export default async function SlugPage({ params }: Props) {
         <Reveal>
           <section className={styles.highlights}>
             <h2 className={styles.highlightsTitle}>
-              {highlightsTitle[place.type] || 'Destacados'}
+              {t.place.highlights[place.type] || t.place.highlightsDefault}
             </h2>
             <ul className={styles.highlightsList}>
               {place.highlights.map((h: any, i: number) => (
@@ -784,10 +824,10 @@ export default async function SlugPage({ params }: Props) {
                 label={place.name}
                 className={styles.ctaButtonLarge}
               >
-                {place.type === PLACE_TYPES.DORMIR ? 'Consultar disponibilidad' : 'Reservar mesa'}
+                {place.type === PLACE_TYPES.DORMIR ? t.place.checkAvailability : t.place.bookTable}
               </TrackedLink>
             )}
-            {place.type === PLACE_TYPES.DORMIR && place.cta.url && <span className={styles.ctaNote}>en booking.com</span>}
+            {place.type === PLACE_TYPES.DORMIR && place.cta.url && <span className={styles.ctaNote}>{t.place.onBooking}</span>}
             {place.cta.mapsUrl && (
               <TrackedLink
                 href={place.cta.mapsUrl}
@@ -795,7 +835,7 @@ export default async function SlugPage({ params }: Props) {
                 label={place.name}
                 className={styles.mapsLink}
               >
-                Ver en Google Maps →
+                {t.place.viewOnMaps}
               </TrackedLink>
             )}
           </section>
@@ -808,7 +848,7 @@ export default async function SlugPage({ params }: Props) {
             {place.relatedPlaces.map((group: any, i: number) => {
               const items = (group.places || [])
                 .map((r: any) => r?.value ?? r)
-                .filter((p: any) => typeof p === 'object' && p)
+                .filter(isPublishedDoc)
               if (items.length === 0) return null
               return (
                 <div key={i} className={styles.recommendation}>
@@ -821,7 +861,7 @@ export default async function SlugPage({ params }: Props) {
                         destination={(p.destination as any)?.name || ''}
                         description={p.summary || ''}
                         image={(p.cardImage as any)?.url || (p.heroImage as any)?.url || ''}
-                        href={`/${p.slug}`}
+                        href={href(p.slug)}
                       />
                     ))}
                   </div>
@@ -835,7 +875,7 @@ export default async function SlugPage({ params }: Props) {
       {relatedPlaces.length > 0 && (
         <Reveal>
           <section className={styles.related}>
-            <h3 className={styles.relatedTitle}>Otros lugares que valen la pena{destinationName ? ` en ${destinationName}` : ''}</h3>
+            <h3 className={styles.relatedTitle}>{destinationName ? t.place.otherPlacesIn(destinationName) : t.place.otherPlaces}</h3>
             <div className={styles.relatedGrid}>
               {relatedPlaces.map((p: any) => (
                 <PlaceCard
@@ -844,7 +884,7 @@ export default async function SlugPage({ params }: Props) {
                   destination={(p.destination as any)?.name || ''}
                   description={p.summary || ''}
                   image={(p.cardImage as any)?.url || (p.heroImage as any)?.url || ''}
-                  href={`/${p.slug}`}
+                  href={href(p.slug)}
                 />
               ))}
             </div>
@@ -852,17 +892,17 @@ export default async function SlugPage({ params }: Props) {
         </Reveal>
       )}
 
-      {place.relatedArticles && place.relatedArticles.filter((a: any) => typeof a === 'object').length > 0 && (
+      {place.relatedArticles && place.relatedArticles.filter(isPublishedDoc).length > 0 && (
         <Reveal>
           <section className={styles.relatedArticles}>
-            <h3 className={styles.relatedTitle}>Para seguir explorando</h3>
+            <h3 className={styles.relatedTitle}>{t.place.keepExploring}</h3>
             <div className={styles.relatedArticlesGrid}>
-              {place.relatedArticles.filter((a: any) => typeof a === 'object').map((a: any) => (
+              {place.relatedArticles.filter(isPublishedDoc).map((a: any) => (
                 <ArticleCard2
                   key={a.id}
                   title={a.title}
-                  slug={a.slug}
-                  type={a.type}
+                  href={href(a.slug)}
+                  typeLabel={t.article.types[a.type] || a.type}
                   tagline={a.tagline}
                   image={(a.heroImage as any)?.url}
                 />

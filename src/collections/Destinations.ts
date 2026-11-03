@@ -15,6 +15,7 @@ export const Destinations: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
+      localized: true,
       required: true,
       unique: true,
       admin: {
@@ -39,6 +40,14 @@ export const Destinations: CollectionConfig = {
       },
     },
     {
+      name: 'published',
+      type: 'checkbox',
+      localized: true,
+      label: 'Publicado en este idioma',
+      // Per language: a destination only exists in a language once it is published there
+      defaultValue: false,
+    },
+    {
       // Unnamed tabs only group the admin UI: the database schema stays the same
       type: 'tabs',
       tabs: [
@@ -48,6 +57,7 @@ export const Destinations: CollectionConfig = {
             {
               name: 'tagline',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Frase breve que define el destino. Ej: "Entre la arena y el campo"',
               },
@@ -55,6 +65,7 @@ export const Destinations: CollectionConfig = {
             {
               name: 'summary',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Frase corta para cards y listados.',
               },
@@ -62,6 +73,7 @@ export const Destinations: CollectionConfig = {
             {
               name: 'description',
               type: 'textarea',
+              localized: true,
               admin: {
                 description: 'Descripción completa del destino.',
               },
@@ -84,6 +96,7 @@ export const Destinations: CollectionConfig = {
             {
               name: 'seoTitle',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Si está vacío se usa el nombre del destino.',
               },
@@ -91,6 +104,7 @@ export const Destinations: CollectionConfig = {
             {
               name: 'seoDescription',
               type: 'textarea',
+              localized: true,
               admin: {
                 description: 'Si está vacío se usa el summary.',
               },

@@ -38,6 +38,27 @@
   opacity: 0.7;
 }
 
+/* Language switch: same voice as the nav, set apart by a thin rule */
+.language {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: #fff;
+  padding-left: 1.25rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.language:hover {
+  opacity: 0.7;
+}
+
+.scrolled .language {
+  color: var(--color-blue);
+  border-left-color: rgba(61, 75, 102, 0.3);
+}
+
 .logo {
   object-fit: contain;
 }
@@ -61,6 +82,13 @@
   .navLink {
     font-size: 0.8rem;
     color: var(--color-blue);
+  }
+
+  .language {
+    font-size: 0.7rem;
+    padding-left: 0.75rem;
+    color: var(--color-blue);
+    border-left-color: rgba(61, 75, 102, 0.3);
   }
 
   .logo {

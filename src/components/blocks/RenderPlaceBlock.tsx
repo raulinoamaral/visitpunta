@@ -3,9 +3,9 @@ import Link from 'next/link'
 import styles from './RenderPlaceBlock.module.css'
 
 type Props = {
+  href: string
   place: {
     name: string
-    slug: string
     summary?: string | null
     heroImage?: { url: string; alt?: string } | null
     destination?: { name: string } | null
@@ -13,9 +13,9 @@ type Props = {
   context?: string | null
 }
 
-export default function RenderPlaceBlock({ place, context }: Props) {
+export default function RenderPlaceBlock({ href, place, context }: Props) {
   return (
-    <Link href={`/${place.slug}`} className={styles.card}>
+    <Link href={href} className={styles.card}>
       {place.heroImage?.url && (
         <div className={styles.imageWrapper}>
           <FadeImage

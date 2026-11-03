@@ -18,11 +18,13 @@ export const Articles: CollectionConfig = {
     {
       name: 'title',
       type: 'text',
+      localized: true,
       required: true,
     },
     {
       name: 'slug',
       type: 'text',
+      localized: true,
       required: true,
       unique: true,
       admin: {
@@ -88,8 +90,10 @@ export const Articles: CollectionConfig = {
         {
           name: 'published',
           type: 'checkbox',
-          label: 'Publicado',
-          defaultValue: true,
+          localized: true,
+          label: 'Publicado en este idioma',
+          // Per language: a page only exists in a language once it is published there
+          defaultValue: false,
           admin: { width: '25%' },
         },
       ],
@@ -104,6 +108,7 @@ export const Articles: CollectionConfig = {
             {
               name: 'tagline',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Frase corta para cards y listados.',
               },
@@ -111,6 +116,7 @@ export const Articles: CollectionConfig = {
             {
               name: 'layout',
               type: 'blocks',
+              localized: true,
               blocks: [TextBlock, MediaBlock, QuoteBlock, PlaceBlock, SocialCarouselBlock, SocialVideoBlock, SocialGalleryBlock],
             },
           ],
@@ -154,6 +160,7 @@ export const Articles: CollectionConfig = {
             {
               name: 'seoTitle',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Si está vacío se usa el título del artículo.',
               },
@@ -161,6 +168,7 @@ export const Articles: CollectionConfig = {
             {
               name: 'seoDescription',
               type: 'textarea',
+              localized: true,
               admin: {
                 description: 'Si está vacío se usa el tagline.',
               },

@@ -1,30 +1,26 @@
 import FadeImage from '@/components/FadeImage'
 import Link from 'next/link'
-import { ARTICLE_TYPE_LABELS } from '@/lib/constants'
 import styles from './ArticleCard2.module.css'
 
 type Props = {
   title: string
-  slug: string
-  type?: string
+  href: string
+  /** Already translated article type, e.g. "Guía" */
+  typeLabel?: string
   tagline?: string
   image?: string
 }
 
-export default function ArticleCard2({ title, slug, type, tagline, image }: Props) {
+export default function ArticleCard2({ title, href, typeLabel, tagline, image }: Props) {
   return (
-    <Link href={`/${slug}`} className={styles.card}>
+    <Link href={href} className={styles.card}>
       {image && (
         <div className={styles.imageWrapper}>
           <FadeImage src={image} alt={title} fill className={styles.image} />
         </div>
       )}
       <div className={styles.text}>
-        {type && (
-          <span className={styles.type}>
-            {ARTICLE_TYPE_LABELS[type] || type}
-          </span>
-        )}
+        {typeLabel && <span className={styles.type}>{typeLabel}</span>}
         <h3 className={styles.name}>{title}</h3>
         {tagline && <p className={styles.tagline}>{tagline}</p>}
       </div>

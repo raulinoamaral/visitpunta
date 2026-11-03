@@ -2,43 +2,58 @@ import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import PageHero from '@/components/PageHero'
-import ExpandableGastroGrid from '@/components/ExpandableGastroGrid'
+import ExpandableGrid from '@/components/ExpandableGrid'
 import Reveal from '@/components/Reveal'
 import styles from '@/styles/interior-page.module.css'
+import { notFound } from 'next/navigation'
 import { PLACE_TYPES } from '@/lib/constants'
+import { isLocale, localePath } from '@/i18n/config'
+import { getDictionary } from '@/i18n/dictionaries'
+import { alternatesMetadata, staticAlternates } from '@/lib/alternates'
+import { PUBLISHED } from '@/lib/published'
 
-export const metadata: Metadata = {
-  title: 'Dónde comer en Punta del Este: restaurantes, cafés y paradores',
-  description: 'Restaurantes, cafés y paradores en Punta del Este y alrededores. Lugares para comer frente al mar, sin apuro o con café de especialidad.',
-  openGraph: {
-    title: 'Dónde comer en Punta del Este: restaurantes, cafés y paradores',
-    description: 'Restaurantes, cafés y paradores en Punta del Este y alrededores. Lugares para comer frente al mar, sin apuro o con café de especialidad.',
-    images: [{ url: '/images/comer-en-punta.jpg' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Dónde comer en Punta del Este: restaurantes, cafés y paradores',
-    description: 'Restaurantes, cafés y paradores en Punta del Este y alrededores. Lugares para comer frente al mar, sin apuro o con café de especialidad.',
-    images: ['/images/comer-en-punta.jpg'],
-  },
+// Rebuilt in the background at most every 5 minutes, so edits and new translations show up without a deploy
+export const revalidate = 300
+
+type Props = {
+  params: Promise<{ locale: string }>
 }
 
-const sections = [
-  { tagLabel: 'Restaurant', title: 'Para sentarse sin apuro' },
-  { tagLabel: 'Café', title: 'Café de especialidad' },
-  { tagLabel: 'Parador', title: 'Frente al mar' },
-]
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
+  const t = getDictionary(locale).stay
+  return {
+    title: t.metaTitle,
+    description: t.metaDescription,
+    alternates: alternatesMetadata(staticAlternates('stay'), locale),
+    openGraph: { title: t.metaTitle, description: t.metaDescription, images: [{ url: '/images/dormir.jpg' }] },
+    twitter: { card: 'summary_large_image', title: t.metaTitle, description: t.metaDescription, images: ['/images/dormir.jpg'] },
+  }
+}
 
-export default async function ComerPage() {
+
+export default async function DormirPage({ params }: Props) {
+  const { locale } = await params
+  if (!isLocale(locale)) notFound()
+  const t = getDictionary(locale).stay
   const payload = await getPayload({ config })
+  const sections = [
+    { tagLabel: 'Para desconectar' },
+    { tagLabel: 'Cerca de todo' },
+    { tagLabel: 'Con más diseño' },
+  ]
 
   const tagSections = await Promise.all(
-    sections.map(async ({ tagLabel, title }) => {
+    sections.map(async ({ tagLabel }) => {
+      const title = t.sections[tagLabel] || tagLabel
       const { docs: tags } = await payload.find({
         collection: 'tags',
+        // Sections are defined by the Spanish tag label
+        locale: 'es',
         where: {
           and: [
-            { type: { equals: PLACE_TYPES.COMER } },
+            { type: { equals: PLACE_TYPES.DORMIR } },
             { label: { equals: tagLabel } },
           ],
         },
@@ -49,9 +64,11 @@ export default async function ComerPage() {
 
       const { docs: featuredPlaces } = await payload.find({
         collection: 'places',
+        locale,
         where: {
           and: [
-            { type: { equals: PLACE_TYPES.COMER } },
+            PUBLISHED,
+            { type: { equals: PLACE_TYPES.DORMIR } },
             { tags: { in: [tag.id] } },
             { featured: { equals: true } },
           ],
@@ -61,9 +78,11 @@ export default async function ComerPage() {
       })
       const { docs: otherPlaces } = await payload.find({
         collection: 'places',
+        locale,
         where: {
           and: [
-            { type: { equals: PLACE_TYPES.COMER } },
+            PUBLISHED,
+            { type: { equals: PLACE_TYPES.DORMIR } },
             { tags: { in: [tag.id] } },
             { featured: { not_equals: true } },
           ],
@@ -77,16 +96,14 @@ export default async function ComerPage() {
   return (
     <main>
       <PageHero
-        image="/images/gastronomia.jpg"
-        title="Restaurantes y cafés"
-        subtitle="Para comer, tomar algo y quedarse un rato más de lo planeado"
+        image="/images/alojamientos.jpg"
+        title={t.title}
+        subtitle={t.subtitle}
       />
 
       <Reveal>
         <section className={styles.intro}>
-          <p className={styles.introText}>
-            Restaurantes frente al mar y beach clubs para alargar el día hasta el atardecer. Cafés de especialidad donde todo está cuidado.
-          </p>
+          <p className={styles.introText}>{t.intro}</p>
         </section>
       </Reveal>
 
@@ -95,14 +112,14 @@ export default async function ComerPage() {
           <Reveal key={title}>
             <section className={styles.section}>
               <h2 className="section-title">{title}</h2>
-              <ExpandableGastroGrid
+              <ExpandableGrid
                 featured={featured.map((p) => ({
                   id: String(p.id),
                   name: p.name,
                   destination: (p.destination as any)?.name || '',
                   description: p.summary || '',
                   image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
-                  href: `/${p.slug}`,
+                  href: localePath(locale, p.slug),
                 }))}
                 rest={rest.map((p) => ({
                   id: String(p.id),
@@ -110,7 +127,7 @@ export default async function ComerPage() {
                   destination: (p.destination as any)?.name || '',
                   description: p.summary || '',
                   image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
-                  href: `/${p.slug}`,
+                  href: localePath(locale, p.slug),
                 }))}
               />
             </section>

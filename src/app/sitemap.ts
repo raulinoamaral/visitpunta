@@ -1,72 +1,66 @@
 import type { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { HTML_LANG, localePath, LOCALES, type Locale } from '@/i18n/config'
+import { SECTION_SLUGS } from '@/i18n/routes'
+
+// Rebuilt in the background at most every 5 minutes, so edits and new translations show up without a deploy
+export const revalidate = 300
+
+const BASE_URL = 'https://visitpunta.com'
+
+type Collection = 'destinations' | 'places' | 'experiences' | 'articles'
+
+const PRIORITY: Record<Collection, number> = {
+  destinations: 0.9,
+  places: 0.8,
+  experiences: 0.8,
+  articles: 0.7,
+}
+
+type LocalizedDoc = {
+  updatedAt: string
+  slug?: Record<string, string | null | undefined>
+  published?: Record<string, boolean | null | undefined>
+}
+
+/** One entry per language a page exists in, each listing all its language versions. */
+function entries(urls: Partial<Record<Locale, string>>, lastModified: Date, priority: number, changeFrequency: 'weekly' | 'monthly') {
+  const languages = Object.fromEntries(
+    Object.entries(urls).map(([code, path]) => [HTML_LANG[code as Locale], `${BASE_URL}${path}`]),
+  )
+  return Object.values(urls).map((path) => ({
+    url: `${BASE_URL}${path}`,
+    lastModified,
+    changeFrequency,
+    priority,
+    alternates: { languages },
+  }))
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://visitpunta.com'
   const payload = await getPayload({ config })
+  const now = new Date()
 
-  // Static pages
-  const staticPages: MetadataRoute.Sitemap = [
-    { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
-    { url: `${baseUrl}/alojamientos`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${baseUrl}/gastronomia`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${baseUrl}/recorridos`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+  const staticPages = [
+    ...entries(Object.fromEntries(LOCALES.map((l) => [l, localePath(l)])), now, 1, 'weekly'),
+    ...Object.values(SECTION_SLUGS).flatMap((slugs) =>
+      entries(Object.fromEntries(LOCALES.map((l) => [l, localePath(l, slugs[l])])), now, 0.9, 'weekly'),
+    ),
   ]
 
-  // Places
-  const { docs: places } = await payload.find({
-    collection: 'places',
-    limit: 500,
-    depth: 0,
-  })
-  const placePages: MetadataRoute.Sitemap = places.map((p) => ({
-    url: `${baseUrl}/${p.slug}`,
-    lastModified: new Date(p.updatedAt),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }))
+  const collections: Collection[] = ['destinations', 'places', 'experiences', 'articles']
+  const documentPages = await Promise.all(
+    collections.map(async (collection) => {
+      const { docs } = await payload.find({ collection, locale: 'all', limit: 500, depth: 0, pagination: false })
+      return (docs as unknown as LocalizedDoc[]).flatMap((doc) => {
+        const urls = Object.fromEntries(
+          LOCALES.filter((l) => doc.published?.[l] && doc.slug?.[l]).map((l) => [l, localePath(l, doc.slug![l]!)]),
+        ) as Partial<Record<Locale, string>>
+        return entries(urls, new Date(doc.updatedAt), PRIORITY[collection], 'monthly')
+      })
+    }),
+  )
 
-  // Experiences
-  const { docs: experiences } = await payload.find({
-    collection: 'experiences',
-    where: { published: { equals: true } },
-    limit: 500,
-    depth: 0,
-  })
-  const experiencePages: MetadataRoute.Sitemap = experiences.map((e) => ({
-    url: `${baseUrl}/${e.slug}`,
-    lastModified: new Date(e.updatedAt),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }))
-
-  // Articles
-  const { docs: articles } = await payload.find({
-    collection: 'articles',
-    where: { published: { equals: true } },
-    limit: 500,
-    depth: 0,
-  })
-  const articlePages: MetadataRoute.Sitemap = articles.map((a) => ({
-    url: `${baseUrl}/${a.slug}`,
-    lastModified: new Date(a.updatedAt),
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }))
-
-  // Destinations
-  const { docs: destinations } = await payload.find({
-    collection: 'destinations',
-    limit: 50,
-    depth: 0,
-  })
-  const destinationPages: MetadataRoute.Sitemap = destinations.map((d) => ({
-    url: `${baseUrl}/${d.slug}`,
-    lastModified: new Date(d.updatedAt),
-    changeFrequency: 'monthly' as const,
-    priority: 0.9,
-  }))
-
-  return [...staticPages, ...destinationPages, ...placePages, ...experiencePages, ...articlePages]
+  return [...staticPages, ...documentPages.flat()]
 }

@@ -15,6 +15,7 @@ export const Places: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
+      localized: true,
       required: true,
       unique: true,
       admin: {
@@ -63,7 +64,16 @@ export const Places: CollectionConfig = {
           type: 'checkbox',
           label: 'Destacado',
           defaultValue: false,
-          admin: { width: '33%' },
+          admin: { width: '15%' },
+        },
+        {
+          name: 'published',
+          type: 'checkbox',
+          localized: true,
+          label: 'Publicado en este idioma',
+          // Per language: a place only exists in a language once it is published there
+          defaultValue: false,
+          admin: { width: '18%' },
         },
       ],
     },
@@ -87,6 +97,7 @@ export const Places: CollectionConfig = {
             {
               name: 'summary',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Frase corta para cards y listados.',
               },
@@ -94,6 +105,7 @@ export const Places: CollectionConfig = {
             {
               name: 'location',
               type: 'textarea',
+              localized: true,
               admin: {
                 description: 'Descripción de la ubicación del lugar.',
               },
@@ -101,6 +113,7 @@ export const Places: CollectionConfig = {
             {
               name: 'description',
               type: 'textarea',
+              localized: true,
               admin: {
                 description: 'Descripción completa para la página del lugar.',
               },
@@ -108,6 +121,7 @@ export const Places: CollectionConfig = {
             {
               name: 'highlights',
               type: 'array',
+              localized: true,
               admin: {
                 description: 'Para hoteles: "Por qué alojarse aquí". Para restaurantes: "Tené en cuenta".',
               },
@@ -208,6 +222,7 @@ export const Places: CollectionConfig = {
                 {
                   name: 'title',
                   type: 'text',
+                  localized: true,
                   required: true,
                   admin: {
                     description: 'Ej: "Para quedarse cerca", "Para comer después".',
@@ -236,6 +251,7 @@ export const Places: CollectionConfig = {
             {
               name: 'seoTitle',
               type: 'text',
+              localized: true,
               admin: {
                 description: 'Si está vacío se usa el nombre del lugar.',
               },
@@ -243,6 +259,7 @@ export const Places: CollectionConfig = {
             {
               name: 'seoDescription',
               type: 'textarea',
+              localized: true,
               admin: {
                 description: 'Si está vacío se usa el summary.',
               },
