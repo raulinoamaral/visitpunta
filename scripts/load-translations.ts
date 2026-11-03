@@ -3,15 +3,26 @@
 //
 // NODE_ENV=production npx tsx --env-file=.env scripts/load-translations.ts <file.json>
 //
-// File shape: { places: { <es slug>: {...} }, experiences: { <es slug>: {...} } }
-// Experience "content" maps each Spanish block index to its Portuguese text:
-// a list of strings for a text block (one per Spanish text node, in order) or a
-// string for a quote. Media and place blocks are copied with the same photos.
+// File shape: { places | experiences | articles | destinations: { <es slug>: {...} } }
+// Experience "content" and article "layout" map each Spanish block index to its
+// Portuguese text: a list of strings for a text block (one per Spanish text node,
+// in order), a string for a quote, or an object of overrides for other blocks
+// ({ title, context, caption, attribution, slides: [...], captions: [...] }).
+// Blocks without an entry are copied as they are, with the same photos.
 import fs from 'node:fs'
 import { getPayload } from 'payload'
 import config from '../src/payload.config'
 
 type TextList = string[]
+type BlockOverrides = {
+  title?: string
+  context?: string
+  caption?: string
+  attribution?: string
+  slides?: string[]
+  captions?: (string | null)[]
+}
+type BlockTranslation = TextList | string | BlockOverrides
 type ExperienceInput = {
   title: string
   slug: string
@@ -22,7 +33,15 @@ type ExperienceInput = {
   timing?: { moment: string; description: string }[]
   seoTitle?: string
   seoDescription?: string
-  content: Record<string, TextList | string>
+  content: Record<string, BlockTranslation>
+}
+type ArticleInput = {
+  title: string
+  slug: string
+  tagline?: string
+  seoTitle?: string
+  seoDescription?: string
+  layout: Record<string, BlockTranslation>
 }
 type PlaceInput = {
   slug: string
@@ -30,6 +49,16 @@ type PlaceInput = {
   location?: string
   description?: string
   highlights?: string[]
+  seoTitle?: string
+  seoDescription?: string
+  /** Titles of the "related places" groups, in the Spanish order */
+  relatedPlacesTitles?: string[]
+}
+type DestinationInput = {
+  slug: string
+  tagline?: string
+  summary?: string
+  description?: string
   seoTitle?: string
   seoDescription?: string
 }
@@ -62,29 +91,71 @@ function replaceTexts(document: any, texts: TextList) {
   return copy
 }
 
+// Builds the Portuguese blocks from the Spanish ones
+function translateBlocks(slug: string, blocks: any[], translations: Record<string, BlockTranslation>) {
+  return (blocks ?? []).map((block: any, i: number) => {
+    const translated = translations[String(i)]
+    const copy = withoutIds(block)
+    if (translated === undefined) {
+      // Text and quotes must never fall back to Spanish
+      if (block.blockType === 'textBlock' || block.blockType === 'quoteBlock') throw new Error(`${slug}: block ${i} is not translated`)
+      return copy
+    }
+    if (block.blockType === 'textBlock') {
+      if (!Array.isArray(translated)) throw new Error(`${slug}: block ${i} needs a text list`)
+      return { ...copy, content: replaceTexts(block.content, translated) }
+    }
+    if (block.blockType === 'quoteBlock' && typeof translated === 'string') return { ...copy, text: translated }
+    if (typeof translated !== 'object' || Array.isArray(translated)) throw new Error(`${slug}: block ${i} needs overrides`)
+    const { slides, captions, ...fields } = translated
+    const result = { ...copy, ...fields }
+    if (slides) result.slides = copy.slides.map((slide: any, n: number) => ({ ...slide, text: slides[n] ?? slide.text }))
+    if (captions) result.images = copy.images.map((image: any, n: number) => ({ ...image, caption: captions[n] ?? null }))
+    return result
+  })
+}
+
 async function run() {
   const file = process.argv[2]
   if (!file) throw new Error('Usage: load-translations.ts <file.json>')
   const input = JSON.parse(fs.readFileSync(file, 'utf8')) as {
     places?: Record<string, PlaceInput>
     experiences?: Record<string, ExperienceInput>
+    articles?: Record<string, ArticleInput>
+    destinations?: Record<string, DestinationInput>
   }
   const payload = await getPayload({ config })
 
   for (const [esSlug, pt] of Object.entries(input.places ?? {})) {
     const { docs } = await payload.find({ collection: 'places', locale: 'es', where: { slug: { equals: esSlug } }, limit: 1, depth: 0 })
     if (!docs[0]) throw new Error(`place not found: ${esSlug}`)
+    const { relatedPlacesTitles, ...fields } = pt
+    // The groups and their places are shared; only each group's title is translated
+    const groups = (docs[0] as any).relatedPlaces ?? []
+    if (relatedPlacesTitles && relatedPlacesTitles.length !== groups.length) {
+      throw new Error(`${esSlug}: ${groups.length} related groups, ${relatedPlacesTitles.length} titles`)
+    }
     await payload.update({
       collection: 'places',
       id: docs[0].id,
       locale: 'pt',
       data: {
-        ...pt,
+        ...fields,
         highlights: pt.highlights?.map((text) => ({ text })),
+        ...(relatedPlacesTitles && {
+          relatedPlaces: groups.map((group: any, i: number) => ({ ...group, title: relatedPlacesTitles[i] })),
+        }),
         published: true,
       } as any,
     })
     console.log(`place ${esSlug} → /pt/${pt.slug}`)
+  }
+
+  for (const [esSlug, pt] of Object.entries(input.destinations ?? {})) {
+    const { docs } = await payload.find({ collection: 'destinations', locale: 'es', where: { slug: { equals: esSlug } }, limit: 1, depth: 0 })
+    if (!docs[0]) throw new Error(`destination not found: ${esSlug}`)
+    await payload.update({ collection: 'destinations', id: docs[0].id, locale: 'pt', data: { ...pt, published: true } as any })
+    console.log(`destination ${esSlug} → /pt/${pt.slug}`)
   }
 
   for (const [esSlug, pt] of Object.entries(input.experiences ?? {})) {
@@ -92,19 +163,7 @@ async function run() {
     const es = docs[0] as any
     if (!es) throw new Error(`experience not found: ${esSlug}`)
 
-    const content = (es.content ?? []).map((block: any, i: number) => {
-      const translated = pt.content[String(i)]
-      const copy = withoutIds(block)
-      if (block.blockType === 'textBlock') {
-        if (!Array.isArray(translated)) throw new Error(`${esSlug}: block ${i} needs a text list`)
-        return { ...copy, content: replaceTexts(block.content, translated) }
-      }
-      if (block.blockType === 'quoteBlock') {
-        if (typeof translated !== 'string') throw new Error(`${esSlug}: block ${i} needs a quote`)
-        return { ...copy, text: translated }
-      }
-      return copy
-    })
+    const content = translateBlocks(esSlug, es.content, pt.content)
 
     await payload.update({
       collection: 'experiences',
@@ -125,6 +184,20 @@ async function run() {
       } as any,
     })
     console.log(`experience ${esSlug} → /pt/${pt.slug}`)
+  }
+
+  for (const [esSlug, pt] of Object.entries(input.articles ?? {})) {
+    const { docs } = await payload.find({ collection: 'articles', locale: 'es', where: { slug: { equals: esSlug } }, limit: 1, depth: 0 })
+    const es = docs[0] as any
+    if (!es) throw new Error(`article not found: ${esSlug}`)
+    const { layout, ...fields } = pt
+    await payload.update({
+      collection: 'articles',
+      id: es.id,
+      locale: 'pt',
+      data: { ...fields, layout: translateBlocks(esSlug, es.layout, layout), published: true } as any,
+    })
+    console.log(`article ${esSlug} → /pt/${pt.slug}`)
   }
   process.exit(0)
 }
