@@ -32,6 +32,7 @@ Esta skill hace dos cosas:
    - Lugar (`places`: comer, dormir, spots) → `references/places.md`
    - Experiencia (`experiences`) → `references/experiences.md`
    - Destino (`destinations`) → `references/destinations.md`
+   - Versión en **portugués (pt-BR)** de algo existente, o pieza nueva en portugués → además leer `references/portuguese.md`
 2. **Procesar el material de investigación** → `references/research.md`. El material define *de qué hablar* y *qué responder*, nunca el tono ni el formato del título.
 3. **Cruzar con el inventario** (`references/inventory.md`) para elegir `placeBlock`, `related`, `relatedArticles` y links internos. Solo se referencia lo que existe; lo que falta se marca `[CREAR]`. El inventario es una foto de la base: si el autor menciona contenido nuevo que no aparece, preguntarle si quiere actualizarlo. También cuando pida "actualizá el inventario". Comando, solo lectura: `NODE_ENV=production npx tsx --env-file=.env scripts/export-editorial-corpus.ts <carpeta temporal>`. Regenera `references/inventory.md`.
 4. **Escribir** siguiendo la voz (abajo) y releer contra la lista anti-IA antes de entregar.
@@ -125,6 +126,7 @@ Entregar siempre en este orden. Campos que no aplican al tipo se omiten. Al fina
 ## Ficha · {tipo de pieza} · {título}
 
 **Colección:** articles | places | experiences | destinations
+**Idioma:** es | pt  (en pt, completar solo los campos con traducción y marcar "Publicado en este idioma")
 **Campos**
 - title / name:
 - slug:                     (minúsculas, sin acentos, guiones)
