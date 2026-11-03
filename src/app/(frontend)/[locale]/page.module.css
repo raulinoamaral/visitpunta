@@ -105,6 +105,8 @@
 
 @media (max-width: 768px) {
   .hero {
+    /* The whole hero fits above the header anchored at the bottom */
+    height: calc(100dvh - var(--mobile-header-height));
     align-items: center;
     padding-bottom: 0;
   }

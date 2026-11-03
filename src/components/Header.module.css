@@ -71,10 +71,19 @@
 }
 
 @media (max-width: 768px) {
+  /* Same header, anchored at the bottom of the screen, near the thumb */
   .header {
-    position: sticky;
-    padding: 1rem 1rem;
+    top: auto;
+    bottom: 0;
+    height: var(--mobile-header-height);
+    padding: 0 1rem env(safe-area-inset-bottom);
     background-color: #fff;
+    border-top: 1px solid rgba(61, 75, 102, 0.12);
+  }
+
+  /* Hides downward while scrolling down, comes back on scroll up */
+  .hidden {
+    transform: translateY(100%);
   }
 
   .nav {
