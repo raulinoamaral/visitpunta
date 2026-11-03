@@ -16,9 +16,10 @@ const buildConverters = (locale: Locale) => ({
     const children = nodesToJSX({ nodes: node.children })
     if (node.fields?.linkType === 'internal' && node.fields?.doc) {
       const doc = node.fields.doc as any
-      const slug = doc?.value?.slug || doc?.slug
-      const href = slug ? localePath(locale, slug) : '#'
-      return <a href={href}>{children}</a>
+      const target = doc?.value ?? doc
+      // A page not yet published in this language: keep the words, drop the link
+      if (!target?.slug || target.published === false) return <>{children}</>
+      return <a href={localePath(locale, target.slug)}>{children}</a>
     }
     return (
       <a
