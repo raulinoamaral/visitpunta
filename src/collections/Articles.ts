@@ -15,7 +15,6 @@ export const Articles: CollectionConfig = {
     defaultColumns: ['title', 'type', 'published', 'featured'],
   },
   fields: [
-    // ── Identidad ──────────────────────────────────────────
     {
       name: 'title',
       type: 'text',
@@ -95,62 +94,80 @@ export const Articles: CollectionConfig = {
         },
       ],
     },
-
-    // ── Hero ────────────────────────────────────────────────
     {
-      name: 'heroImage',
-      type: 'upload',
-      relationTo: 'media',
-    },
-
-    // ── Contenido principal ─────────────────────────────────
-    {
-      name: 'tagline',
-      type: 'text',
-      admin: {
-        description: 'Frase corta para cards y listados.',
-      },
-    },
-    {
-      name: 'layout',
-      type: 'blocks',
-      blocks: [TextBlock, MediaBlock, QuoteBlock, PlaceBlock, SocialCarouselBlock, SocialVideoBlock, SocialGalleryBlock],
-    },
-
-    // ── Relacionados ────────────────────────────────────────
-    {
-      name: 'related',
-      type: 'relationship',
-      relationTo: ['places', 'experiences'],
-      hasMany: true,
-      admin: {
-        description: 'Places y experiencias relacionadas.',
-      },
-    },
-    {
-      name: 'relatedArticles',
-      type: 'relationship',
-      relationTo: 'articles',
-      hasMany: true,
-      admin: {
-        description: 'Otros artículos relacionados.',
-      },
-    },
-
-    // ── SEO ─────────────────────────────────────────────────
-    {
-      name: 'seoTitle',
-      type: 'text',
-      admin: {
-        description: 'Si está vacío se usa el título del artículo.',
-      },
-    },
-    {
-      name: 'seoDescription',
-      type: 'textarea',
-      admin: {
-        description: 'Si está vacío se usa el tagline.',
-      },
+      // Unnamed tabs only group the admin UI: the database schema stays the same
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Contenido',
+          fields: [
+            {
+              name: 'tagline',
+              type: 'text',
+              admin: {
+                description: 'Frase corta para cards y listados.',
+              },
+            },
+            {
+              name: 'layout',
+              type: 'blocks',
+              blocks: [TextBlock, MediaBlock, QuoteBlock, PlaceBlock, SocialCarouselBlock, SocialVideoBlock, SocialGalleryBlock],
+            },
+          ],
+        },
+        {
+          label: 'Fotos',
+          fields: [
+            {
+              name: 'heroImage',
+              type: 'upload',
+              relationTo: 'media',
+            },
+          ],
+        },
+        {
+          label: 'Relacionados',
+          fields: [
+            {
+              name: 'related',
+              type: 'relationship',
+              relationTo: ['places', 'experiences'],
+              hasMany: true,
+              admin: {
+                description: 'Places y experiencias relacionadas.',
+              },
+            },
+            {
+              name: 'relatedArticles',
+              type: 'relationship',
+              relationTo: 'articles',
+              hasMany: true,
+              admin: {
+                description: 'Otros artículos relacionados.',
+              },
+            },
+          ],
+        },
+        {
+          label: 'SEO',
+          fields: [
+            {
+              name: 'seoTitle',
+              type: 'text',
+              admin: {
+                description: 'Si está vacío se usa el título del artículo.',
+              },
+            },
+            {
+              name: 'seoDescription',
+              type: 'textarea',
+              admin: {
+                description: 'Si está vacío se usa el tagline.',
+              },
+            },
+          ],
+        },
+      ],
     },
   ],
 }

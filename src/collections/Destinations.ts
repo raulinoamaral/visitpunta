@@ -7,7 +7,6 @@ export const Destinations: CollectionConfig = {
     defaultColumns: ['name', 'slug'],
   },
   fields: [
-    // ── Basic info ──────────────────────────────────────────
     {
       name: 'name',
       type: 'text',
@@ -39,51 +38,66 @@ export const Destinations: CollectionConfig = {
         ],
       },
     },
-
-    // ── Hero ────────────────────────────────────────────────
     {
-      name: 'heroImage',
-      type: 'upload',
-      relationTo: 'media',
-    },
-
-    // ── Content ─────────────────────────────────────────────
-    {
-      name: 'tagline',
-      type: 'text',
-      admin: {
-        description: 'Frase breve que define el destino. Ej: "Entre la arena y el campo"',
-      },
-    },
-    {
-      name: 'summary',
-      type: 'text',
-      admin: {
-        description: 'Frase corta para cards y listados.',
-      },
-    },
-    {
-      name: 'description',
-      type: 'textarea',
-      admin: {
-        description: 'Descripción completa del destino.',
-      },
-    },
-
-    // ── SEO ─────────────────────────────────────────────────
-    {
-      name: 'seoTitle',
-      type: 'text',
-      admin: {
-        description: 'Si está vacío se usa el nombre del destino.',
-      },
-    },
-    {
-      name: 'seoDescription',
-      type: 'textarea',
-      admin: {
-        description: 'Si está vacío se usa el summary.',
-      },
+      // Unnamed tabs only group the admin UI: the database schema stays the same
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Contenido',
+          fields: [
+            {
+              name: 'tagline',
+              type: 'text',
+              admin: {
+                description: 'Frase breve que define el destino. Ej: "Entre la arena y el campo"',
+              },
+            },
+            {
+              name: 'summary',
+              type: 'text',
+              admin: {
+                description: 'Frase corta para cards y listados.',
+              },
+            },
+            {
+              name: 'description',
+              type: 'textarea',
+              admin: {
+                description: 'Descripción completa del destino.',
+              },
+            },
+          ],
+        },
+        {
+          label: 'Fotos',
+          fields: [
+            {
+              name: 'heroImage',
+              type: 'upload',
+              relationTo: 'media',
+            },
+          ],
+        },
+        {
+          label: 'SEO',
+          fields: [
+            {
+              name: 'seoTitle',
+              type: 'text',
+              admin: {
+                description: 'Si está vacío se usa el nombre del destino.',
+              },
+            },
+            {
+              name: 'seoDescription',
+              type: 'textarea',
+              admin: {
+                description: 'Si está vacío se usa el summary.',
+              },
+            },
+          ],
+        },
+      ],
     },
   ],
 }

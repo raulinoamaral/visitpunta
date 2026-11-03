@@ -189,11 +189,6 @@ export interface Place {
   destination?: (number | null) | Destination;
   featured?: boolean | null;
   tags?: (number | Tag)[] | null;
-  heroImage?: (number | null) | Media;
-  /**
-   * Imagen para cards y listados. Si está vacío se usa la hero image.
-   */
-  cardImage?: (number | null) | Media;
   /**
    * Frase corta para cards y listados.
    */
@@ -206,6 +201,20 @@ export interface Place {
    * Descripción completa para la página del lugar.
    */
   description?: string | null;
+  /**
+   * Para hoteles: "Por qué alojarse aquí". Para restaurantes: "Tené en cuenta".
+   */
+  highlights?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  heroImage?: (number | null) | Media;
+  /**
+   * Imagen para cards y listados. Si está vacío se usa la hero image.
+   */
+  cardImage?: (number | null) | Media;
   gallery?:
     | {
         layout: 'duo' | 'grid' | 'featured-bottom' | 'featured-side';
@@ -213,15 +222,6 @@ export interface Place {
           image: number | Media;
           id?: string | null;
         }[];
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Para hoteles: "Por qué alojarse aquí". Para restaurantes: "Tené en cuenta".
-   */
-  highlights?:
-    | {
-        text: string;
         id?: string | null;
       }[]
     | null;
@@ -277,7 +277,6 @@ export interface Destination {
   id: number;
   name: string;
   slug: string;
-  heroImage?: (number | null) | Media;
   /**
    * Frase breve que define el destino. Ej: "Entre la arena y el campo"
    */
@@ -290,6 +289,7 @@ export interface Destination {
    * Descripción completa del destino.
    */
   description?: string | null;
+  heroImage?: (number | null) | Media;
   /**
    * Si está vacío se usa el nombre del destino.
    */
@@ -330,7 +330,6 @@ export interface Experience {
    */
   featured?: boolean | null;
   published?: boolean | null;
-  heroImage?: (number | null) | Media;
   /**
    * Frase corta para cards y listados.
    */
@@ -418,6 +417,17 @@ export interface Experience {
         id?: string | null;
       }[]
     | null;
+  heroImage?: (number | null) | Media;
+  gallery?:
+    | {
+        layout: 'single' | 'duo';
+        images: {
+          image: number | Media;
+          id?: string | null;
+        }[];
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Título de la sección (ej: "Cuándo ir", "Mejor momento").
    */
@@ -435,16 +445,6 @@ export interface Experience {
          * Ej: Más tranquila, buen momento para caminar
          */
         description: string;
-        id?: string | null;
-      }[]
-    | null;
-  gallery?:
-    | {
-        layout: 'single' | 'duo';
-        images: {
-          image: number | Media;
-          id?: string | null;
-        }[];
         id?: string | null;
       }[]
     | null;
@@ -493,7 +493,6 @@ export interface Article {
    */
   featured?: boolean | null;
   published?: boolean | null;
-  heroImage?: (number | null) | Media;
   /**
    * Frase corta para cards y listados.
    */
@@ -610,6 +609,7 @@ export interface Article {
           }
       )[]
     | null;
+  heroImage?: (number | null) | Media;
   /**
    * Places y experiencias relacionadas.
    */
@@ -800,11 +800,17 @@ export interface PlacesSelect<T extends boolean = true> {
   destination?: T;
   featured?: T;
   tags?: T;
-  heroImage?: T;
-  cardImage?: T;
   summary?: T;
   location?: T;
   description?: T;
+  highlights?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  heroImage?: T;
+  cardImage?: T;
   gallery?:
     | T
     | {
@@ -815,12 +821,6 @@ export interface PlacesSelect<T extends boolean = true> {
               image?: T;
               id?: T;
             };
-        id?: T;
-      };
-  highlights?:
-    | T
-    | {
-        text?: T;
         id?: T;
       };
   cta?:
@@ -864,7 +864,6 @@ export interface ArticlesSelect<T extends boolean = true> {
   order?: T;
   featured?: T;
   published?: T;
-  heroImage?: T;
   tagline?: T;
   layout?:
     | T
@@ -944,6 +943,7 @@ export interface ArticlesSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
+  heroImage?: T;
   related?: T;
   relatedArticles?: T;
   seoTitle?: T;
@@ -958,10 +958,10 @@ export interface ArticlesSelect<T extends boolean = true> {
 export interface DestinationsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
-  heroImage?: T;
   tagline?: T;
   summary?: T;
   description?: T;
+  heroImage?: T;
   seoTitle?: T;
   seoDescription?: T;
   updatedAt?: T;
@@ -987,7 +987,6 @@ export interface ExperiencesSelect<T extends boolean = true> {
   order?: T;
   featured?: T;
   published?: T;
-  heroImage?: T;
   summary?: T;
   tagline?: T;
   content?:
@@ -1037,14 +1036,7 @@ export interface ExperiencesSelect<T extends boolean = true> {
         text?: T;
         id?: T;
       };
-  timingTitle?: T;
-  timing?:
-    | T
-    | {
-        moment?: T;
-        description?: T;
-        id?: T;
-      };
+  heroImage?: T;
   gallery?:
     | T
     | {
@@ -1055,6 +1047,14 @@ export interface ExperiencesSelect<T extends boolean = true> {
               image?: T;
               id?: T;
             };
+        id?: T;
+      };
+  timingTitle?: T;
+  timing?:
+    | T
+    | {
+        moment?: T;
+        description?: T;
         id?: T;
       };
   related?: T;

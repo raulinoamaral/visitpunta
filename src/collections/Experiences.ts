@@ -11,7 +11,6 @@ export const Experiences: CollectionConfig = {
     defaultColumns: ['title', 'destination', 'published'],
   },
   fields: [
-    // ── Identidad ──────────────────────────────────────────
     {
       name: 'title',
       type: 'text',
@@ -83,142 +82,159 @@ export const Experiences: CollectionConfig = {
         },
       ],
     },
-
-    // ── Hero ────────────────────────────────────────────────
     {
-      name: 'heroImage',
-      type: 'upload',
-      relationTo: 'media',
-    },
-
-    // ── Contenido principal ─────────────────────────────────
-    {
-      name: 'summary',
-      type: 'text',
-      admin: {
-        description: 'Frase corta para cards y listados.',
-      },
-    },
-    {
-      name: 'tagline',
-      type: 'text',
-      admin: {
-        description: 'Frase corta destacada, tipo subtítulo.',
-      },
-    },
-    {
-      name: 'content',
-      type: 'blocks',
-      blocks: [TextBlock, MediaBlock, QuoteBlock, PlaceBlock],
-    },
-
-    // ── Highlights ──────────────────────────────────────────
-    {
-      name: 'highlights',
-      type: 'array',
-      admin: {
-        description: 'Puntos destacados de la experiencia.',
-      },
-      fields: [
+      // Unnamed tabs only group the admin UI: the database schema stays the same
+      type: 'tabs',
+      tabs: [
         {
-          name: 'text',
-          type: 'text',
-          required: true,
-        },
-      ],
-    },
-
-    // ── Timing ──────────────────────────────────────────────
-    {
-      name: 'timingTitle',
-      type: 'text',
-      defaultValue: 'Cuándo ir',
-      admin: {
-        description: 'Título de la sección (ej: "Cuándo ir", "Mejor momento").',
-      },
-    },
-    {
-      name: 'timing',
-      type: 'array',
-      admin: {
-        description: 'Momentos del día con una descripción corta.',
-      },
-      fields: [
-        {
-          name: 'moment',
-          type: 'text',
-          required: true,
-          admin: {
-            description: 'Ej: Mañana, Tarde, Atardecer',
-          },
-        },
-        {
-          name: 'description',
-          type: 'text',
-          required: true,
-          admin: {
-            description: 'Ej: Más tranquila, buen momento para caminar',
-          },
-        },
-      ],
-    },
-
-    // ── Galería ─────────────────────────────────────────────
-    {
-      name: 'gallery',
-      type: 'array',
-      fields: [
-        {
-          name: 'layout',
-          type: 'select',
-          required: true,
-          defaultValue: 'single',
-          options: [
-            { label: 'Single — 1 foto', value: 'single' },
-            { label: 'Duo — 2 fotos en línea', value: 'duo' },
+          label: 'Contenido',
+          fields: [
+            {
+              name: 'summary',
+              type: 'text',
+              admin: {
+                description: 'Frase corta para cards y listados.',
+              },
+            },
+            {
+              name: 'tagline',
+              type: 'text',
+              admin: {
+                description: 'Frase corta destacada, tipo subtítulo.',
+              },
+            },
+            {
+              name: 'content',
+              type: 'blocks',
+              blocks: [TextBlock, MediaBlock, QuoteBlock, PlaceBlock],
+            },
+            {
+              name: 'highlights',
+              type: 'array',
+              admin: {
+                description: 'Puntos destacados de la experiencia.',
+              },
+              fields: [
+                {
+                  name: 'text',
+                  type: 'text',
+                  required: true,
+                },
+              ],
+            },
           ],
         },
         {
-          name: 'images',
-          type: 'array',
-          required: true,
+          label: 'Fotos',
           fields: [
             {
-              name: 'image',
+              name: 'heroImage',
               type: 'upload',
               relationTo: 'media',
-              required: true,
+            },
+            {
+              name: 'gallery',
+              type: 'array',
+              fields: [
+                {
+                  name: 'layout',
+                  type: 'select',
+                  required: true,
+                  defaultValue: 'single',
+                  options: [
+                    { label: 'Single — 1 foto', value: 'single' },
+                    { label: 'Duo — 2 fotos en línea', value: 'duo' },
+                  ],
+                },
+                {
+                  name: 'images',
+                  type: 'array',
+                  required: true,
+                  fields: [
+                    {
+                      name: 'image',
+                      type: 'upload',
+                      relationTo: 'media',
+                      required: true,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Lo práctico',
+          fields: [
+            {
+              name: 'timingTitle',
+              type: 'text',
+              defaultValue: 'Cuándo ir',
+              admin: {
+                description: 'Título de la sección (ej: "Cuándo ir", "Mejor momento").',
+              },
+            },
+            {
+              name: 'timing',
+              type: 'array',
+              admin: {
+                description: 'Momentos del día con una descripción corta.',
+              },
+              fields: [
+                {
+                  name: 'moment',
+                  type: 'text',
+                  required: true,
+                  admin: {
+                    description: 'Ej: Mañana, Tarde, Atardecer',
+                  },
+                },
+                {
+                  name: 'description',
+                  type: 'text',
+                  required: true,
+                  admin: {
+                    description: 'Ej: Más tranquila, buen momento para caminar',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Relacionados',
+          fields: [
+            {
+              name: 'related',
+              type: 'relationship',
+              relationTo: ['places', 'experiences'],
+              hasMany: true,
+              admin: {
+                description: 'Places y experiencias relacionadas.',
+              },
+            },
+          ],
+        },
+        {
+          label: 'SEO',
+          fields: [
+            {
+              name: 'seoTitle',
+              type: 'text',
+              admin: {
+                description: 'Si está vacío se usa el título.',
+              },
+            },
+            {
+              name: 'seoDescription',
+              type: 'textarea',
+              admin: {
+                description: 'Si está vacío se usa el summary.',
+              },
             },
           ],
         },
       ],
-    },
-
-    // ── Relacionados ────────────────────────────────────────
-    {
-      name: 'related',
-      type: 'relationship',
-      relationTo: ['places', 'experiences'],
-      hasMany: true,
-      admin: {
-        description: 'Places y experiencias relacionadas.',
-      },
-    },
-
-    // ── SEO ─────────────────────────────────────────────────
-    {
-      name: 'seoTitle',
-      type: 'text',
-      admin: {
-        description: 'Si está vacío se usa el título.',
-      },
-    },
-    {
-      name: 'seoDescription',
-      type: 'textarea',
-      admin: {
-        description: 'Si está vacío se usa el summary.',
-      },
     },
   ],
 }
