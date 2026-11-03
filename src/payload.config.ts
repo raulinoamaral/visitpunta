@@ -60,6 +60,9 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    // Schema changes always go through migrations, in dev and production
+    push: false,
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
 })
