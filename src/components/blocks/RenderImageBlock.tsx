@@ -1,4 +1,5 @@
 import FadeImage from '@/components/FadeImage'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import styles from './RenderImageBlock.module.css'
 
 type Props = {
@@ -11,7 +12,7 @@ export default function RenderImageBlock({ image, caption, variant }: Props) {
   return (
     <figure className={`${styles.figure} ${variant === 'large' ? styles.large : ''}`}>
       <div className={styles.imageWrapper}>
-        <FadeImage src={image.url} alt={image.alt || caption || ''} fill className={styles.image} />
+        <FadeImage src={image.url} alt={image.alt || caption || ''} fill sizes={IMAGE_SIZES.content} className={styles.image} />
       </div>
       {caption && <figcaption className={styles.caption}>{caption}</figcaption>}
     </figure>

@@ -1,4 +1,5 @@
 import FadeImage from '@/components/FadeImage'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import Link from 'next/link'
 import styles from './GastroCard.module.css'
 
@@ -16,7 +17,7 @@ export default function GastroCard({ image, name, destination, description, tag,
     <>
       {image && (
         <div className={styles.imageWrapper}>
-          <FadeImage src={image} alt={name} fill className={styles.image} />
+          <FadeImage src={image} alt={name} fill sizes={IMAGE_SIZES.card3} className={styles.image} />
           <div className={styles.overlay} />
           <div className={styles.imageText}>
             {tag && <span className={styles.tag}>{tag}</span>}

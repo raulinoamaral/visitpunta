@@ -1,4 +1,5 @@
 import FadeImage from '@/components/FadeImage'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import GalleryCarousel from './GalleryCarousel'
 import styles from './GalleryFeaturedSide.module.css'
 
@@ -17,7 +18,7 @@ export default function GalleryFeaturedSide({ images }: { images: GalleryImage[]
         <div className={styles.main}>
           {main && (
             <>
-              <FadeImage src={main.url} alt={main.alt || ''} fill className={styles.img} />
+              <FadeImage src={main.url} alt={main.alt || ''} fill sizes={IMAGE_SIZES.twoThirds} className={styles.img} />
               {main.credit && <span className={styles.credit}>{main.credit}</span>}
             </>
           )}
@@ -25,7 +26,7 @@ export default function GalleryFeaturedSide({ images }: { images: GalleryImage[]
         <div className={styles.stack}>
           {stack.slice(0, 2).map((img, i) => (
             <div key={i} className={styles.stackImage}>
-              <FadeImage src={img.url} alt={img.alt || ''} fill className={styles.img} />
+              <FadeImage src={img.url} alt={img.alt || ''} fill sizes={IMAGE_SIZES.card3} className={styles.img} />
               {img.credit && <span className={styles.credit}>{img.credit}</span>}
             </div>
           ))}

@@ -1,6 +1,7 @@
 'use client'
 
 import FadeImage from '@/components/FadeImage'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import { useRef, useState } from 'react'
 import styles from './RenderSocialCarousel.module.css'
 
@@ -74,7 +75,7 @@ export default function RenderSocialCarousel({ title, slides }: Props) {
               <FadeImage
                 src={slide.image.url}
                 alt={slide.image.alt || slide.text}
-                fill
+                fill sizes={IMAGE_SIZES.slide}
                 className={styles.image}
                 draggable={false}
               />

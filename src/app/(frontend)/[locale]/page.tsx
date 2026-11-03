@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -78,7 +79,7 @@ export default async function Home({ params }: Props) {
         <Image
           src="/images/home-punta-del-este.jpg"
           alt="Punta del Este"
-          fill
+          fill sizes={IMAGE_SIZES.full}
           className={styles.heroImage}
           priority
         />
@@ -109,7 +110,7 @@ export default async function Home({ params }: Props) {
                 <Image
                   src={((pde as any).heroImage as any)?.url || ''}
                   alt={(pde as any).name}
-                  fill
+                  fill sizes={IMAGE_SIZES.full}
                   className={styles.zonaCardImage}
                 />
                 <div className={styles.zonaCardOverlay} />
@@ -128,7 +129,7 @@ export default async function Home({ params }: Props) {
                   <Image
                     src={(dest.heroImage as any)?.url || ''}
                     alt={dest.name}
-                    fill
+                    fill sizes={IMAGE_SIZES.card3}
                     className={styles.zonaCardImage}
                   />
                   <div className={styles.zonaCardOverlay} />
@@ -159,7 +160,7 @@ export default async function Home({ params }: Props) {
                 <Image
                   src={img}
                   alt={title}
-                  fill
+                  fill sizes={IMAGE_SIZES.card3}
                   className={styles.destacadoImage}
                 />
                 <div className={styles.destacadoOverlay} />
@@ -187,7 +188,7 @@ export default async function Home({ params }: Props) {
                       <Image
                         src={(featuredArticles[0].heroImage as any).url}
                         alt={featuredArticles[0].title}
-                        fill
+                        fill sizes={IMAGE_SIZES.twoThirds}
                         className={styles.explorarImg}
                       />
                     </div>
@@ -211,7 +212,7 @@ export default async function Home({ params }: Props) {
                         <Image
                           src={(article.heroImage as any).url}
                           alt={article.title}
-                          fill
+                          fill sizes={IMAGE_SIZES.card3}
                           className={styles.explorarImg}
                         />
                       </div>

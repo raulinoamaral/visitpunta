@@ -1,6 +1,7 @@
 'use client'
 
 import FadeImage from '@/components/FadeImage'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import { useRef, useState } from 'react'
 import styles from './GalleryCarousel.module.css'
 
@@ -64,7 +65,7 @@ export default function GalleryCarousel({ images }: { images: GalleryImage[] }) 
       >
         {images.map((img, i) => (
           <div key={i} className={styles.slide}>
-            <FadeImage src={img.url} alt={img.alt || ''} fill className={styles.image} draggable={false} />
+            <FadeImage src={img.url} alt={img.alt || ''} fill sizes={IMAGE_SIZES.card3} className={styles.image} draggable={false} />
             {img.credit && <span className={styles.credit}>{img.credit}</span>}
           </div>
         ))}

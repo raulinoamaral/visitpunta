@@ -18,6 +18,10 @@ const nextConfig = {
     cpus: 1,
   },
   images: {
+    // No 3840px variant: no layout here needs more than 2048px
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    // Keep resized photos for a week (Spaces only says one hour), so they are not reprocessed so often
+    minimumCacheTTL: 60 * 60 * 24 * 7,
     remotePatterns: [
       {
         protocol: 'https',

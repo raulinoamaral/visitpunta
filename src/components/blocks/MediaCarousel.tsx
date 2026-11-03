@@ -1,6 +1,7 @@
 'use client'
 
 import FadeImage from '@/components/FadeImage'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import { useRef, useState } from 'react'
 import styles from './MediaCarousel.module.css'
 
@@ -72,7 +73,7 @@ export default function MediaCarousel({ images }: Props) {
             <FadeImage
               src={item.image.url}
               alt={item.image.alt || item.caption || ''}
-              fill
+              fill sizes={IMAGE_SIZES.slide}
               className={styles.image}
               draggable={false}
             />

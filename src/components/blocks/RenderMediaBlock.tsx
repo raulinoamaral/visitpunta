@@ -1,4 +1,5 @@
 import FadeImage from '@/components/FadeImage'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import MediaCarousel from './MediaCarousel'
 import styles from './RenderMediaBlock.module.css'
 
@@ -21,6 +22,14 @@ export default function RenderMediaBlock({ images, variant, stack }: Props) {
     return w > 0 && h > 0 && h > w
   })
 
+  // Bleed photos span the screen; the rest sit in the text column, split by how many share the row
+  const sizes =
+    variant === 'bleed' || variant === 'large'
+      ? IMAGE_SIZES.full
+      : images.length > 1 && !stack
+        ? IMAGE_SIZES.half
+        : IMAGE_SIZES.content
+
   return (
     <figure className={`${styles.figure} ${variant === 'large' || variant === 'bleed' ? styles.large : ''}`}>
 
@@ -35,6 +44,7 @@ export default function RenderMediaBlock({ images, variant, stack }: Props) {
               src={item.image.url}
               alt={item.image.alt || item.caption || ''}
               fill
+              sizes={sizes}
               className={styles.image}
             />
             {item.caption && <span className={styles.caption}>{item.caption}</span>}

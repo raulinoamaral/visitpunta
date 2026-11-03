@@ -1,4 +1,5 @@
 import FadeImage from '@/components/FadeImage'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import Link from 'next/link'
 import styles from './RenderPlaceBlock.module.css'
 
@@ -21,7 +22,7 @@ export default function RenderPlaceBlock({ href, place, context }: Props) {
           <FadeImage
             src={place.heroImage.url}
             alt={place.heroImage.alt || place.name}
-            fill
+            fill sizes={IMAGE_SIZES.content}
             className={styles.image}
           />
           <div className={styles.overlay} />
