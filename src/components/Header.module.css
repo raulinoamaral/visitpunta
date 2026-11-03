@@ -21,6 +21,8 @@
 
 .nav {
   display: flex;
+  /* Baseline keeps the smaller language switch on the same line as the links */
+  align-items: baseline;
   gap: 2rem;
 }
 
