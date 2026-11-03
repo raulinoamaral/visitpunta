@@ -14,6 +14,8 @@ const inter = Inter({
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
+  // Real italic for the footer closing line and editorial asides (avoids faux italic)
+  style: ['normal', 'italic'],
   variable: '--font-playfair',
   display: 'swap',
 })
