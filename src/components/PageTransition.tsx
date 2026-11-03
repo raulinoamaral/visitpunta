@@ -4,20 +4,22 @@ import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import styles from './PageTransition.module.css'
 
+// Only show the veil when a navigation is actually slow: prefetched pages arrive
+// before this and switch directly, with no white flash in between
+const SHOW_DELAY_MS = 150
 // Never leave the veil up if a navigation is cancelled or fails
 const SAFETY_MS = 8000
-// Prefetched pages arrive almost instantly: keep the veil up long enough to finish fading in
-const MIN_VISIBLE_MS = 450
 
 export default function PageTransition() {
   const pathname = usePathname()
   const [isVisible, setIsVisible] = useState(false)
-  const shownAt = useRef(0)
+  const showTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    // The new page is here: reveal it, once the veil has been up for the minimum time
-    const elapsed = Date.now() - shownAt.current
-    const timer = setTimeout(() => setIsVisible(false), Math.max(50, MIN_VISIBLE_MS - elapsed))
+    // The new page is here: cancel a pending veil and reveal the page
+    if (showTimer.current) clearTimeout(showTimer.current)
+    showTimer.current = null
+    const timer = setTimeout(() => setIsVisible(false), 50)
     return () => clearTimeout(timer)
   }, [pathname])
 
@@ -38,13 +40,16 @@ export default function PageTransition() {
       // Only internal pages, and not the page we're already on
       if (url.origin !== window.location.origin || url.pathname.startsWith('/admin')) return
       if (url.pathname === window.location.pathname) return
-      shownAt.current = Date.now()
-      setIsVisible(true)
+      if (showTimer.current) clearTimeout(showTimer.current)
+      showTimer.current = setTimeout(() => setIsVisible(true), SHOW_DELAY_MS)
     }
 
     // Capture phase: Next's <Link> calls preventDefault on bubbling, before a normal listener would run
     document.addEventListener('click', handleClick, true)
-    return () => document.removeEventListener('click', handleClick, true)
+    return () => {
+      document.removeEventListener('click', handleClick, true)
+      if (showTimer.current) clearTimeout(showTimer.current)
+    }
   }, [])
 
   return (
