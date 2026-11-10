@@ -20,7 +20,7 @@ export default function NotFoundContent() {
     <main className={styles.page}>
       <div className={styles.content}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/ISO-COLOR.svg" alt="" className={styles.iso} />
+        <img src="/brand/avatar.svg" alt="" className={styles.iso} />
         <h1 className={styles.title}>{t.notFound.title}</h1>
         <p className={styles.subtitle}>{t.notFound.subtitle}</p>
         <nav className={styles.nav}>

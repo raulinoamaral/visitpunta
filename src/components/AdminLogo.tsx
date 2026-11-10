@@ -1,15 +1,6 @@
-'use client'
+import Logo from './Logo'
 
-import Image from 'next/image'
-
+// Payload admin login and nav: the same wordmark, "punta" follows the admin's text color
 export default function AdminLogo() {
-  return (
-    <Image
-      src="/visit-punta-del-este.svg"
-      alt="Visit Punta"
-      width={160}
-      height={43}
-      priority
-    />
-  )
+  return <Logo />
 }

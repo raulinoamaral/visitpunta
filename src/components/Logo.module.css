@@ -1,0 +1,35 @@
+.logo {
+  display: block;
+  width: 9.5rem;
+  height: auto;
+  aspect-ratio: 452.3 / 97;
+}
+
+.lockup {
+  width: 14rem;
+  aspect-ratio: 452.3 / 124.45;
+}
+
+.visit {
+  fill: var(--logo-accent, var(--color-pink));
+  transition: fill 0.3s ease;
+}
+
+.place {
+  fill: currentColor;
+  transition: fill 0.3s ease;
+}
+
+.tagline {
+  fill: var(--logo-tagline, var(--logo-accent, var(--color-pink)));
+}
+
+@media (max-width: 640px) {
+  .logo {
+    width: 8rem;
+  }
+
+  .lockup {
+    width: 12rem;
+  }
+}

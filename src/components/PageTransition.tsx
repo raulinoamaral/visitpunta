@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import styles from './PageTransition.module.css'
 
+// The "pe" avatar, breathing slowly while the veil is up
+const ICON = '/brand/avatar.svg'
 // Only show the veil when a navigation is actually slow: prefetched pages arrive
 // before this and switch directly, with no white flash in between
 const SHOW_DELAY_MS = 150
@@ -55,7 +57,7 @@ export default function PageTransition() {
   return (
     <div className={`${styles.transition} ${isVisible ? styles.active : ''}`} aria-hidden="true">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/ISO-COLOR.svg" alt="" className={styles.logo} />
+      <img src={ICON} alt="" className={styles.icon} />
     </div>
   )
 }

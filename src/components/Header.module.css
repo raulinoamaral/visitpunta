@@ -61,13 +61,21 @@
   border-left-color: rgba(61, 75, 102, 0.3);
 }
 
-.logo {
-  object-fit: contain;
+/* White wordmark while the header sits on the photo; pink and navy once scrolled */
+.brand {
+  --logo-accent: #fff;
+  color: #fff;
 }
 
-.logoMobile {
+.scrolled .brand {
+  --logo-accent: var(--color-pink);
+  color: var(--color-blue);
+}
+
+.avatar {
   display: none;
-  object-fit: contain;
+  width: 2rem;
+  height: 2rem;
 }
 
 @media (max-width: 768px) {
@@ -102,11 +110,35 @@
     border-left-color: rgba(61, 75, 102, 0.3);
   }
 
-  .logo {
-    display: none !important;
+  /* The bottom bar is white: the wordmark always in its colors */
+  .brand {
+    --logo-accent: var(--color-pink);
+    color: var(--color-blue);
+  }
+}
+
+/* Phones: the "pe" avatar stands in for the wordmark, and the row tightens to fit 360px */
+@media (max-width: 520px) {
+  .wordmark {
+    display: none;
   }
 
-  .logoMobile {
-    display: block !important;
+  .avatar {
+    display: block;
+  }
+}
+
+@media (max-width: 420px) {
+  .header {
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+  }
+
+  .nav {
+    gap: 0.8rem;
+  }
+
+  .navLink {
+    font-size: 0.75rem;
   }
 }

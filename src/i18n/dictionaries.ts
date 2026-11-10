@@ -22,7 +22,8 @@ const es = {
   footer: {
     closing: 'Para quedarse unos minutos más.',
     suggest: '¿Tenés un lugar que vale la pena?',
-    credit: 'Una guía curada por Visit Punta',
+    notice: 'Una guía curada e independiente. No es un sitio oficial.',
+    family: 'De la misma mano:',
   },
   home: {
     heroSmall: '& alrededores',
@@ -128,7 +129,8 @@ const pt: Dictionary = {
   footer: {
     closing: 'Para ficar só mais um pouquinho.',
     suggest: 'Conhece um lugar que vale a pena?',
-    credit: 'Um guia com curadoria da Visit Punta',
+    notice: 'Um guia curado e independente. Não é um site oficial.',
+    family: 'Da mesma mão:',
   },
   home: {
     heroSmall: '& arredores',

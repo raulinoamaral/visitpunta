@@ -53,15 +53,14 @@
   opacity: 1;
 }
 
+/* Full lockup on the navy: "visit" in pink, "punta" and "THE GUIDE" in white */
 .brand {
+  --logo-accent: var(--color-pink);
+  --logo-tagline: #fff;
+  color: #fff;
   width: fit-content;
   /* Phones: the logo leads the columns instead of sitting between them */
   order: -1;
-}
-
-.logo {
-  display: block;
-  object-fit: contain;
 }
 
 .suggest {
@@ -94,6 +93,22 @@
 
 .bottom a:hover {
   color: rgba(255, 255, 255, 0.8);
+}
+
+.dot {
+  margin: 0 0.6em;
+}
+
+/* Phones: the sister site on its own line instead of a broken sentence */
+@media (max-width: 640px) {
+  .dot {
+    display: none;
+  }
+
+  .family {
+    display: block;
+    margin-top: 0.5rem;
+  }
 }
 
 @media (min-width: 960px) {

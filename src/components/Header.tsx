@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import LanguageSwitch from './LanguageSwitch'
 import { HTML_LANG, localePath, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { sectionHref } from '@/i18n/routes'
+import Logo from './Logo'
 import styles from './Header.module.css'
 
 type Props = {
@@ -34,23 +34,13 @@ export default function Header({ locale }: Props) {
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''} ${hidden ? styles.hidden : ''}`}>
-      <Link href={localePath(locale)} aria-label={t.nav.home}>
-        <Image
-          src="/visit-punta-del-este.svg"
-          alt="Visit Punta del Este"
-          width={180}
-          height={52}
-          className={styles.logo}
-          priority
-        />
-        <Image
-          src="/ISO-COLOR.svg"
-          alt="Visit Punta del Este"
-          width={40}
-          height={40}
-          className={styles.logoMobile}
-          priority
-        />
+      <Link href={localePath(locale)} aria-label={t.nav.home} className={styles.brand}>
+        <span className={styles.wordmark}>
+          <Logo />
+        </span>
+        {/* Phones: three sections and the language leave no room for the wordmark */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/avatar.svg" alt="" className={styles.avatar} />
       </Link>
 
       <nav className={styles.nav}>

@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { localePath, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { sectionHref } from '@/i18n/routes'
+import Logo from './Logo'
 import styles from './Footer.module.css'
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 
 /**
  * Editorial close of every page: a closing line like the end of a story, then three
- * columns (links, white logo, Instagram and contact) and a small credit line.
+ * columns (links, the full logo, Instagram and contact) and a small notice line.
  */
 export default function Footer({ locale }: Props) {
   const t = getDictionary(locale)
@@ -29,13 +29,7 @@ export default function Footer({ locale }: Props) {
           </nav>
 
           <Link href={localePath(locale)} className={styles.brand} aria-label="Visit Punta del Este">
-            <Image
-              src="/visit-punta-del-este-w.svg"
-              alt="Visit Punta del Este"
-              width={200}
-              height={60}
-              className={styles.logo}
-            />
+            <Logo tagline />
           </Link>
 
           <div className={styles.social}>
@@ -48,7 +42,18 @@ export default function Footer({ locale }: Props) {
         </div>
 
         <div className={styles.bottom}>
-          <p>{t.footer.credit}</p>
+          <p>
+            {t.footer.notice}
+            <span className={styles.dot} aria-hidden="true">
+              ·
+            </span>
+            <span className={styles.family}>
+              {t.footer.family}{' '}
+              <a href="https://visitcabopolonio.com" target="_blank" rel="noopener">
+                visitcabopolonio.com
+              </a>
+            </span>
+          </p>
           <a href="https://balloon.haus/es" target="_blank" rel="noopener noreferrer">
             balloon.haus
           </a>
