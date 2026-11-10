@@ -2,6 +2,7 @@
 
 ## De dónde salen
 `fotos/` (carpetas por tema: atardecer, cafe, casapueblo, centro-punta, isla-gorriti, noche, playa, puerto, punta-ballena). Son del usuario y se pueden usar en Instagram.
+- `cafe/` son del usuario. Algunas son tazas genéricas sacadas en otra ciudad (por ejemplo Barcelona): sirven como detalle o ambiente, nunca presentadas como un café concreto de Punta.
 - Si una foto parece de un lugar (interior de un restaurante u hotel, un plato con su vajilla, su cartel), preguntar antes si es del usuario o del lugar. Las que cedieron los lugares para la web **no** van en Instagram.
 - Las fotos que se cargaron en la web con crédito de otra persona tampoco.
 - Los `.HEIC` tienen su `.jpeg` al lado casi siempre; usar el jpeg. Si no hay, convertirlo antes con `sips -s format jpeg X.HEIC --out X.jpeg` (el script no lee HEIC).
