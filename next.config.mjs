@@ -2,6 +2,9 @@ import { withPayload } from '@payloadcms/next/withPayload'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // The CDN in front of App Platform may serve a stale cached page for at most this long
+  // (default is one year, which left the home stuck on old content)
+  expireTime: 3600,
   // Old hand-made pages, now served from Payload (permanent, keeps search rankings)
   async redirects() {
     return [
