@@ -35,14 +35,14 @@ Esta skill hace dos cosas:
    - Versión en **portugués (pt-BR)** de algo existente, o pieza nueva en portugués → además leer `references/portuguese.md`
 2. **Procesar el material de investigación** → `references/research.md`. El material define *de qué hablar* y *qué responder*, nunca el tono ni el formato del título.
 3. **Cruzar con el inventario** (`references/inventory.md`) para elegir `placeBlock`, `related`, `relatedArticles` y links internos. Solo se referencia lo que existe; lo que falta se marca `[CREAR]`. El inventario es una foto de la base: si el autor menciona contenido nuevo que no aparece, preguntarle si quiere actualizarlo. También cuando pida "actualizá el inventario". Comando, solo lectura: `NODE_ENV=production npx tsx --env-file=.env scripts/export-editorial-corpus.ts <carpeta temporal>`. Regenera `references/inventory.md`.
-4. **Escribir** siguiendo la voz (abajo) y releer contra la lista anti-IA antes de entregar.
+4. **Escribir** siguiendo la voz (abajo) y releer contra la lista anti-IA y los patrones de formato antes de entregar.
 5. **Entregar la ficha de armado** con el formato del final de este archivo.
 
 Antes de escribir la primera pieza de la sesión, leer al menos dos ejemplos de `examples/` del mismo tipo o cercano. Son la referencia de oro: Casapueblo, La Huella, Ballenas en Punta del Este, Dónde ver el atardecer. El catálogo de bloques está en `references/blocks.md`.
 
 ## La voz
 
-**Ritmo.** Una idea por línea. Frases cortas que se sostienen solas, con saltos de línea frecuentes. Párrafos de 1 a 3 líneas. De vez en cuando una frase más larga para que no suene a telegrama.
+**Ritmo.** Una idea por línea, con saltos de línea frecuentes. Párrafos de 1 a 3 líneas. Pero las frases tienen largos distintos de verdad: al lado de una corta, una de 20 o 30 palabras que respira ("Hay quienes salen de la playa unos minutos antes, otros que frenan el auto cuando cambia la luz o simplemente buscan un lugar para quedarse mirando el horizonte."). Una tras otra de 6 a 10 palabras suena a telegrama.
 > No es el viento. Son ballenas, a pocos metros de la costa.
 
 **Arranque con escena, no con definición.** La primera línea muestra algo que pasa, se ve o se siente. Nunca "X es un lugar ubicado en…".
@@ -64,6 +64,8 @@ Antes de escribir la primera pieza de la sesión, leer al menos dos ejemplos de 
 **Cierre corto que deja algo.** Una o dos líneas que reflexionan o abren, sin resumir lo dicho.
 > Lo demás no se controla.
 > Alcanza con encontrar uno que te haga quedarte unos minutos más.
+
+No siempre con el mismo molde (ver "Patrones de formato"): a veces el cierre es un dato práctico, una escena o una sola frase larga.
 
 ## Corto y atrapante
 
@@ -103,6 +105,21 @@ Releer el texto entero contra esta lista antes de entregar. Si aparece algo, ree
 
 Variar los arranques de párrafo: si tres seguidos empiezan igual (con "Hay", "En", "Es"), reescribir.
 
+## Patrones de formato (los moldes que delatan a la IA)
+
+Detectados el 11/11/2026 al releer juntas cinco notas (Black Coffee, Fin de año, Un día en José Ignacio, Paradores de la Mansa, La Barra). No son palabras prohibidas: son moldes. Uno suelto no molesta. Repetido en toda la pieza, o en todas las piezas, se nota que lo escribió una máquina. Releer la pieza buscando esto, además de la lista anti-IA:
+
+- **Cierre en dos líneas con giro.** "En la Mansa nadie mira el reloj. / Lo marca el sol." "En La Barra nada se hace rápido. / Tampoco hace falta." Salió igual en las cinco notas. Usarlo como mucho en una de cada tres piezas.
+- **Remate corto al final de cada sección.** "Parece casual. La cocina no lo es." "No pasa siempre." "Hay que ir a buscarlo." "Pocas combinaciones le ganan." Uno por pieza como máximo.
+- **Subtítulos con el mismo molde** "[momento o lugar], [complemento]." ("Temprano, en La Juanita." "Parada 1, sobre el agua." "Primero, un café."). Mezclar formas: una frase con verbo, como en el atardecer ("En el puerto, el paisaje cambia otra vez."), el nombre solo, una frase práctica. Si el subtítulo no tiene verbo, va sin punto final.
+- **Todas las secciones iguales.** Subtítulo, dos párrafos de dos líneas y, al final, una advertencia ("en temporada puede haber espera"). Variar el largo: una sección puede ser una línea y otra cuatro párrafos. La advertencia va donde de verdad importa, no en todas.
+- **Dos puntos para explicar.** "Queda en Punta: desde la península…", "reservá: sin reserva…", "estacionar cuesta: lo mejor es…". Dos o tres por pieza como máximo (sin contar los "Nombre: …" de una lista). Alternativas: "porque", "así que", un punto, o dar vuelta la frase.
+- **Inventarios con comas.** "olas, tablas en la arena, viento", "carnes, pastas, pescado", "se camina, se entra, se sigue". Una lista así por pieza. El resto, contado con algo que pasa ("la carta va de las pastas al pescado, en platos que alcanzan para compartir").
+- **Varios lugares con la misma ficha.** "Mar de Fondo: a, b y c. / El Chancho y La Coneja: a, b y c. / Tierra: a, b y c." Si van varios seguidos, que el nombre no siempre abra la frase ni vaya seguido de dos puntos.
+- **Conectores que se repiten:** "así que", "conviene", "alcanza con", "en temporada", "en verano". Cada uno, una o dos veces por pieza.
+- **"No porque X, sino porque Y"** cuenta como la muletilla "No es X, sino Y".
+- **Frases hechas entre piezas.** Si una fórmula ya está en otra nota ("En verano, reservá: sin reserva no hay mesa"), decirlo de otra manera.
+
 ## Anti-SEO-listicle
 
 - Títulos sin números ni fórmulas: nunca "10 lugares para…", "Las 5 mejores…", "Guía definitiva".
@@ -134,7 +151,7 @@ Entregar siempre en este orden. Campos que no aplican al tipo se omiten. Al fina
 - destinations / destination:
 - tagline:                  (≤ 110 caracteres)
 - summary:                  (places/experiences/destinations; ≤ 90 caracteres, para cards)
-- heroImage:                (qué foto buscar: encuadre, momento del día, estación)
+- heroImage:                (qué foto buscar: encuadre, momento del día, estación. A la altura de la mirada, como la vería alguien que está ahí: evitar fotos de drone o aéreas en portada. Preferir fotos propias del autor)
 
 **Cuerpo**  (layout / content / description según colección)
 1. [textBlock]
