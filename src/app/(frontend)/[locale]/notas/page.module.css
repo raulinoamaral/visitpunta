@@ -1,0 +1,82 @@
+/* No cover photo: the page opens on white, below the fixed header */
+.page {
+  padding: 9rem 2rem 6rem;
+}
+
+.head {
+  max-width: 680px;
+  margin-bottom: 5rem;
+}
+
+.title {
+  font-family: var(--font-playfair);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+}
+
+.intro {
+  font-family: var(--font-playfair);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 400;
+  color: #555;
+  line-height: 1.7;
+}
+
+.group {
+  margin-bottom: 5rem;
+}
+
+.groupHead {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.groupTitle {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.groupIntro {
+  font-family: var(--font-playfair);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #777;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem 2rem;
+}
+
+@media (max-width: 768px) {
+  /* The header sits at the bottom on phones */
+  .page {
+    padding: 4rem 2rem 5rem;
+  }
+
+  .head {
+    margin-bottom: 3.5rem;
+  }
+
+  .groupHead {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}

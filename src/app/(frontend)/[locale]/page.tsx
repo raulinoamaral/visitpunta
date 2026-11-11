@@ -231,6 +231,12 @@ export default async function Home({ params }: Props) {
               </div>
             </div>
           </Reveal>
+          {/* The only way into the notes index: it stays out of the menu */}
+          <Reveal delay={0.15}>
+            <Link href={sectionHref('notes', locale)} className={styles.explorarAll}>
+              {t.home.allNotes}
+            </Link>
+          </Reveal>
         </section>
       )}
     </main>

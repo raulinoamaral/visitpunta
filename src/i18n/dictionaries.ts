@@ -41,6 +41,22 @@ const es = {
       explore: { title: 'Recorridos', subtitle: 'Playas, planes y spots para descubrir' },
     },
     exploreTitle: 'Para explorar ahora',
+    allNotes: 'Todas las notas →',
+  },
+  notes: {
+    metaTitle: 'Notas sobre Punta del Este: guías, selecciones y temporada',
+    metaDescription:
+      'Todas las notas de Visit Punta: guías para recorrer el Este, selecciones de lugares y lo que pasa en cada temporada en Punta del Este, José Ignacio y La Barra.',
+    title: 'Notas',
+    intro: 'Lo que escribimos sobre el Este. Pocas notas, elegidas con el mismo criterio que los lugares.',
+    // Groups in this order, by article type, each with one line on what it holds
+    groups: { guide: 'Guías', selection: 'Selecciones', season: 'Temporada', experience: 'Experiencias' } as Record<string, string>,
+    groupIntros: {
+      guide: 'Para recorrer y entender cada lugar.',
+      selection: 'Pocos lugares, elegidos.',
+      season: 'Lo que pasa en cada época del año.',
+      experience: 'Momentos que definen el Este.',
+    } as Record<string, string>,
   },
   stay: {
     metaTitle: 'Alojamientos en Punta del Este: hoteles y lugares para quedarse',
@@ -156,6 +172,21 @@ const pt: Dictionary = {
       explore: { title: 'Passeios', subtitle: 'Praias, programas e lugares para descobrir' },
     },
     exploreTitle: 'Para explorar agora',
+    allNotes: 'Todas as leituras →',
+  },
+  notes: {
+    metaTitle: 'Leituras sobre Punta del Este: guias, seleções e temporada',
+    metaDescription:
+      'Todas as leituras do Visit Punta: guias para percorrer a região, seleções de lugares e o que acontece em cada temporada em Punta del Este, José Ignacio e La Barra.',
+    title: 'Leituras',
+    intro: 'O que escrevemos sobre a região. Poucos textos, escolhidos com o mesmo critério dos lugares.',
+    groups: { guide: 'Guias', selection: 'Seleções', season: 'Temporada', experience: 'Experiências' },
+    groupIntros: {
+      guide: 'Para percorrer e entender cada lugar.',
+      selection: 'Poucos lugares, escolhidos.',
+      season: 'O que acontece em cada época do ano.',
+      experience: 'Momentos que definem a região.',
+    },
   },
   stay: {
     metaTitle: 'Onde ficar em Punta del Este, Uruguai: hotéis e pousadas que valem a pena',
