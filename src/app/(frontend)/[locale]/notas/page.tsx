@@ -52,7 +52,7 @@ export default async function NotesPage({ params }: Props) {
   })).filter((group) => group.items.length > 0)
 
   return (
-    <main className={styles.page}>
+    <main className={styles.page} data-solid-header>
       {/* No cover photo: the section opens with its name, like a magazine's contents page */}
       <header className={styles.head}>
         <h1 className={styles.title}>{t.title}</h1>

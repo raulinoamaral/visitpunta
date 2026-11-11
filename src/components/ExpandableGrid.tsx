@@ -14,11 +14,13 @@ type Place = {
 }
 
 type Props = {
+  /** "Keep looking" button, already translated */
+  moreLabel: string
   featured: Place[]
   rest: Place[]
 }
 
-export default function ExpandableGrid({ featured, rest }: Props) {
+export default function ExpandableGrid({ featured, rest, moreLabel }: Props) {
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -36,7 +38,7 @@ export default function ExpandableGrid({ featured, rest }: Props) {
         ))}
         {!expanded && rest.length > 0 && (
           <button className={styles.moreInline} onClick={() => setExpanded(true)}>
-            Seguir viendo →
+            {moreLabel}
           </button>
         )}
         {expanded && rest.map((place, i) => (
@@ -57,7 +59,7 @@ export default function ExpandableGrid({ featured, rest }: Props) {
       </div>
       {!expanded && rest.length > 0 && (
         <button className={styles.more} onClick={() => setExpanded(true)}>
-          Seguir viendo →
+          {moreLabel}
         </button>
       )}
     </>

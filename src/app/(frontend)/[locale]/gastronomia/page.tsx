@@ -113,6 +113,7 @@ export default async function ComerPage({ params }: Props) {
             <section className={styles.section}>
               <h2 className="section-title">{title}</h2>
               <ExpandableGastroGrid
+                moreLabel={getDictionary(locale).common.more}
                 featured={featured.map((p) => ({
                   id: String(p.id),
                   name: p.name,

@@ -17,7 +17,7 @@ export default function NotFoundContent() {
   const t = getDictionary(locale)
 
   return (
-    <main className={styles.page}>
+    <main className={styles.page} data-solid-header>
       <div className={styles.content}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/brand/avatar.svg" alt="" className={styles.iso} />

@@ -72,6 +72,22 @@
   color: var(--color-blue);
 }
 
+/* Pages without a hero photo (notes index, 404) mark their content with
+   data-solid-header: the header starts in its navy colors so it reads on white */
+:global(body:has([data-solid-header])) .navLink {
+  color: var(--color-blue);
+}
+
+:global(body:has([data-solid-header])) .language {
+  color: var(--color-blue);
+  border-left-color: rgba(61, 75, 102, 0.3);
+}
+
+:global(body:has([data-solid-header])) .brand {
+  --logo-accent: var(--color-pink);
+  color: var(--color-blue);
+}
+
 @media (max-width: 768px) {
   /* Same header, anchored at the bottom of the screen, near the thumb */
   .header {

@@ -12,12 +12,14 @@ type Item = {
 }
 
 type Props = {
+  /** "Keep looking" button, already translated */
+  moreLabel: string
   items: Item[]
   initialCount?: number
   loadCount?: number
 }
 
-export default function ExpandableMiniGrid({ items, initialCount = 3, loadCount = 4 }: Props) {
+export default function ExpandableMiniGrid({ items, initialCount = 3, loadCount = 4, moreLabel }: Props) {
   const [visible, setVisible] = useState(initialCount)
   const hasMore = visible < items.length
 
@@ -43,13 +45,13 @@ export default function ExpandableMiniGrid({ items, initialCount = 3, loadCount 
         ))}
         {hasMore && (
           <button className={styles.moreInline} onClick={loadMore}>
-            Seguir viendo →
+            {moreLabel}
           </button>
         )}
       </div>
       {hasMore && (
         <button className={styles.more} onClick={loadMore}>
-          Seguir viendo →
+          {moreLabel}
         </button>
       )}
     </>

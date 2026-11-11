@@ -21,6 +21,10 @@ const es = {
     menu: 'Menú',
     close: 'Cerrar menú',
   },
+  common: {
+    // Button that reveals the rest of a row of cards
+    more: 'Seguir viendo →',
+  },
   footer: {
     closing: 'Para quedarse unos minutos más.',
     suggest: '¿Tenés un lugar que vale la pena?',
@@ -151,6 +155,9 @@ const pt: Dictionary = {
     switchLanguage: 'Ver en español',
     menu: 'Menu',
     close: 'Fechar menu',
+  },
+  common: {
+    more: 'Ver mais →',
   },
   footer: {
     closing: 'Para ficar só mais um pouquinho.',

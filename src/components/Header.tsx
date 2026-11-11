@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import LanguageSwitch from './LanguageSwitch'
 import MenuOverlay from './MenuOverlay'
 import { HTML_LANG, localePath, type Locale } from '@/i18n/config'
@@ -19,8 +18,6 @@ export default function Header({ locale }: Props) {
   const t = getDictionary(locale)
   const otherLocale: Locale = locale === 'es' ? 'pt' : 'es'
   const [scrolled, setScrolled] = useState(false)
-  // Pages without a hero photo start with the header already in its dark colors
-  const onWhite = usePathname() === sectionHref('notes', locale)
   const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
 
@@ -43,7 +40,7 @@ export default function Header({ locale }: Props) {
   }, [])
 
   return (
-    <header className={`${styles.header} ${scrolled || onWhite ? styles.scrolled : ''} ${hidden ? styles.hidden : ''}`}>
+    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''} ${hidden ? styles.hidden : ''}`}>
       <Link href={localePath(locale)} aria-label={t.nav.home} className={styles.brand}>
         <Logo />
       </Link>

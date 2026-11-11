@@ -520,6 +520,7 @@ export default async function SlugPage({ params }: Props) {
               <section className={destStyles.section}>
                 <h2 className="section-title">{t.destination.stay}</h2>
                 <ExpandableGrid
+                  moreLabel={t.common.more}
                   featured={dormirFeatured.map(toPlaceData)}
                   rest={dormirRest.map(toPlaceData)}
                 />
@@ -532,6 +533,7 @@ export default async function SlugPage({ params }: Props) {
               <section className={destStyles.section}>
                 <h2 className="section-title">{t.destination.explore}</h2>
                 <ExpandableMiniGrid
+                  moreLabel={t.common.more}
                   items={destExperiences.map((e: any) => ({
                     id: String(e.id),
                     name: e.title,
@@ -548,6 +550,7 @@ export default async function SlugPage({ params }: Props) {
               <section className={destStyles.section}>
                 <h2 className="section-title">{t.destination.eat}</h2>
                 <ExpandableGastroGrid
+                  moreLabel={t.common.more}
                   featured={comerFeatured.map(toGastroData)}
                   rest={comerRest.map(toGastroData)}
                 />
@@ -718,6 +721,7 @@ export default async function SlugPage({ params }: Props) {
                 <h3 className={articleStyles.relatedTitle}>{articlePlacesTitle}</h3>
                 {/* Four cards, the rest behind "keep looking", as on the zone pages */}
                 <ExpandableGrid
+                  moreLabel={t.common.more}
                   featured={articlePlaces.slice(0, 4).map(toArticlePlaceCard)}
                   rest={articlePlaces.slice(4).map(toArticlePlaceCard)}
                 />
