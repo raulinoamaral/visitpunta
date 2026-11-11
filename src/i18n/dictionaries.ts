@@ -18,6 +18,8 @@ const es = {
     explore: 'Recorridos',
     home: 'Visit Punta del Este',
     switchLanguage: 'Ver en português',
+    menu: 'Menú',
+    close: 'Cerrar menú',
   },
   footer: {
     closing: 'Para quedarse unos minutos más.',
@@ -125,6 +127,8 @@ const pt: Dictionary = {
     explore: 'Passeios',
     home: 'Visit Punta del Este',
     switchLanguage: 'Ver en español',
+    menu: 'Menu',
+    close: 'Fechar menu',
   },
   footer: {
     closing: 'Para ficar só mais um pouquinho.',

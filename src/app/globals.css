@@ -25,6 +25,11 @@ body {
   overflow-x: hidden;
 }
 
+/* Set by MenuOverlay while the phone menu is open */
+body.menu-open {
+  overflow: hidden;
+}
+
 h1, h2, h3, h4 {
   font-family: var(--font-playfair);
 }

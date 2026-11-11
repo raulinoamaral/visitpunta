@@ -1,0 +1,96 @@
+/* Wider screens show the sections in the header itself */
+.toggle,
+.overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Hamburger: two thin lines; they cross into an X when open */
+  .toggle {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0 0.25rem;
+    color: var(--color-blue);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    /* Same baseline row as the language switch */
+    align-self: center;
+  }
+
+  .bar {
+    display: block;
+    height: 1.5px;
+    width: 100%;
+    background: currentColor;
+    transition: transform 0.25s ease;
+  }
+
+  .toggleOpen .bar:first-child {
+    transform: translateY(calc(0.2rem + 0.75px)) rotate(45deg);
+  }
+
+  .toggleOpen .bar:last-child {
+    transform: translateY(calc(-0.2rem - 0.75px)) rotate(-45deg);
+  }
+
+  /* Opens above the bottom header, links close to the thumb */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: var(--mobile-header-height);
+    z-index: 99;
+    background: #fff;
+    padding: 2.5rem 1rem;
+    overflow-y: auto;
+  }
+
+  /* Only when open: the hidden attribute must keep winning while closed */
+  .overlay:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Same voice as the header links, at a size made for the thumb */
+  .item {
+    font-family: var(--font-inter);
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    text-transform: lowercase;
+    text-decoration: none;
+    color: var(--color-blue);
+    padding-block: 0.9rem;
+    border-bottom: 1px solid rgba(61, 75, 102, 0.12);
+    transition: color 0.3s ease;
+  }
+
+  .item:hover {
+    color: var(--color-pink);
+  }
+
+  .open {
+    animation: fadeIn 0.25s ease both;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

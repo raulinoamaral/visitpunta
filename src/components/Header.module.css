@@ -72,12 +72,6 @@
   color: var(--color-blue);
 }
 
-.avatar {
-  display: none;
-  width: 2rem;
-  height: 2rem;
-}
-
 @media (max-width: 768px) {
   /* Same header, anchored at the bottom of the screen, near the thumb */
   .header {
@@ -94,13 +88,14 @@
     transform: translateY(100%);
   }
 
+  /* The sections live in the hamburger menu; the language stays in the bar */
   .nav {
-    gap: 1rem;
+    align-items: center;
+    gap: 1.25rem;
   }
 
   .navLink {
-    font-size: 0.8rem;
-    color: var(--color-blue);
+    display: none;
   }
 
   .language {
@@ -117,28 +112,9 @@
   }
 }
 
-/* Phones: the "pe" avatar stands in for the wordmark, and the row tightens to fit 360px */
-@media (max-width: 520px) {
-  .wordmark {
-    display: none;
-  }
-
-  .avatar {
-    display: block;
-  }
-}
-
 @media (max-width: 420px) {
   .header {
     padding-left: 0.9rem;
     padding-right: 0.9rem;
-  }
-
-  .nav {
-    gap: 0.8rem;
-  }
-
-  .navLink {
-    font-size: 0.75rem;
   }
 }

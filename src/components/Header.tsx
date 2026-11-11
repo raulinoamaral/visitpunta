@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import LanguageSwitch from './LanguageSwitch'
+import MenuOverlay from './MenuOverlay'
 import { HTML_LANG, localePath, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { sectionHref } from '@/i18n/routes'
@@ -20,6 +21,12 @@ export default function Header({ locale }: Props) {
   const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
 
+  const links = [
+    { href: sectionHref('stay', locale), label: t.nav.stay },
+    { href: sectionHref('eat', locale), label: t.nav.eat },
+    { href: sectionHref('explore', locale), label: t.nav.explore },
+  ]
+
   useEffect(() => {
     function handleScroll() {
       const currentY = window.scrollY
@@ -35,24 +42,21 @@ export default function Header({ locale }: Props) {
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''} ${hidden ? styles.hidden : ''}`}>
       <Link href={localePath(locale)} aria-label={t.nav.home} className={styles.brand}>
-        <span className={styles.wordmark}>
-          <Logo />
-        </span>
-        {/* Phones: three sections and the language leave no room for the wordmark */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/avatar.svg" alt="" className={styles.avatar} />
+        <Logo />
       </Link>
 
       <nav className={styles.nav}>
-        <Link href={sectionHref('stay', locale)} className={styles.navLink}>{t.nav.stay}</Link>
-        <Link href={sectionHref('eat', locale)} className={styles.navLink}>{t.nav.eat}</Link>
-        <Link href={sectionHref('explore', locale)} className={styles.navLink}>{t.nav.explore}</Link>
+        {/* Phones: these move into the menu */}
+        {links.map((link) => (
+          <Link key={link.href} href={link.href} className={styles.navLink}>{link.label}</Link>
+        ))}
         <LanguageSwitch
           locale={otherLocale}
           hrefLang={HTML_LANG[otherLocale]}
           homeHref={localePath(otherLocale)}
           label={t.nav.switchLanguage}
         />
+        <MenuOverlay links={links} menuLabel={t.nav.menu} closeLabel={t.nav.close} />
       </nav>
     </header>
   )

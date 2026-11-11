@@ -74,6 +74,17 @@
   color: #fff;
 }
 
+/* Phones: name and summary get the full width; the booking button stays at the end of the page */
+@media (max-width: 768px) {
+  .header {
+    display: block;
+  }
+
+  .cta {
+    display: none;
+  }
+}
+
 .ctaNote {
   font-family: var(--font-inter);
   font-size: 0.7rem;
