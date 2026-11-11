@@ -584,7 +584,14 @@ export default async function SlugPage({ params }: Props) {
     const articlePlaces = (article.related || [])
       .filter((r: any) => isPublishedDoc(r?.value))
       .map((r: any) => ({ ...r.value, collection: r.relationTo }))
-      .slice(0, 4)
+    const toArticlePlaceCard = (p: any) => ({
+      id: `${p.collection}-${p.id}`,
+      name: p.name || p.title,
+      destination: (p.destination as any)?.name || '',
+      description: p.summary || '',
+      image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
+      href: href(p.slug),
+    })
     const placeKinds = new Set(
       articlePlaces.map((p: any) => (p.collection === 'experiences' ? 'experiences' : p.type)),
     )
@@ -709,18 +716,11 @@ export default async function SlugPage({ params }: Props) {
             <Reveal>
               <section className={articleStyles.places}>
                 <h3 className={articleStyles.relatedTitle}>{articlePlacesTitle}</h3>
-                <div className={articleStyles.placesGrid}>
-                  {articlePlaces.map((p: any) => (
-                    <PlaceCard
-                      key={`${p.collection}-${p.id}`}
-                      name={p.name || p.title}
-                      destination={(p.destination as any)?.name || ''}
-                      description={p.summary || ''}
-                      image={(p.cardImage as any)?.url || (p.heroImage as any)?.url || ''}
-                      href={href(p.slug)}
-                    />
-                  ))}
-                </div>
+                {/* Four cards, the rest behind "keep looking", as on the zone pages */}
+                <ExpandableGrid
+                  featured={articlePlaces.slice(0, 4).map(toArticlePlaceCard)}
+                  rest={articlePlaces.slice(4).map(toArticlePlaceCard)}
+                />
               </section>
             </Reveal>
           )}

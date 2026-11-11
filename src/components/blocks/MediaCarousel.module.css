@@ -36,10 +36,22 @@
   position: absolute;
   bottom: 0.6rem;
   left: 0.75rem;
-  right: 0.75rem;
+  /* Leaves room for the credit on the right */
+  right: 7rem;
   font-family: var(--font-inter);
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.85);
+}
+
+/* Credit over the photo, as in the places' galleries */
+.credit {
+  position: absolute;
+  bottom: 0.6rem;
+  right: 0.75rem;
+  font-family: var(--font-inter);
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.04em;
 }
 
 /* ── Dots ────────────────────────────────────────────────── */

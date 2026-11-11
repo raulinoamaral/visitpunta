@@ -3,10 +3,11 @@
 import FadeImage from '@/components/FadeImage'
 import { IMAGE_SIZES } from '@/lib/imageSizes'
 import { useRef, useState } from 'react'
+import { formatCredit } from '@/lib/credit'
 import styles from './MediaCarousel.module.css'
 
 type MediaItem = {
-  image: { url: string; alt?: string }
+  image: { url: string; alt?: string; credit?: string | null }
   caption?: string | null
   id?: string
 }
@@ -78,6 +79,7 @@ export default function MediaCarousel({ images }: Props) {
               draggable={false}
             />
             {item.caption && <span className={styles.caption}>{item.caption}</span>}
+            {item.image.credit && <span className={styles.credit}>{formatCredit(item.image.credit)}</span>}
           </div>
         ))}
       </div>

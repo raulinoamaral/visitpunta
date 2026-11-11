@@ -46,6 +46,19 @@
   aspect-ratio: 3 / 4;
 }
 
+/* Credit over the photo, as in the places' galleries */
+.credit {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  font-family: var(--font-inter);
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.04em;
+  z-index: 1;
+}
+
+/* Caption below the photo, for real captions (the credit has its own place) */
 .caption {
   display: block;
   font-family: var(--font-inter);

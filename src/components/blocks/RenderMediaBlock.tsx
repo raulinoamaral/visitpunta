@@ -1,10 +1,11 @@
 import FadeImage from '@/components/FadeImage'
 import { IMAGE_SIZES } from '@/lib/imageSizes'
+import { formatCredit } from '@/lib/credit'
 import MediaCarousel from './MediaCarousel'
 import styles from './RenderMediaBlock.module.css'
 
 type MediaItem = {
-  image: { url: string; alt?: string; width?: number; height?: number }
+  image: { url: string; alt?: string; width?: number; height?: number; credit?: string | null }
   caption?: string | null
   id?: string
 }
@@ -39,14 +40,18 @@ export default function RenderMediaBlock({ images, variant, stack }: Props) {
         data-count={images.length}
       >
         {images.map((item, i) => (
-          <div key={item.id ?? i} className={styles.imageWrapper}>
-            <FadeImage
-              src={item.image.url}
-              alt={item.image.alt || item.caption || ''}
-              fill
-              sizes={sizes}
-              className={styles.image}
-            />
+          <div key={item.id ?? i}>
+            <div className={styles.imageWrapper}>
+              <FadeImage
+                src={item.image.url}
+                alt={item.image.alt || item.caption || ''}
+                fill
+                sizes={sizes}
+                className={styles.image}
+              />
+              {/* Same credit as in the places' galleries: small, over the photo */}
+              {item.image.credit && <span className={styles.credit}>{formatCredit(item.image.credit)}</span>}
+            </div>
             {item.caption && <span className={styles.caption}>{item.caption}</span>}
           </div>
         ))}
