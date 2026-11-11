@@ -34,6 +34,7 @@ La cuenta es de una **marca** (la familia Visit: visitpunta y visitcabopolonio, 
 - **La foto manda, el texto va aparte:** nada de recuadros ni paneles sobre las fotos, como mucho una línea; los datos en placas propias (unas 12 palabras como máximo) y la firma `pe` solo en la última placa del carrusel. Ver `references/formats.md`.
 - **No inventar datos:** horarios, temporadas, distancias y nombres salen de la web o del usuario. Si falta un dato, preguntarlo en el chat (nunca marcas tipo [VERIFICAR] en los textos).
 - **Sin precios.** Sin "lujo", "exclusivo", "VIP", "jet set", "paraíso", "imperdible", "joya escondida", "experiencia única", "mágico", "destino de moda".
+- **Nunca nombrar el mate** (ni "mates", "matear"), ni en textos ni en líneas sobre fotos. Decisión del usuario (10/11/2026): es un cliché. Para la escena, otra cosa concreta: gente sentada en la arena, sin apuro.
 - **Sin clickbait, sin urgencia falsa, sin exclamaciones**, sin pedir "seguinos" o "dale like". Sin títulos con números ("Los 5 mejores…").
 - **Links:** en el feed no funcionan → "el link está en la bio". En historias, sticker de link a la página exacta.
 - **Lugares:** solo los que están en la web, contados como recomendación y nunca como publicidad: `references/strategy.md` § Recomendar lugares.

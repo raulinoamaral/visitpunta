@@ -16,6 +16,7 @@ Largo: 300 a 900 caracteres; los carruseles pueden llegar a 1.500.
 
 ## Tono
 - Voseo ("si venís en enero…"), como la web.
+- Nunca nombrar el mate (cliché, decisión del usuario).
 - Emojis: casi nunca, como mucho uno funcional. Nunca filas de emojis.
 - Las muletillas del autor (ver la skill editorial) como mucho una vez por texto.
 - Honestidad: decir lo que puede salir mal ("en enero, la Brava se llena temprano"). Da credibilidad.

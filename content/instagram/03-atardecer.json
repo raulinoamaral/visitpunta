@@ -1,0 +1,13 @@
+{
+  "out": "~/Downloads/visitpunta-instagram/03-atardecer",
+  "format": "feed",
+  "slides": [
+    { "file": "fotos/atardecer/4F379D05-148E-4F94-88DB-0D1EE095EE64.jpg", "position": "50% 50%", "style": "cover", "eyebrow": "Punta del Este", "title": "Dónde ver el atardecer", "text": "No hay un solo lugar." },
+    { "file": "fotos/punta-ballena/D8B761F3-78EE-40C8-8B02-ADA989D255D1.jpg", "position": "60% 50%", "style": "caption", "text": "Punta Ballena. Frenar en la ruta, o bajar a las rocas." },
+    { "file": "fotos/atardecer/E8DC951B-30B7-48A2-A27C-371B80D63852.jpg", "position": "50% 50%", "style": "caption", "text": "La Mansa. Gente en la arena y el agua calma." },
+    { "file": "fotos/atardecer/53CB3673-E57E-4190-83CC-AD976A1B9E56.jpg", "position": "50% 50%", "style": "caption", "text": "El puerto. Barcos quietos, mesas que se llenan." },
+    { "file": "fotos/atardecer/54154C2E-67F2-4E7C-965F-A8EB369F8082.jpg", "position": "50% 50%", "style": "caption", "text": "José Ignacio. Las playas se vacían de a poco." },
+    { "style": "card", "title": "En verano, cae más tarde.", "text": "En invierno llega antes, con las playas tranquilas." },
+    { "style": "sign" }
+  ]
+}

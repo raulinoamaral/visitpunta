@@ -1,0 +1,11 @@
+{
+  "out": "~/Downloads/visitpunta-instagram/01-presentacion",
+  "format": "feed",
+  "slides": [
+    {
+      "file": "fotos/playa/IMG_8408.webp",
+      "position": "0% 50%",
+      "style": "clean"
+    }
+  ]
+}

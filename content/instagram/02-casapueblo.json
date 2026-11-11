@@ -1,0 +1,12 @@
+{
+  "out": "~/Downloads/visitpunta-instagram/02-casapueblo",
+  "format": "feed",
+  "slides": [
+    { "file": "fotos/casapueblo/738D047E-9C35-4A06-B759-38A42693FA9F.jpg", "position": "60% 50%", "style": "cover", "eyebrow": "Punta Ballena", "title": "Casapueblo", "text": "Aparece antes de llegar." },
+    { "file": "fotos/casapueblo/C2D71476-91D0-4747-8EC0-D22AF4E3B4C7.jpg", "position": "55% 50%", "style": "clean" },
+    { "style": "card", "title": "Casi sin líneas rectas.", "text": "Páez Vilaró la construyó durante décadas." },
+    { "file": "fotos/casapueblo/0CAB99A0-A83E-42EE-9E66-7CFDF12AED24.jpg", "position": "50% 50%", "style": "caption", "text": "Cuando baja el sol, la gente va a las terrazas." },
+    { "file": "fotos/atardecer/E30F4E11-4C22-4121-A2EF-ED39FC6151C9.jpg", "position": "50% 50%", "style": "caption", "text": "Y suena la Ceremonia al Sol." },
+    { "style": "sign" }
+  ]
+}
