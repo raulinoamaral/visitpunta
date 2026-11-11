@@ -219,3 +219,22 @@
     padding-right: 1rem;
   }
 }
+
+/* ── Articles that mention this experience ─────────────── */
+.relatedArticles {
+  padding: 4rem 2rem 5rem;
+  border-top: 1px solid #e5e5e5;
+}
+
+.relatedArticlesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .relatedArticlesGrid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}

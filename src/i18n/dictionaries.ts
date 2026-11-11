@@ -95,6 +95,7 @@ const es = {
   experience: {
     timingDefault: 'Cuándo ir',
     nearby: 'Cerca',
+    keepExploring: 'Para seguir explorando',
   },
   destination: {
     stay: 'Dónde dormir',
@@ -104,6 +105,11 @@ const es = {
   },
   article: {
     keepReading: 'Seguir leyendo',
+    // Title for the places an article points to, by what they are
+    placesStay: 'Dónde quedarse cerca',
+    placesEat: 'Para comer cerca',
+    placesExplore: 'Para recorrer',
+    placesMixed: 'Lugares de esta nota',
     types: { guide: 'Guía', selection: 'Selección', experience: 'Experiencia', season: 'Temporada' } as Record<string, string>,
   },
   notFound: {
@@ -203,6 +209,7 @@ const pt: Dictionary = {
   experience: {
     timingDefault: 'Quando ir',
     nearby: 'Por perto',
+    keepExploring: 'Para continuar explorando',
   },
   destination: {
     stay: 'Onde ficar',
@@ -212,6 +219,10 @@ const pt: Dictionary = {
   },
   article: {
     keepReading: 'Continue lendo',
+    placesStay: 'Onde ficar por perto',
+    placesEat: 'Para comer por perto',
+    placesExplore: 'Para explorar',
+    placesMixed: 'Lugares deste texto',
     types: { guide: 'Guia', selection: 'Seleção', experience: 'Experiência', season: 'Temporada' },
   },
   notFound: {

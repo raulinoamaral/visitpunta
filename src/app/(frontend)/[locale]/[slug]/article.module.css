@@ -72,3 +72,40 @@
     gap: 2.5rem;
   }
 }
+
+/* ── Places the article recommends ─────────────────────── */
+.places {
+  padding: 4rem 2rem 5rem;
+  border-top: 1px solid #e5e5e5;
+}
+
+.placesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .places {
+    padding: 4rem 0 5rem 2rem;
+  }
+
+  .placesGrid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+  }
+
+  .placesGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .placesGrid > * {
+    flex: 0 0 80%;
+    scroll-snap-align: start;
+    padding-right: 1rem;
+  }
+}

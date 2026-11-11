@@ -17,6 +17,7 @@ import { isLocale, localePath, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { alternatesMetadata, documentAlternates } from '@/lib/alternates'
 import { isPublishedDoc, PUBLISHED } from '@/lib/published'
+import { findArticlesMentioning, findSimilarArticles } from '@/lib/related'
 import GallerySingle from '@/components/gallery/GallerySingle'
 import GalleryDuo from '@/components/gallery/GalleryDuo'
 import GalleryGrid from '@/components/gallery/GalleryGrid'
@@ -179,12 +180,29 @@ export default async function SlugPage({ params }: Props) {
         const expDestName = expDest?.name ?? null
         const expDestSlug = expDest?.slug ?? null
 
-        const relItems = (experience.related || [])
+        let relItems = (experience.related || [])
           .filter((r: any) => isPublishedDoc(r?.value))
           .map((r: any) => ({
             ...r.value,
             collection: r.relationTo,
           }))
+
+        // Nothing picked by hand: other experiences in the same zone
+        if (relItems.length === 0 && expDest) {
+          const { docs: sameZone } = await payload.find({
+            collection: 'experiences',
+            locale,
+            where: {
+              and: [PUBLISHED, { destination: { equals: expDest.id } }, { id: { not_equals: experience.id } }],
+            },
+            sort: 'order',
+            depth: 1,
+            limit: 4,
+          })
+          relItems = sameZone.map((e: any) => ({ ...e, collection: 'experiences' }))
+        }
+
+        const expArticles = await findArticlesMentioning(payload, locale, 'experiences', experience.id)
 
         return (
           <main>
@@ -328,6 +346,26 @@ export default async function SlugPage({ params }: Props) {
                 </section>
               </Reveal>
             )}
+
+            {expArticles.length > 0 && (
+              <Reveal>
+                <section className={expStyles.relatedArticles}>
+                  <h2 className={expStyles.relatedTitle}>{t.experience.keepExploring}</h2>
+                  <div className={expStyles.relatedArticlesGrid}>
+                    {expArticles.map((a: any) => (
+                      <ArticleCard2
+                        key={a.id}
+                        title={a.title}
+                        href={href(a.slug)}
+                        typeLabel={t.article.types[a.type] || a.type}
+                        tagline={a.tagline}
+                        image={(a.heroImage as any)?.url}
+                      />
+                    ))}
+                  </div>
+                </section>
+              </Reveal>
+            )}
           </main>
         )
       }
@@ -426,7 +464,8 @@ export default async function SlugPage({ params }: Props) {
           ],
         },
         depth: 1,
-        limit: 6,
+        // Three full rows
+        limit: 9,
       })
 
       const destHeroUrl = (dest.heroImage as any)?.url as string | undefined
@@ -541,6 +580,27 @@ export default async function SlugPage({ params }: Props) {
 
     const heroUrl = (article.heroImage as any)?.url as string | undefined
 
+    // Places and experiences the article recommends, titled by what they are
+    const articlePlaces = (article.related || [])
+      .filter((r: any) => isPublishedDoc(r?.value))
+      .map((r: any) => ({ ...r.value, collection: r.relationTo }))
+      .slice(0, 4)
+    const placeKinds = new Set(
+      articlePlaces.map((p: any) => (p.collection === 'experiences' ? 'experiences' : p.type)),
+    )
+    const onlyKind = placeKinds.size === 1 ? [...placeKinds][0] : null
+    const articlePlacesTitle =
+      onlyKind === PLACE_TYPES.DORMIR ? t.article.placesStay
+      : onlyKind === PLACE_TYPES.COMER ? t.article.placesEat
+      : onlyKind === 'experiences' ? t.article.placesExplore
+      : t.article.placesMixed
+
+    // Hand-picked reading wins; otherwise articles of the same zone or type
+    const pickedReading = (article.relatedArticles || []).filter(isPublishedDoc)
+    const keepReading = pickedReading.length > 0
+      ? pickedReading
+      : await findSimilarArticles(payload, locale, article as any)
+
     const articleSchema = {
       '@context': 'https://schema.org',
       '@type': 'Article',
@@ -645,12 +705,32 @@ export default async function SlugPage({ params }: Props) {
               })}
             </div>
           )}
-          {article.relatedArticles && article.relatedArticles.filter(isPublishedDoc).length > 0 && (
+          {articlePlaces.length > 0 && (
+            <Reveal>
+              <section className={articleStyles.places}>
+                <h3 className={articleStyles.relatedTitle}>{articlePlacesTitle}</h3>
+                <div className={articleStyles.placesGrid}>
+                  {articlePlaces.map((p: any) => (
+                    <PlaceCard
+                      key={`${p.collection}-${p.id}`}
+                      name={p.name || p.title}
+                      destination={(p.destination as any)?.name || ''}
+                      description={p.summary || ''}
+                      image={(p.cardImage as any)?.url || (p.heroImage as any)?.url || ''}
+                      href={href(p.slug)}
+                    />
+                  ))}
+                </div>
+              </section>
+            </Reveal>
+          )}
+
+          {keepReading.length > 0 && (
             <Reveal>
               <section className={articleStyles.relatedArticles}>
                 <h3 className={articleStyles.relatedTitle}>{t.article.keepReading}</h3>
                 <div className={articleStyles.relatedGrid}>
-                  {article.relatedArticles.filter(isPublishedDoc).map((rel: any) => (
+                  {keepReading.map((rel: any) => (
                     <ArticleCard2
                       key={rel.id}
                       title={rel.title}
@@ -712,6 +792,14 @@ export default async function SlugPage({ params }: Props) {
       limit: 4,
     }))
   }
+
+  // Hand-picked articles first, then the ones that recommend this place
+  const pickedArticles = (place.relatedArticles || []).filter(isPublishedDoc) as any[]
+  const mentioningArticles = await findArticlesMentioning(payload, locale, 'places', place.id)
+  const placeArticles = [
+    ...pickedArticles,
+    ...mentioningArticles.filter((a) => !pickedArticles.some((p) => p.id === a.id)),
+  ].slice(0, 3)
 
   const heroImage = place.heroImage as any
   const heroUrl = heroImage?.url || ''
@@ -892,12 +980,12 @@ export default async function SlugPage({ params }: Props) {
         </Reveal>
       )}
 
-      {place.relatedArticles && place.relatedArticles.filter(isPublishedDoc).length > 0 && (
+      {placeArticles.length > 0 && (
         <Reveal>
           <section className={styles.relatedArticles}>
             <h3 className={styles.relatedTitle}>{t.place.keepExploring}</h3>
             <div className={styles.relatedArticlesGrid}>
-              {place.relatedArticles.filter(isPublishedDoc).map((a: any) => (
+              {placeArticles.map((a: any) => (
                 <ArticleCard2
                   key={a.id}
                   title={a.title}
