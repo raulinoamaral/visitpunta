@@ -115,6 +115,12 @@
   overflow: hidden;
 }
 
+/* Photos between the description's paragraphs: narrower than the closing gallery, so the text keeps leading */
+.galleryInline {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 .galleryRow2 {
   display: grid;
   grid-template-columns: 1fr 1fr;

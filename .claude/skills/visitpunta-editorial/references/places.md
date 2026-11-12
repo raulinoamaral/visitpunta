@@ -4,12 +4,14 @@ Tipos: `comer`, `dormir`, `spots`. URL: `/{slug}`.
 
 Campos:
 - `name`, `slug`, `type`, `destination` (uno), `tags`
-- `heroImage`, `cardImage` (opcional), `gallery`
+- `heroImage`, `cardImage` (opcional), `gallery`: bloques con `layout` (single, duo, grid, featured-bottom, featured-side) y, opcional, `afterParagraph` = N para mostrar el bloque después del párrafo N de `description` (vacío: al final, debajo del texto). Para fichas nuevas, proponer un bloque entre el texto (un Duo o un Single, sin personas) además de la galería del final.
 - `summary`: frase para cards, ≤ 90 caracteres, con voz. Ej: "El restaurante de playa más conocido de José Ignacio. Y probablemente del Este."
 - `location`: dónde está, en una línea o dos. Ej: "Los Cisnes y Las Calandrias, Playa Brava".
 - `description`: **texto plano** (textarea, sin bloques ni subtítulos), 120–250 palabras, 4–6 párrafos cortos.
 - `highlights`: 3–4 ítems cortos. Para `comer` funciona como "Tené en cuenta" y para `dormir`, como "Por qué alojarse aquí". Concretos y prácticos: "Se pide y paga en caja antes de sentarse", "Fila en temporada alta".
-- `cta.url` (reserva) y `cta.mapsUrl`: solo si vienen en el material. Si no, `[VERIFICAR]`.
+- `cta.url` (reserva) y `cta.mapsUrl`: solo si vienen en el material. Si no, preguntar al autor.
+  - **`dormir`: siempre y solo Booking** (decisión del autor, 12/11/2026), nunca la web del hotel. Es el link de afiliado con el que se cobra. Se carga la URL limpia de la ficha, sin parámetros ni idioma: `https://www.booking.com/hotel/uy/{nombre}.html` (si llega `….es.html`, sacar el `.es`). El sitio le agrega el id de partner solo (`withBookingAid` en `[slug]/page.tsx`). Si el autor no la pasó, pedírsela.
+  - `comer`: la reserva propia del lugar (Meitre, web, WhatsApp).
 - `relatedPlaces`: grupos con título editorial ("Para quedarse cerca", "Para comer después") → lugares/experiencias del inventario.
 - `relatedArticles`, `seoTitle`, `seoDescription`.
 

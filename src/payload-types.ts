@@ -218,11 +218,15 @@ export interface Place {
   cardImage?: (number | null) | Media;
   gallery?:
     | {
-        layout: 'duo' | 'grid' | 'featured-bottom' | 'featured-side';
+        layout: 'single' | 'duo' | 'grid' | 'featured-bottom' | 'featured-side';
         images: {
           image: number | Media;
           id?: string | null;
         }[];
+        /**
+         * Mostrar después del párrafo N de la descripción (los párrafos se separan con una línea en blanco). Vacío: debajo del texto, como siempre.
+         */
+        afterParagraph?: number | null;
         id?: string | null;
       }[]
     | null;
@@ -824,6 +828,7 @@ export interface PlacesSelect<T extends boolean = true> {
               image?: T;
               id?: T;
             };
+        afterParagraph?: T;
         id?: T;
       };
   cta?:

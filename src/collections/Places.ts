@@ -161,6 +161,7 @@ export const Places: CollectionConfig = {
                   required: true,
                   defaultValue: 'duo',
                   options: [
+                    { label: 'Single — 1 foto', value: 'single' },
                     { label: 'Duo — 2 fotos', value: 'duo' },
                     { label: 'Grid — 3 fotos en fila', value: 'grid' },
                     { label: 'Featured Bottom — 2 arriba + 3 abajo', value: 'featured-bottom' },
@@ -179,6 +180,15 @@ export const Places: CollectionConfig = {
                       required: true,
                     },
                   ],
+                },
+                {
+                  name: 'afterParagraph',
+                  type: 'number',
+                  min: 1,
+                  admin: {
+                    description:
+                      'Mostrar después del párrafo N de la descripción (los párrafos se separan con una línea en blanco). Vacío: debajo del texto, como siempre.',
+                  },
                 },
               ],
             },

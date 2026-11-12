@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Fragment } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
@@ -18,6 +19,7 @@ import { getDictionary } from '@/i18n/dictionaries'
 import { alternatesMetadata, documentAlternates } from '@/lib/alternates'
 import { isPublishedDoc, PUBLISHED } from '@/lib/published'
 import { findArticlesMentioning, findSimilarArticles } from '@/lib/related'
+import { formatCredit } from '@/lib/credit'
 import GallerySingle from '@/components/gallery/GallerySingle'
 import GalleryDuo from '@/components/gallery/GalleryDuo'
 import GalleryGrid from '@/components/gallery/GalleryGrid'
@@ -808,6 +810,37 @@ export default async function SlugPage({ params }: Props) {
   const heroImage = place.heroImage as any
   const heroUrl = heroImage?.url || ''
 
+  function renderGalleryBlock(block: any, key: number) {
+    const images = (block.images || []).map((item: any) => ({
+      url: item.image?.url || '',
+      alt: item.image?.alt || '',
+      credit: formatCredit(item.image?.credit),
+    }))
+    if (block.layout === 'single') return <GallerySingle key={key} images={images} />
+    if (block.layout === 'duo') return <GalleryDuo key={key} images={images} />
+    if (block.layout === 'grid') return <GalleryGrid key={key} images={images} />
+    if (block.layout === 'featured-bottom') return <GalleryFeaturedBottom key={key} images={images} />
+    if (block.layout === 'featured-side') return <GalleryFeaturedSide key={key} images={images} />
+    return null
+  }
+
+  // Gallery blocks with "afterParagraph" go between the description's paragraphs; the rest stay below the text
+  const paragraphs: string[] = place.description ? place.description.split(/\n\s*\n/) : []
+  const galleryBlocks: any[] = place.gallery || []
+  const isInline = (block: any) => block.afterParagraph >= 1 && block.afterParagraph < paragraphs.length
+  const inlineBlocks = galleryBlocks.filter(isInline)
+  const bottomBlocks = galleryBlocks.filter((block) => !isInline(block))
+  const descriptionChunks: { text: string; blocks: any[] }[] = []
+  let chunkStart = 0
+  for (const position of [...new Set(inlineBlocks.map((b) => b.afterParagraph as number))].sort((a, b) => a - b)) {
+    descriptionChunks.push({
+      text: paragraphs.slice(chunkStart, position).join('\n\n'),
+      blocks: inlineBlocks.filter((b) => b.afterParagraph === position),
+    })
+    chunkStart = position
+  }
+  if (paragraphs.length > chunkStart) descriptionChunks.push({ text: paragraphs.slice(chunkStart).join('\n\n'), blocks: [] })
+
   const placeSchema = {
     '@context': 'https://schema.org',
     '@type': place.type === PLACE_TYPES.DORMIR ? 'Hotel' : place.type === PLACE_TYPES.COMER ? 'Restaurant' : 'Place',
@@ -859,33 +892,26 @@ export default async function SlugPage({ params }: Props) {
         </section>
       </Reveal>
 
-      {place.description && (
-        <Reveal>
-          <section className={styles.description}>
-            <p className={styles.descriptionText}>{place.description}</p>
-          </section>
-        </Reveal>
-      )}
+      {descriptionChunks.map((chunk, i) => (
+        <Fragment key={i}>
+          <Reveal>
+            <section className={styles.description}>
+              <p className={styles.descriptionText}>{chunk.text}</p>
+            </section>
+          </Reveal>
+          {chunk.blocks.length > 0 && (
+            <Reveal>
+              <section className={`${styles.gallery} ${styles.galleryInline}`}>
+                {chunk.blocks.map((block, j) => renderGalleryBlock(block, j))}
+              </section>
+            </Reveal>
+          )}
+        </Fragment>
+      ))}
 
-      {place.gallery && place.gallery.length > 0 && (
+      {bottomBlocks.length > 0 && (
         <Reveal>
-          <section className={styles.gallery}>
-            {place.gallery.map((block: any, i: number) => {
-              const images = (block.images || []).map((item: any) => {
-                const credit = item.image?.credit || ''
-                return {
-                  url: item.image?.url || '',
-                  alt: item.image?.alt || '',
-                  credit: credit && !credit.startsWith('©') ? `© ${credit}` : credit,
-                }
-              })
-              if (block.layout === 'duo') return <GalleryDuo key={i} images={images} />
-              if (block.layout === 'grid') return <GalleryGrid key={i} images={images} />
-              if (block.layout === 'featured-bottom') return <GalleryFeaturedBottom key={i} images={images} />
-              if (block.layout === 'featured-side') return <GalleryFeaturedSide key={i} images={images} />
-              return null
-            })}
-          </section>
+          <section className={styles.gallery}>{bottomBlocks.map((block, i) => renderGalleryBlock(block, i))}</section>
         </Reveal>
       )}
 
