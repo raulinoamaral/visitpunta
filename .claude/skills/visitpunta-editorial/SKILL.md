@@ -91,7 +91,8 @@ Releer el texto entero contra esta lista antes de entregar. Si aparece algo, ree
 - Preguntas retóricas de apertura ("¿Buscás el lugar perfecto para…?").
 - Enumeraciones de a tres por reflejo ("playa, sol y relax"). Si van tres cosas, que sean concretas y no adjetivos.
 - Cierres que resumen ("En resumen…", "Ya sea que busques X o Y, Z tiene algo para vos").
-- Lujo ostentoso y cliché turístico: "exclusivo", "lujoso", "de lujo", "VIP", "glamour", "jet set", "destino de moda", "la perla del Atlántico", "Saint-Tropez de Sudamérica", "todo lo que necesitás saber", "amplia oferta".
+- Lujo ostentoso y cliché turístico: "lujoso", "de lujo", "VIP", "glamour", "jet set", "destino de moda", "la perla del Atlántico", "Saint-Tropez de Sudamérica", "todo lo que necesitás saber", "amplia oferta".
+- "Exclusivo" sí se puede (decisión del usuario, 23/11/2026: es lo que busca quien va a Punta del Este), con medida: para algo concreto (una playa con poca gente, un lugar chico), nunca como adjetivo de relleno ni más de una vez por pieza.
 - Signos de exclamación.
 - Adjetivos dobles inflados ("vibrante y cosmopolita").
 - Raya larga (—) más de una vez por pieza. Preferir punto o coma.
