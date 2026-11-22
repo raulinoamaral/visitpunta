@@ -34,6 +34,11 @@ No repetir el mismo tipo dos días seguidos. Alternar día, atardecer y noche.
 - Cada post tiene una página destino. En el feed: "lo contamos en la web, el link está en la bio".
 - Prioridad: dónde comer, dónde dormir, ballenas (en temporada), notas.
 
+## Guías de lugares en carrusel (decisión del usuario, 22/11/2026)
+- Carruseles tipo **dónde comer** y **dónde dormir** (por zona, por momento o por estilo): son lo más guardable y llevan a las fichas de la web, que es lo que paga. En Punta, más seguido (hay muchas opciones); en Cabo, cuando haya material.
+- Cada lugar: su foto (propia o del lugar en un Collab) o una placa con el nombre y una línea con el detalle que lo hace distinto. Etiquetar a cada lugar en su imagen y avisarles por mensaje para que lo compartan.
+- Cierre con una placa "La guía completa, en la web" y la firma. Link en la bio a la página de la lista.
+
 ## Recomendar lugares
 - **Arrancar con selecciones, no con un lugar solo** (decisión del usuario, 13/11/2026): posts tipo guía con varios lugares ("Dónde comer en José Ignacio", "La Barra", "Nuestros favoritos en…"), con la estética de la cuenta. Referencias que mandó: cuentas de otros (una con 131 envíos), y la guía Softer Volumes por el diseño; pedirle sus posts antes de armar el primero. El post de un lugar solo, más adelante.
 - Solo los que están en la web (`visitpunta-editorial/references/inventory.md`, places).
@@ -47,3 +52,4 @@ No repetir el mismo tipo dos días seguidos. Alternar día, atardecer y noche.
 - Antes de cada tanda: qué posts tuvieron más alcance, guardados y compartidos, y qué tipo (foto, carrusel, reel) rinde más. Ajustar la mezcla con eso y anotar lo aprendido en `registro.md` § Aprendizajes.
 - Con pocos seguidores los números son chicos y ruidosos: mirar tendencias de varias semanas, no un post suelto.
 - **El nicho:** `node scripts/instagram/references.mjs visitpunta` muestra qué posts de las cuentas de referencia (`content/instagram/referencias.json`) tuvieron más interacción respecto de sus seguidores, y qué formato rinde. Sirve para ver qué temas y formatos enganchan, nunca para copiar: la voz y la estética siguen siendo las de la guía. Solo hay likes y comentarios (no alcance ni guardados) y solo de cuentas profesionales.
+- **Criterio del usuario (22/11/2026):** las cuentas de referencia son solo una orientación, nunca la guía. Lo que manda es la línea de la guía.
