@@ -12,6 +12,9 @@ const nextConfig = {
       { source: '/gastronomia/la-huella', destination: '/la-huella', permanent: true },
       { source: '/alojamientos/the-grand-hotel', destination: '/alojamientos', permanent: true },
       { source: '/articulos/donde-dormir-en-punta', destination: '/alojamientos', permanent: true },
+      // Old URLs Google still requests (Search Console 404s, 23/11/2026)
+      { source: '/playas-en-punta-del-este', destination: '/que-playa-elegir-en-punta-del-este', permanent: true },
+      { source: '/index.htm', destination: '/', permanent: true },
       // Articles used to live under /articulos; they are served at the root now
       { source: '/articulos/:slug', destination: '/:slug', permanent: true },
     ]
