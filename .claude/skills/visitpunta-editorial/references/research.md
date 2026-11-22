@@ -23,3 +23,6 @@ Si el autor pidió la pieza directamente, el brief va arriba de la ficha, sin fr
 ## Contradicciones y datos dudosos
 
 Si las fuentes no coinciden (horarios, temporada de apertura, precios), no elegir una: marcar `[VERIFICAR: las fuentes dicen X e Y]`.
+
+## Search Console (búsquedas reales del sitio)
+`node scripts/seo/search-console.mjs visitpunta.com [días] [query|page <texto>]` (solo lectura; la clave está fuera del repo, en `~/.config/google/search-console.json`: no moverla ni mostrarla). Muestra las búsquedas y páginas principales, las búsquedas casi ganadas (posición 8 a 20), las páginas con CTR bajo y los países. Usarlo antes de proponer notas nuevas o reescribir un `seoTitle`: la keyword sale de lo que la gente ya busca.
