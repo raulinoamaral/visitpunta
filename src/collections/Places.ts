@@ -1,7 +1,9 @@
 import type { CollectionConfig } from 'payload'
+import { notifyIndexNow } from '@/lib/indexNow'
 
 export const Places: CollectionConfig = {
   slug: 'places',
+  hooks: { afterChange: [notifyIndexNow] },
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'type', 'destination', 'featured'],

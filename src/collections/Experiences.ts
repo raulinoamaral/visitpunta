@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { notifyIndexNow } from '@/lib/indexNow'
 import { TextBlock } from '@/blocks/TextBlock'
 import { MediaBlock } from '@/blocks/MediaBlock'
 import { QuoteBlock } from '@/blocks/QuoteBlock'
@@ -6,6 +7,7 @@ import { PlaceBlock } from '@/blocks/PlaceBlock'
 
 export const Experiences: CollectionConfig = {
   slug: 'experiences',
+  hooks: { afterChange: [notifyIndexNow] },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'destination', 'published'],

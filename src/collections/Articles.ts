@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { notifyIndexNow } from '@/lib/indexNow'
 import { ARTICLE_TYPES } from '@/lib/constants'
 import { TextBlock } from '@/blocks/TextBlock'
 import { MediaBlock } from '@/blocks/MediaBlock'
@@ -10,6 +11,7 @@ import { SocialGalleryBlock } from '@/blocks/SocialGalleryBlock'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
+  hooks: { afterChange: [notifyIndexNow] },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'type', 'published', 'featured'],
