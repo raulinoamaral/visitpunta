@@ -14,7 +14,7 @@ import RenderSocialCarousel from '@/components/blocks/RenderSocialCarousel'
 import RenderSocialVideo from '@/components/blocks/RenderSocialVideo'
 import RenderSocialGallery from '@/components/blocks/RenderSocialGallery'
 import { PLACE_TYPES } from '@/lib/constants'
-import { isLocale, localePath, type Locale } from '@/i18n/config'
+import { HTML_LANG, isLocale, localePath, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { alternatesMetadata, documentAlternates } from '@/lib/alternates'
 import { isPublishedDoc, PUBLISHED } from '@/lib/published'
@@ -28,6 +28,7 @@ import GalleryFeaturedSide from '@/components/gallery/GalleryFeaturedSide'
 import PlaceCard from '@/components/PlaceCard'
 import TrackedLink from '@/components/TrackedLink'
 import JsonLd from '@/components/JsonLd'
+import { absoluteUrl, breadcrumbSchema, pageUrl, publisherRef } from '@/lib/structuredData'
 import ArticleCard2 from '@/components/ArticleCard2'
 import MiniCard from '@/components/MiniCard'
 import ExpandableGrid from '@/components/ExpandableGrid'
@@ -206,8 +207,23 @@ export default async function SlugPage({ params }: Props) {
 
         const expArticles = await findArticlesMentioning(payload, locale, 'experiences', experience.id)
 
+        const experienceSchema = {
+          '@context': 'https://schema.org',
+          '@type': 'TouristAttraction',
+          name: experience.title,
+          description: experience.summary || experience.tagline || '',
+          url: pageUrl(locale, experience.slug),
+          inLanguage: HTML_LANG[locale],
+          ...(expHeroUrl && { image: absoluteUrl(expHeroUrl) }),
+          ...(expDestName && {
+            address: { '@type': 'PostalAddress', addressLocality: expDestName, addressCountry: 'UY' },
+          }),
+        }
+
         return (
           <main>
+            <JsonLd data={experienceSchema} />
+            <JsonLd data={breadcrumbSchema(locale, [{ name: expDestName, slug: expDestSlug }, { name: experience.title, slug: experience.slug }])} />
             {expHeroUrl && <PageHero image={expHeroUrl} title="" />}
 
             <Reveal>
@@ -496,8 +512,20 @@ export default async function SlugPage({ params }: Props) {
         }
       }
 
+      const destinationSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Place',
+        name: dest.name,
+        description: dest.summary || dest.tagline || '',
+        url: pageUrl(locale, dest.slug),
+        ...(destHeroUrl && { image: absoluteUrl(destHeroUrl) }),
+        containedInPlace: { '@type': 'Country', name: 'Uruguay' },
+      }
+
       return (
         <main>
+          <JsonLd data={destinationSchema} />
+          <JsonLd data={breadcrumbSchema(locale, [{ name: dest.name, slug: dest.slug }])} />
           {destHeroUrl && (
             <section className={destStyles.hero}>
               <Image src={destHeroUrl} alt={dest.name} fill className={destStyles.heroImage} priority />
@@ -618,18 +646,20 @@ export default async function SlugPage({ params }: Props) {
       '@type': 'Article',
       headline: article.title,
       description: article.tagline || '',
-      url: `https://visitpunta.com${href(article.slug)}`,
-      ...(heroUrl && { image: heroUrl }),
-      publisher: {
-        '@type': 'Organization',
-        name: 'Visit Punta',
-        url: 'https://visitpunta.com',
-      },
+      url: pageUrl(locale, article.slug),
+      mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl(locale, article.slug) },
+      inLanguage: HTML_LANG[locale],
+      datePublished: article.createdAt,
+      dateModified: article.updatedAt,
+      ...(heroUrl && { image: absoluteUrl(heroUrl) }),
+      author: publisherRef(),
+      publisher: publisherRef(),
     }
 
     return (
       <main>
         <JsonLd data={articleSchema} />
+        <JsonLd data={breadcrumbSchema(locale, [{ name: article.title, slug: article.slug }])} />
         <article>
           {heroUrl && <PageHero image={heroUrl} title="" />}
 
@@ -846,12 +876,15 @@ export default async function SlugPage({ params }: Props) {
     '@type': place.type === PLACE_TYPES.DORMIR ? 'Hotel' : place.type === PLACE_TYPES.COMER ? 'Restaurant' : 'Place',
     name: place.name,
     description: place.summary || place.description || '',
-    url: `https://visitpunta.com${href(place.slug)}`,
-    ...(heroUrl && { image: heroUrl }),
-    ...(destinationName && {
+    url: pageUrl(locale, place.slug),
+    inLanguage: HTML_LANG[locale],
+    ...(heroUrl && { image: absoluteUrl(heroUrl) }),
+    ...(place.cta?.mapsUrl && { hasMap: place.cta.mapsUrl }),
+    ...((destinationName || place.location) && {
       address: {
         '@type': 'PostalAddress',
-        addressLocality: destinationName,
+        ...(place.location && { streetAddress: place.location.replace(/\s+/g, ' ').trim() }),
+        ...(destinationName && { addressLocality: destinationName }),
         addressCountry: 'UY',
       },
     }),
@@ -860,6 +893,7 @@ export default async function SlugPage({ params }: Props) {
   return (
     <main>
       <JsonLd data={placeSchema} />
+      <JsonLd data={breadcrumbSchema(locale, [{ name: destinationName, slug: destinationSlug }, { name: place.name, slug: place.slug }])} />
       {heroUrl && <PageHero image={heroUrl} title="" />}
 
       <Reveal>

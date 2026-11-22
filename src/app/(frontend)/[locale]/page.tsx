@@ -12,6 +12,8 @@ import { getDictionary } from '@/i18n/dictionaries'
 import { sectionHref } from '@/i18n/routes'
 import { alternatesMetadata, staticAlternates } from '@/lib/alternates'
 import { PUBLISHED } from '@/lib/published'
+import JsonLd from '@/components/JsonLd'
+import { homeSchema } from '@/lib/structuredData'
 import styles from './page.module.css'
 
 // Rebuilt in the background at most every 5 minutes, so edits and new translations show up without a deploy
@@ -75,6 +77,7 @@ export default async function Home({ params }: Props) {
   })
   return (
     <main>
+      <JsonLd data={homeSchema(locale, t.meta.homeDescription)} />
       <section className={styles.hero}>
         <Image
           src="/images/home-punta-del-este.jpg"
