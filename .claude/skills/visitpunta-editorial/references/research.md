@@ -26,3 +26,6 @@ Si las fuentes no coinciden (horarios, temporada de apertura, precios), no elegi
 
 ## Search Console (búsquedas reales del sitio)
 `node scripts/seo/search-console.mjs visitpunta.com [días] [query|page <texto>]` (solo lectura; la clave está fuera del repo, en `~/.config/google/search-console.json`: no moverla ni mostrarla). Muestra las búsquedas y páginas principales, las búsquedas casi ganadas (posición 8 a 20), las páginas con CTR bajo y los países. Usarlo antes de proponer notas nuevas o reescribir un `seoTitle`: la keyword sale de lo que la gente ya busca.
+
+## Google Analytics 4 (qué se lee y de dónde llega la gente)
+`node scripts/seo/analytics.mjs visitpunta.com [días]` (solo lectura, misma clave; el id de la propiedad está en `~/.config/google/analytics.json`). Muestra las páginas más vistas, las fuentes (Google, ChatGPT, Instagram…) y a qué página llega cada asistente de IA.
