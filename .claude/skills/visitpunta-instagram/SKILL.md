@@ -16,6 +16,7 @@ La cuenta es de una **marca** (la familia Visit: visitpunta y visitcabopolonio, 
 ## Antes de arrancar
 - Leer la skill `visitpunta-editorial` (`SKILL.md`, la voz) si no se leyó en la sesión.
 - Leer `content/instagram/registro.md`: qué se publicó, qué fotos ya fueron portada y qué temas se tocaron.
+- **Mirar los números:** `node scripts/instagram/stats.mjs visitpunta` (solo lectura, token en `~/.config/instagram/`, nunca en el repo). Alcance, vistas, guardados, compartidos y likes de los últimos posts; usarlos para decidir la mezcla de la tanda.
 - Ver qué hay en la web: `visitpunta-editorial/references/inventory.md` (si parece viejo, regenerarlo con el comando que indica esa skill). Cada post tiene que tener una página a la cual mandar.
 
 ## Flujo

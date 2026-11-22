@@ -35,6 +35,7 @@ No repetir el mismo tipo dos días seguidos. Alternar día, atardecer y noche.
 - Prioridad: dónde comer, dónde dormir, ballenas (en temporada), notas.
 
 ## Recomendar lugares
+- **Arrancar con selecciones, no con un lugar solo** (decisión del usuario, 13/11/2026): posts tipo guía con varios lugares ("Dónde comer en José Ignacio", "La Barra", "Nuestros favoritos en…"), con la estética de la cuenta. Referencias que mandó: cuentas de otros (una con 131 envíos), y la guía Softer Volumes por el diseño; pedirle sus posts antes de armar el primero. El post de un lugar solo, más adelante.
 - Solo los que están en la web (`visitpunta-editorial/references/inventory.md`, places).
 - Como mucho **uno por semana**, alternando comer y dormir.
 - Contados como recomendación de la guía, con el detalle que los hace distintos, nunca como aviso: sin "promo" ni precios.
@@ -42,4 +43,6 @@ No repetir el mismo tipo dos días seguidos. Alternar día, atardecer y noche.
 - Llevar a la ficha de la web, no a su Instagram.
 
 ## Medir
-Después de cada tanda, pedir al usuario las estadísticas básicas (alcance, guardados, compartidos, visitas al perfil, toques en el link) y ajustar. Anotar lo aprendido en `registro.md` § Aprendizajes.
+- Los números se leen solos con `node scripts/instagram/stats.mjs visitpunta` (API oficial de Meta, solo lectura). No hace falta pedirle capturas al usuario.
+- Antes de cada tanda: qué posts tuvieron más alcance, guardados y compartidos, y qué tipo (foto, carrusel, reel) rinde más. Ajustar la mezcla con eso y anotar lo aprendido en `registro.md` § Aprendizajes.
+- Con pocos seguidores los números son chicos y ruidosos: mirar tendencias de varias semanas, no un post suelto.
