@@ -87,7 +87,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     limit: 1,
   })
   if (places[0]) {
-    const title = `${places[0].seoTitle || places[0].name} — Visit Punta`
+    const title = `${places[0].seoTitle || places[0].name}`
     const description = places[0].seoDescription || places[0].summary || undefined
     const image = (places[0].heroImage as any)?.url
     return buildMeta('places', places[0].id, title, description, image)
@@ -101,7 +101,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     limit: 1,
   })
   if (articles[0]) {
-    const title = `${articles[0].seoTitle || articles[0].title} — Visit Punta`
+    const title = `${articles[0].seoTitle || articles[0].title}`
     const description = articles[0].seoDescription || articles[0].tagline || undefined
     const image = (articles[0].heroImage as any)?.url
     return buildMeta('articles', articles[0].id, title, description, image)
@@ -115,7 +115,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     limit: 1,
   })
   if (experiences[0]) {
-    const title = `${experiences[0].seoTitle || experiences[0].title} — Visit Punta`
+    const title = `${experiences[0].seoTitle || experiences[0].title}`
     const description = experiences[0].seoDescription || experiences[0].summary || undefined
     const image = (experiences[0].heroImage as any)?.url
     return buildMeta('experiences', experiences[0].id, title, description, image)
@@ -129,7 +129,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     limit: 1,
   })
   if (destinations[0]) {
-    const title = `${destinations[0].seoTitle || destinations[0].name} — Visit Punta`
+    const title = `${destinations[0].seoTitle || destinations[0].name}`
     const description = destinations[0].seoDescription || destinations[0].summary || undefined
     const image = (destinations[0].heroImage as any)?.url
     return buildMeta('destinations', destinations[0].id, title, description, image)
