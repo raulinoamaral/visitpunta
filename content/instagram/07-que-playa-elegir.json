@@ -1,0 +1,15 @@
+{
+  "out": "~/Downloads/visitpunta-instagram/07-que-playa-elegir",
+  "format": "feed",
+  "slides": [
+    { "file": "fotos/playa/web-02-mansa.webp", "position": "50% 50%", "style": "cover", "eyebrow": "Punta del Este", "title": "Qué playa elegir", "text": "Depende de cómo quieras pasar el día." },
+    { "file": "fotos/playa/web-03-mansa.webp", "position": "50% 50%", "style": "caption", "text": "La Mansa. Agua calma y, al final, el sol cayendo sobre la bahía." },
+    { "file": "fotos/playa/web-07-brava.webp", "position": "50% 50%", "style": "caption", "text": "La Brava. Olas, rambla y siempre algo pasando." },
+    { "file": "fotos/playa/E313FF58-ECFA-41B0-8817-308F43C85B1A.jpg", "position": "50% 50%", "style": "caption", "text": "Bikini. Tranquila a la mañana; a la tarde llega la música." },
+    { "file": "fotos/playa/web-13-montoya-pexels.webp", "position": "50% 50%", "style": "caption", "text": "Montoya. Surf y el ritmo de La Barra." },
+    { "file": "fotos/playa/web-14-emir.webp", "position": "40% 50%", "style": "caption", "text": "El Emir. Chica, entre piedras, a pasos de Gorlero." },
+    { "file": "fotos/playa/web-17-jimansa.webp", "position": "50% 50%", "style": "caption", "text": "José Ignacio. El mar cambia de un lado al otro del faro." },
+    { "style": "card", "title": "¿Mansa o Brava?", "text": "Contanos cuál es la tuya." },
+    { "style": "sign" }
+  ]
+}

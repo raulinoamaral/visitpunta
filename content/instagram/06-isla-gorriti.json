@@ -1,0 +1,11 @@
+{
+  "out": "~/Downloads/visitpunta-instagram/06-isla-gorriti",
+  "format": "feed",
+  "slides": [
+    { "file": "fotos/isla-gorriti/IMG_0868.jpeg", "position": "50% 50%", "style": "cover", "eyebrow": "Punta del Este", "title": "Isla Gorriti", "text": "Está ahí enfrente, pero cambia todo." },
+    { "file": "fotos/isla-gorriti/IMG_0913.jpeg", "position": "50% 50%", "style": "caption", "text": "Sin autos. Senderos de arena entre pinos altos." },
+    { "style": "card", "title": "Pocos minutos de lancha.", "text": "Hay horarios de ida y vuelta." },
+    { "file": "fotos/puerto/F72EC41D-1F6B-4157-BDAB-C0A75CCF699A.jpg", "position": "50% 50%", "style": "caption", "text": "El último barco marca el cierre del día." },
+    { "style": "sign" }
+  ]
+}
