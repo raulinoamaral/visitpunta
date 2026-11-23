@@ -52,6 +52,14 @@ type Props = {
   params: Promise<{ locale: string; slug: string }>
 }
 
+// Each page is rendered on its first visit and then served from cache, refreshed every 5 minutes.
+// Without this every visit and every crawler hit re-ran the deep CMS queries against the database.
+export const revalidate = 300
+
+export function generateStaticParams() {
+  return []
+}
+
 // A document is reachable in a language only through that language's slug, once published there
 const bySlug = (slug: string) => ({ and: [{ slug: { equals: slug } }, PUBLISHED] })
 
