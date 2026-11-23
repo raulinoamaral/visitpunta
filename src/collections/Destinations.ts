@@ -1,9 +1,10 @@
 import type { CollectionConfig } from 'payload'
 import { notifyIndexNow } from '@/lib/indexNow'
+import { revalidateOnChange, revalidateOnDelete } from '@/lib/revalidate'
 
 export const Destinations: CollectionConfig = {
   slug: 'destinations',
-  hooks: { afterChange: [notifyIndexNow] },
+  hooks: { afterChange: [notifyIndexNow, revalidateOnChange], afterDelete: [revalidateOnDelete] },
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'slug'],

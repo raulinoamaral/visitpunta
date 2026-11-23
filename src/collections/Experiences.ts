@@ -4,10 +4,11 @@ import { TextBlock } from '@/blocks/TextBlock'
 import { MediaBlock } from '@/blocks/MediaBlock'
 import { QuoteBlock } from '@/blocks/QuoteBlock'
 import { PlaceBlock } from '@/blocks/PlaceBlock'
+import { revalidateOnChange, revalidateOnDelete } from '@/lib/revalidate'
 
 export const Experiences: CollectionConfig = {
   slug: 'experiences',
-  hooks: { afterChange: [notifyIndexNow] },
+  hooks: { afterChange: [notifyIndexNow, revalidateOnChange], afterDelete: [revalidateOnDelete] },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'destination', 'published'],

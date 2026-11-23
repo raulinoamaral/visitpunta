@@ -8,10 +8,11 @@ import { PlaceBlock } from '@/blocks/PlaceBlock'
 import { SocialCarouselBlock } from '@/blocks/SocialCarouselBlock'
 import { SocialVideoBlock } from '@/blocks/SocialVideoBlock'
 import { SocialGalleryBlock } from '@/blocks/SocialGalleryBlock'
+import { revalidateOnChange, revalidateOnDelete } from '@/lib/revalidate'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
-  hooks: { afterChange: [notifyIndexNow] },
+  hooks: { afterChange: [notifyIndexNow, revalidateOnChange], afterDelete: [revalidateOnDelete] },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'type', 'published', 'featured'],

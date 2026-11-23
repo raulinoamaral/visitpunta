@@ -1,8 +1,10 @@
 import type { CollectionConfig } from 'payload'
 import { PLACE_TYPES } from '../lib/constants'
+import { revalidateOnChange, revalidateOnDelete } from '@/lib/revalidate'
 
 export const Tags: CollectionConfig = {
   slug: 'tags',
+  hooks: { afterChange: [revalidateOnChange], afterDelete: [revalidateOnDelete] },
   admin: {
     useAsTitle: 'label',
     defaultColumns: ['label', 'type'],
