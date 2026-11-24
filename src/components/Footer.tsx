@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { localePath, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { sectionHref } from '@/i18n/routes'
+import { instagramHandle, instagramUrl } from '@/lib/structuredData'
 import Logo from './Logo'
 import styles from './Footer.module.css'
 
@@ -33,8 +34,8 @@ export default function Footer({ locale }: Props) {
           </Link>
 
           <div className={styles.social}>
-            <a href="https://instagram.com/visitpunta" target="_blank" rel="noopener noreferrer">
-              @visitpunta
+            <a href={instagramUrl(locale)} target="_blank" rel="noopener noreferrer">
+              @{instagramHandle(locale)}
             </a>
             <p className={styles.suggest}>{t.footer.suggest}</p>
             <a href="mailto:hello@visitpunta.com">hello@visitpunta.com</a>
