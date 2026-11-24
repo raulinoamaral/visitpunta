@@ -15,6 +15,7 @@ No repetir el mismo tipo dos días seguidos. Alternar día, atardecer y noche.
 - **Picos:** ballenas (julio a octubre) y Semana de Turismo.
 - Si una semana viene floja de fotos, mejor menos y buenos que relleno, y decirlo.
 - **Arranque:** el perfil vuelve a empezar (posts viejos archivados). Publicar los 3 primeros posts seguidos para que la grilla arranque con una fila completa.
+- **Reels en pausa (decisión del usuario, 24/11/2026):** no proponerlos en las tandas hasta que el usuario cargue videos propios y se arme el proceso de reels. Feed: fotos y carruseles.
 - **Historias:** con pocos seguidores activos rinden poco. No proponer historias del día a día hasta que el usuario lo decida. Sí, una vez: los sets de las destacadas con sus tapas. Recordarle compartir cada post en sus historias.
 
 ## Calendario
@@ -31,13 +32,13 @@ No repetir el mismo tipo dos días seguidos. Alternar día, atardecer y noche.
 - **Ubicación siempre**, palabras clave en el texto, 3 a 5 hashtags.
 
 ## Llevar a la web
-- Cada post tiene una página destino. En el feed: "lo contamos en la web, el link está en la bio".
+- Cada post tiene una página destino, nombrada como dato en el texto ("está en visitpunta.com"), **nunca "link en la bio"** (decisión del usuario, 24/11/2026). El link de la bio es fijo, a la home.
 - Prioridad: dónde comer, dónde dormir, ballenas (en temporada), notas.
 
 ## Guías de lugares en carrusel (decisión del usuario, 22/11/2026)
 - Carruseles tipo **dónde comer** y **dónde dormir** (por zona, por momento o por estilo): son lo más guardable y llevan a las fichas de la web, que es lo que paga. En Punta, más seguido (hay muchas opciones); en Cabo, cuando haya material.
 - Cada lugar: su foto (propia o del lugar en un Collab) o una placa con el nombre y una línea con el detalle que lo hace distinto. Etiquetar a cada lugar en su imagen y avisarles por mensaje para que lo compartan.
-- Cierre con una placa "La guía completa, en la web" y la firma. Link en la bio a la página de la lista.
+- Cierre con una placa "La guía completa, en visitpunta.com" y la firma.
 
 ## Recomendar lugares
 - **Arrancar con selecciones, no con un lugar solo** (decisión del usuario, 13/11/2026): posts tipo guía con varios lugares ("Dónde comer en José Ignacio", "La Barra", "Nuestros favoritos en…"), con la estética de la cuenta. Referencias que mandó: cuentas de otros (una con 131 envíos), y la guía Softer Volumes por el diseño; pedirle sus posts antes de armar el primero. El post de un lugar solo, más adelante.

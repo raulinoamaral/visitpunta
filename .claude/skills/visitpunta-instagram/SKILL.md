@@ -37,6 +37,6 @@ La cuenta es de una **marca** (la familia Visit: visitpunta y visitcabopolonio, 
 - **Sin precios.** Sin "lujo", "VIP", "jet set", "paraíso", "imperdible", "joya escondida", "experiencia única", "mágico", "destino de moda".
 - **Nunca nombrar el mate** (ni "mates", "matear"), ni en textos ni en líneas sobre fotos. Decisión del usuario (10/11/2026): es un cliché. Para la escena, otra cosa concreta: gente sentada en la arena, sin apuro.
 - **Sin clickbait, sin urgencia falsa, sin exclamaciones**, sin pedir "seguinos" o "dale like". Sin títulos con números ("Los 5 mejores…").
-- **Links:** en el feed no funcionan → "el link está en la bio". En historias, sticker de link a la página exacta.
+- **Links:** en el feed no funcionan. **Nunca "link en la bio"**: el link de la bio es fijo, a la home, y no se cambia por post. Los posts con una página detrás nombran la web como dato ("está en visitpunta.com"). En historias, sticker de link a la página exacta.
 - **Lugares:** solo los que están en la web, contados como recomendación y nunca como publicidad: `references/strategy.md` § Recomendar lugares.
 - **Publicar lo hace el usuario** (Meta Business Suite). Esta skill nunca publica ni se conecta a la cuenta.

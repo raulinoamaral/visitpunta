@@ -8,7 +8,7 @@ La voz es la de la web (skill `visitpunta-editorial`): curada, segura sin superl
    - ✓ "Entre julio y octubre, hay días en los que el mar se mueve distinto."
    - ✗ "¡Hola!" · "¿Sabías que…?" · "Te contamos todo sobre…"
 2. **Cuerpo:** 1 o 2 frases cortas, con saltos de línea. Un solo tema por post. En un carrusel, el detalle ya está en las placas y en las líneas sobre las fotos: el texto no lo repite (nada de un párrafo por lugar).
-3. **Cierre:** a dónde ir para saber más ("Lo contamos entero en la web. El link está en la bio.") y, si suma, una pregunta de verdad.
+3. **Cierre:** **nunca "link en la bio"** (decisión del usuario, 24/11/2026: la bio no se cambia por post y casi nadie va al perfil a buscar el link). Si el post tiene una nota o ficha detrás, se nombra la web como dato, sin pedir nada: "Todas las playas están en visitpunta.com". Una pregunta de verdad, de vez en cuando, en lugar de la web, nunca las dos.
 4. **Idioma:** solo español.
 5. **Hashtags:** 3 a 5, al final y específicos: #puntadeleste #uruguay, más uno del lugar o tema (#casapueblo, #joseignacio, #ballenas). Nunca bloques de 20 o 30.
 
@@ -19,9 +19,7 @@ Las playas de Punta del Este no se parecen entre sí.
 
 Más que elegir una playa, se trata de elegir cómo querés pasar el día.
 
-Guardalo para cuando estés acá. Todas las playas, en la web: el link está en la bio.
-
-¿Y vos, Mansa o Brava?
+Guardalo para cuando estés acá. Todas las playas están en visitpunta.com.
 ```
 
 ## Tono
