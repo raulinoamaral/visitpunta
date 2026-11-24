@@ -8,12 +8,15 @@ import sharp from 'sharp'
 
 import { Articles } from './collections/Articles'
 import { Experiences } from './collections/Experiences'
+import { InstagramMedia } from './collections/InstagramMedia'
+import { InstagramPosts } from './collections/InstagramPosts'
 import { Destinations } from './collections/Destinations'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Places } from './collections/Places'
 import { Tags } from './collections/Tags'
 import { Users } from './collections/Users'
+import { INSTAGRAM_CRON, INSTAGRAM_QUEUE, publishInstagramTask } from './jobs/publishInstagram'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -36,6 +39,10 @@ export default buildConfig({
             return `${process.env.R2_PUBLIC_URL}/${args.filename}`
           },
         },
+        'instagram-media': {
+          prefix: 'instagram',
+          generateFileURL: ({ filename, prefix }) => `${process.env.R2_PUBLIC_URL}/${prefix}/${filename}`,
+        },
       },
       acl: 'public-read',
       bucket: process.env.R2_BUCKET || '',
@@ -50,7 +57,13 @@ export default buildConfig({
       },
     }),
   ],
-  collections: [Users, Media, Places, Tags, Articles, Destinations, Pages, Experiences],
+  collections: [Users, Media, Places, Tags, Articles, Destinations, Pages, Experiences, InstagramPosts, InstagramMedia],
+  jobs: {
+    tasks: [publishInstagramTask],
+    // Only the production server starts the clock: a local `next dev` on the same database
+    // must never queue or publish anything (gate autoRun itself: schedules are queued before shouldAutoRun runs)
+    autoRun: () => (process.env.INSTAGRAM_PUBLISH === 'true' ? [{ cron: INSTAGRAM_CRON, queue: INSTAGRAM_QUEUE }] : []),
+  },
   localization: {
     locales: [
       { label: 'Español', code: 'es' },

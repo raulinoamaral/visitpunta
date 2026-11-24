@@ -28,8 +28,14 @@ La cuenta es de una **marca** (la familia Visit: visitpunta y visitcabopolonio, 
    node scripts/instagram/render.mjs content/instagram/<NN>-<tema>.json
    ```
    Estilos: `references/formats.md`. Mirar el resultado (grilla) antes de entregar.
-5. **Entrega.** Una carpeta por pieza en `~/Downloads/visitpunta-instagram/<NN>-<tema>/` con las imágenes numeradas y un `texto.txt`. En el chat: el plan, la ruta y nada más largo de lo necesario. El usuario mira las imágenes en la carpeta.
-6. **Registro.** Agregar cada pieza entregada a `content/instagram/registro.md`. Si el usuario dice que no la publicó o la cambió, actualizarlo.
+5. **Entrega: al admin, como borrador.** Agregar al spec el bloque `post` (título, `account` (`visitpunta` por defecto; `visitpunta.br` para la cuenta en portugués), tipo `post`/`reel`/`story`, `scheduledAt` con hora de Uruguay `-03:00`, texto, nota para el usuario y página a la que lleva; para reel o historia en video, `files` con la ruta del MP4) y cargarlo:
+   ```
+   INSTAGRAM_FILE=content/instagram/<NN>-<tema>.json npx payload run src/scripts/stage-instagram.ts
+   ```
+   Queda en **Admin → Instagram → Publicaciones** como Borrador, con vista previa. El usuario aprueba, pide cambio o descarta ahí; **solo lo aprobado se publica solo, a la hora indicada**. La nota para el usuario lleva lo que tiene que hacer a mano, si hay algo (etiquetar un lugar, avisarle por mensaje). En el chat: el plan y el link al admin, nada más largo.
+   - **Pedido de cambio:** leer el campo "Pedido de cambio" de la pieza, rehacer y volver a cargar con el mismo título (el script actualiza la pieza y la deja otra vez en Borrador). Nunca toca piezas aprobadas, publicadas o descartadas.
+   - **Historias con sticker de link:** la API no pone stickers. Esas siguen yendo a mano: carpeta en `~/Downloads/visitpunta-instagram/<NN>-<tema>/` con las imágenes y un `texto.txt` (sticker y URL).
+6. **Registro.** Agregar cada pieza entregada a `content/instagram/registro.md`. El estado real (aprobada, publicada, link) está en el admin; antes de una tanda nueva, mirarlo ahí y actualizar el registro.
 
 ## Reglas que no se negocian
 - **La foto manda, el texto va aparte:** nada de recuadros ni paneles sobre las fotos, como mucho una línea; los datos en placas propias (unas 12 palabras como máximo) y la firma `pe` solo en la última placa del carrusel. Ver `references/formats.md`.
@@ -39,4 +45,4 @@ La cuenta es de una **marca** (la familia Visit: visitpunta y visitcabopolonio, 
 - **Sin clickbait, sin urgencia falsa, sin exclamaciones**, sin pedir "seguinos" o "dale like". Sin títulos con números ("Los 5 mejores…").
 - **Links:** en el feed no funcionan. **Nunca "link en la bio"**: el link de la bio es fijo, a la home, y no se cambia por post. Los posts con una página detrás nombran la web como dato ("está en visitpunta.com"). En historias, sticker de link a la página exacta.
 - **Lugares:** solo los que están en la web, contados como recomendación y nunca como publicidad: `references/strategy.md` § Recomendar lugares.
-- **Publicar lo hace el usuario** (Meta Business Suite). Esta skill nunca publica ni se conecta a la cuenta.
+- **Nada sale sin aprobación del usuario.** Esta skill carga borradores; nunca aprueba ni publica, ni cambia el estado de una pieza.

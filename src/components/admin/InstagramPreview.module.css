@@ -1,0 +1,320 @@
+/* Instagram piece preview in the admin: the post inside a phone, and the approval actions beside it */
+.preview {
+  --accent: #3d4b66;
+  --accent-deep: #2c3850;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 40px;
+  align-items: start;
+  padding: 24px;
+  margin-bottom: 32px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 14px;
+  background: var(--theme-elevation-0);
+}
+
+/* Phone */
+.phone {
+  width: 320px;
+  padding: 11px;
+  border-radius: 42px;
+  background: #1b1a18;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+}
+
+.screen {
+  overflow: hidden;
+  border-radius: 32px;
+  background: #fff;
+  color: #111;
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 30px 12px 10px;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #3d4b66;
+  color: #fff;
+  font: 800 12px/1 'Inter', -apple-system, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.dots {
+  margin-left: auto;
+  letter-spacing: 1px;
+}
+
+/* Arrows and counter sit over the photos, like Instagram on desktop */
+.carousel {
+  position: relative;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0 0 3px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  color: #111;
+  font-size: 20px;
+  line-height: 1;
+  transform: translateY(-50%);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.prev {
+  left: 8px;
+}
+
+.next {
+  right: 8px;
+}
+
+.counter {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 11px;
+}
+
+.slides {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  background: #f1f1f1;
+}
+
+.slides::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  flex: 0 0 100%;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  scroll-snap-align: start;
+  background: #000;
+}
+
+/* Reels and stories fill the screen in 9:16 */
+.vertical .slide {
+  aspect-ratio: 9 / 16;
+}
+
+.empty {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  color: #888;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px 4px;
+  font-size: 20px;
+}
+
+.save {
+  margin-left: auto;
+}
+
+.pager {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: -18px 0 6px;
+}
+
+.pager button {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #c7c7c7;
+  cursor: pointer;
+}
+
+.pager .on {
+  background: #3897f0;
+}
+
+.caption {
+  margin: 0;
+  padding: 4px 12px 22px;
+  white-space: pre-line;
+}
+
+.more {
+  color: #737373;
+}
+
+/* Side column */
+.side {
+  min-width: 0;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.pill {
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: var(--theme-elevation-100);
+  font-size: 12px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--theme-elevation-600);
+}
+
+.status::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--theme-elevation-300);
+}
+
+.approved::before,
+.publishing::before {
+  background: var(--accent);
+}
+
+.published::before {
+  background: #3d7a4f;
+}
+
+.changes::before {
+  background: #c99a2e;
+}
+
+.discarded::before,
+.failed::before {
+  background: #b4483c;
+}
+
+.when {
+  margin: 10px 0 22px;
+  font-size: 18px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.button,
+.approve {
+  padding: 12px 20px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 10px;
+  background: var(--theme-elevation-0);
+  color: var(--theme-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:hover {
+  border-color: var(--theme-elevation-400);
+}
+
+.approve {
+  padding: 12px 30px;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.approve:hover {
+  background: var(--accent-deep);
+}
+
+.discard {
+  color: #b4483c;
+}
+
+.hint {
+  margin: 0 0 18px;
+  font-size: 13px;
+  color: var(--theme-elevation-600);
+}
+
+.done {
+  margin: 0 0 18px;
+}
+
+.error {
+  margin: 0 0 18px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(180, 72, 60, 0.1);
+  color: #b4483c;
+}
+
+.note {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border: 1px solid rgba(147, 96, 31, 0.25);
+  border-radius: 10px;
+  background: rgba(147, 96, 31, 0.07);
+  font-size: 13px;
+}
+
+.note p {
+  margin: 2px 0 0;
+  white-space: pre-line;
+}
+
+@media (max-width: 900px) {
+  .preview {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 16px;
+  }
+
+  .phone {
+    width: 290px;
+    margin: 0 auto;
+  }
+
+  .actions button {
+    flex: 1;
+  }
+}

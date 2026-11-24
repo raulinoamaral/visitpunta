@@ -1,6 +1,7 @@
 import * as migration_20261103_111926_initial from './20261103_111926_initial';
 import * as migration_20261103_112844_localization_es_pt from './20261103_112844_localization_es_pt';
 import * as migration_20261112_152254_place_gallery_position from './20261112_152254_place_gallery_position';
+import * as migration_20261124_224556_instagram from './20261124_224556_instagram';
 
 export const migrations = [
   {
@@ -16,6 +17,11 @@ export const migrations = [
   {
     up: migration_20261112_152254_place_gallery_position.up,
     down: migration_20261112_152254_place_gallery_position.down,
-    name: '20261112_152254_place_gallery_position'
+    name: '20261112_152254_place_gallery_position',
+  },
+  {
+    up: migration_20261124_224556_instagram.up,
+    down: migration_20261124_224556_instagram.down,
+    name: '20261124_224556_instagram'
   },
 ];
