@@ -1,0 +1,47 @@
+{
+  "out": "~/Downloads/visitpunta-br-instagram/br-03-casapueblo",
+  "format": "feed",
+  "site": "visitpunta.com/pt",
+  "slides": [
+    {
+      "file": "fotos/punta-ballena/6ABFEE87-42E9-49D6-B72C-80EFEB419F30.jpg",
+      "position": "50% 50%",
+      "style": "cover",
+      "eyebrow": "Punta Ballena",
+      "title": "Casapueblo",
+      "text": "Aparece antes de chegar."
+    },
+    {
+      "file": "fotos/casapueblo/0F9D7148-DBBE-44FC-B647-C6BEC6375C32.jpg",
+      "position": "50% 50%",
+      "style": "clean"
+    },
+    {
+      "style": "card",
+      "title": "Não há linhas retas porque o mar também não tem."
+    },
+    {
+      "file": "fotos/punta-ballena/33328972-D050-4C77-BE78-A29F91CB10BD.jpg",
+      "position": "50% 50%",
+      "style": "clean"
+    },
+    {
+      "file": "fotos/punta-ballena/274EC154-4C61-4BFB-BE86-9D217BE9AB1C.jpg",
+      "position": "50% 50%",
+      "style": "caption",
+      "text": "No fim do dia, a Cerimônia ao Sol."
+    },
+    {
+      "style": "sign"
+    }
+  ],
+  "post": {
+    "title": "Casapueblo",
+    "account": "visitpunta.br",
+    "kind": "post",
+    "scheduledAt": "2026-11-25T19:00:00-03:00",
+    "caption": "Casapueblo aparece antes de chegar, branca sobre a encosta de Punta Ballena.\n\nCarlos Páez Vilaró a construiu durante décadas, quase sem linhas retas.\n\nVá com tempo: no verão, os terraços enchem perto do pôr do sol.\n\n#casapueblo #puntaballena #puntadeleste #uruguai",
+    "note": "Tercer post: completa la primera fila. Ubicación sugerida: Casapueblo.",
+    "link": "/pt/casapueblo"
+  }
+}

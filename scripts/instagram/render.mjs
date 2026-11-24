@@ -7,6 +7,7 @@
  * {
  *   "out": "~/Downloads/visitpunta-instagram/01-presentacion",
  *   "format": "feed" | "story",
+ *   "site": "visitpunta.com/pt",   (optional: the address on sign and story slides; default visitpunta.com)
  *   "slides": [
  *     { "file": "fotos/casapueblo/X.jpg", "position": "35% 50%",
  *       "style": "cover" | "caption" | "card" | "sign" | "clean" | "story" | "highlight",
@@ -40,6 +41,7 @@ if (!specPath) throw new Error('Usage: node scripts/instagram/render.mjs <post.j
 const spec = JSON.parse(fs.readFileSync(specPath, 'utf8'))
 const out = spec.out.replace(/^~/, os.homedir())
 const size = SIZES[spec.format ?? 'feed']
+const SITE = spec.site ?? 'visitpunta.com'
 fs.mkdirSync(out, { recursive: true })
 
 const escapeHtml = (text = '') => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -91,14 +93,14 @@ function body(slide) {
     case 'label':
       return `<div class="shade"></div><div class="bottom"><div class="label">${escapeHtml(slide.text)}</div></div><div class="mark">visitpunta</div>`
     case 'story':
-      return `<div class="veil"></div><div class="story">${eyebrow}${title}${italic}<span class="mark">visitpunta.com</span></div>`
+      return `<div class="veil"></div><div class="story">${eyebrow}${title}${italic}<span class="mark">${escapeHtml(SITE)}</span></div>`
     case 'caption':
       return `<div class="soft"></div><div class="caption">${escapeHtml(slide.text)}</div>`
     case 'card':
       return `<div class="card">${title}${italic}</div>`
     case 'sign': {
       const avatar = fs.readFileSync(path.join(ROOT, 'public/brand/avatar.svg')).toString('base64')
-      return `<div class="sign"><img src="data:image/svg+xml;base64,${avatar}"><span>visitpunta.com</span></div>`
+      return `<div class="sign"><img src="data:image/svg+xml;base64,${avatar}"><span>${escapeHtml(SITE)}</span></div>`
     }
     case 'highlight':
       return `<div class="highlight"><span>${escapeHtml(slide.title)}</span></div>`

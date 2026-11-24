@@ -1,0 +1,54 @@
+{
+  "out": "~/Downloads/visitpunta-br-instagram/br-02-reveillon",
+  "format": "feed",
+  "site": "visitpunta.com/pt",
+  "slides": [
+    {
+      "file": "fotos/noche/IMG_1337.jpeg",
+      "position": "50% 50%",
+      "style": "cover",
+      "eyebrow": "Punta del Este",
+      "title": "Réveillon em Punta del Este",
+      "text": "Este ano, a festa é num museu."
+    },
+    {
+      "style": "card",
+      "title": "27 de dezembro: Rüfüs Du Sol.",
+      "text": "No MACA, entre esculturas e campo aberto."
+    },
+    {
+      "file": "fotos/maca/9F50F1EE-4815-4339-9252-E0AA9F3AFE40.jpg",
+      "position": "40% 50%",
+      "style": "caption",
+      "text": "O MACA, em Manantiales, a uns 20 km da península."
+    },
+    {
+      "file": "fotos/maca/AC556FC0-0C60-4D0C-881D-EDC3263C26DA.jpg",
+      "position": "50% 50%",
+      "style": "caption",
+      "text": "Madeira curva, projeto de Carlos Ott."
+    },
+    {
+      "style": "card",
+      "title": "31 de dezembro, a partir das 22h.",
+      "text": "Kerri Chandler, Jaime Jones e Franky Rizardo."
+    },
+    {
+      "style": "card",
+      "title": "A ponte de La Barra trava.",
+      "text": "Saia com tempo e resolva a volta antes."
+    },
+    {
+      "style": "sign"
+    }
+  ],
+  "post": {
+    "title": "Réveillon em Punta del Este",
+    "account": "visitpunta.br",
+    "kind": "post",
+    "scheduledAt": "2026-11-25T18:30:00-03:00",
+    "caption": "Na última semana de dezembro, Punta del Este enche de uma vez.\n\nEste ano, o Réveillon mais esperado acontece num museu. Os ingressos são vendidos só em pacotes, todos com open bar.\n\nDatas e como chegar estão em visitpunta.com/pt.\n\n#reveillon #puntadeleste #maca #uruguai",
+    "note": "Segundo post. Ubicación sugerida: MACA (Museo de Arte Contemporáneo Atchugarry). Podés etiquetar a @reveillonpunta en la portada.",
+    "link": "/pt/reveillon-em-punta-del-este"
+  }
+}

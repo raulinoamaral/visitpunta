@@ -1,0 +1,21 @@
+{
+  "out": "~/Downloads/visitpunta-br-instagram/br-01-jose-ignacio",
+  "format": "feed",
+  "site": "visitpunta.com/pt",
+  "slides": [
+    {
+      "file": "fotos/playa/mansa-jose-ignacio/web-2C897326.webp",
+      "position": "46% 50%",
+      "style": "clean"
+    }
+  ],
+  "post": {
+    "title": "José Ignacio",
+    "account": "visitpunta.br",
+    "kind": "post",
+    "scheduledAt": "2026-11-25T18:00:00-03:00",
+    "caption": "Em José Ignacio, o farol aparece entre as casas brancas e o capim alto.\n\nDe um lado dele, a Mansa. Do outro, a Brava.\n\nO guia de Punta del Este e arredores, em português, está em visitpunta.com/pt.\n\n#joseignacio #puntadeleste #uruguai",
+    "note": "Primer post de la cuenta: publicalo antes que los otros dos (la grilla se lee de abajo hacia arriba). Ubicación sugerida: José Ignacio.",
+    "link": "/pt/jose-ignacio"
+  }
+}
