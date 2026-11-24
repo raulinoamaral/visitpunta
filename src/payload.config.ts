@@ -16,6 +16,7 @@ import { Pages } from './collections/Pages'
 import { Places } from './collections/Places'
 import { Tags } from './collections/Tags'
 import { Users } from './collections/Users'
+import { Home } from './globals/Home'
 import { INSTAGRAM_CRON, INSTAGRAM_QUEUE, publishInstagramTask } from './jobs/publishInstagram'
 
 const filename = fileURLToPath(import.meta.url)
@@ -58,6 +59,7 @@ export default buildConfig({
     }),
   ],
   collections: [Users, Media, Places, Tags, Articles, Destinations, Pages, Experiences, InstagramPosts, InstagramMedia],
+  globals: [Home],
   jobs: {
     tasks: [publishInstagramTask],
     // Only the production server starts the clock: a local `next dev` on the same database

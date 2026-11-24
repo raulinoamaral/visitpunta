@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { homeSeasonField } from '@/fields/homeSeason'
 import { notifyIndexNow } from '@/lib/indexNow'
 import { TextBlock } from '@/blocks/TextBlock'
 import { MediaBlock } from '@/blocks/MediaBlock'
@@ -251,5 +252,6 @@ export const Experiences: CollectionConfig = {
         },
       ],
     },
+    homeSeasonField,
   ],
 }

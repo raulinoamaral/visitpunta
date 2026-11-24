@@ -1,499 +1,562 @@
-.hero {
-  position: relative;
-  width: 100%;
-  height: 100dvh;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 10vh;
-  overflow: hidden;
-}
+/* Home: lots of white, changes of scale, titles over a thin rule */
 
-@keyframes heroZoom {
-  from { transform: scale(1.08); }
-  to   { transform: scale(1); }
-}
-
-.heroImage {
+.cover {
   object-fit: cover;
-  object-position: center;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .heroImage {
-    animation: heroZoom 1.8s ease-out both;
-  }
-}
-
-.heroOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
-}
-
-@keyframes heroFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(25px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.heroAnimate {
-  animation: heroFadeIn 1s ease 0.4s both;
-}
-
-.heroText {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  color: #fff;
-}
-
-.heroTitle {
-  font-family: var(--font-playfair);
-  font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.01em;
-  margin-bottom: 1.5rem;
-}
-
-.heroSmall {
-  display: block;
-  margin-top: 0.2em;
-  font-size: clamp(1rem, 3vw, 0.4em);
-  font-style: italic;
-  letter-spacing: 0.1em;
-}
-
-.heroSubtitle {
-  font-family: var(--font-inter);
-  font-size: clamp(0.7rem, 1vw, 0.8rem);
-  font-weight: 400;
-  opacity: 0.6;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-/* Scroll indicator */
-.scrollIndicator {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  text-decoration: none;
-}
-
-.scrollLine {
-  display: block;
-  width: 1px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.4);
-  animation: scrollPulse 2s ease-in-out infinite;
-}
-
-@keyframes scrollPulse {
-  0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
-  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
-  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
-}
-
-@media (max-width: 768px) {
-  .hero {
-    /* The whole hero fits above the header anchored at the bottom */
-    height: calc(100dvh - var(--mobile-header-height));
-    align-items: center;
-    padding-bottom: 0;
-  }
-}
-
-/* Intro */
 
 .intro {
-  padding: 4rem 2rem;
-  text-align: center;
-}
-
-.introText {
-  font-family: var(--font-playfair);
-  font-size: 1.2rem;
-  font-weight: 400;
-  color: #555;
-  line-height: 1.8;
-  max-width: 620px;
+  max-width: 640px;
   margin: 0 auto;
-}
-
-/* Destacados */
-
-.destacados {
-  padding: 5rem 2rem;
-  background: #fff;
-}
-
-
-.destacadosGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-}
-
-.destacadoCard {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.destacadoImage {
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.destacadoCard:hover .destacadoImage {
-  transform: scale(1.04);
-}
-
-.destacadoOverlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-}
-
-.destacadoText {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  padding: 6.5rem 2rem 1rem;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  width: 80%;
-}
-
-.destacadoTitle {
   font-family: var(--font-playfair);
-  font-size: clamp(1.4rem, 2.5vw, 2.4rem);
-  font-weight: 400;
-  color: #fff;
-  line-height: 1.2;
+  font-size: 1.35rem;
+  line-height: 1.7;
+  color: #555;
 }
 
-.destacadoSubtitle {
-  font-family: var(--font-playfair);
-  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
-  font-style: italic;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.75);
+.section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 7rem 2rem 0;
 }
 
-@media (max-width: 768px) {
-  .destacados {
-    overflow: hidden;
-  }
-
-  .destacadosGrid {
-    grid-template-columns: none;
-    display: flex;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 0;
-  }
-
-  .destacadosGrid::-webkit-scrollbar {
-    display: none;
-  }
-
-  .destacadoCard {
-    flex: 0 0 85%;
-    scroll-snap-align: start;
-    margin-right: 0.75rem;
-    text-decoration: none;
-  }
-
-  .destacadoTitle {
-    font-size: 2rem;
-  }
-
-  .destacadoSubtitle {
-    font-size: 1rem;
-  }
+.last {
+  padding-bottom: 7rem;
 }
 
-/* Zonas */
-
-.zonas {
-  display: flex;
-  flex-direction: column;
-  padding: 4rem 2rem 2rem;
-}
-
-
-.zonaCardFull {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 5 / 2;
-  overflow: hidden;
-  display: block;
-  margin-bottom: 1rem;
-}
-
-.zonaCardFull:hover .zonaCardImage {
-  transform: scale(1.03);
-}
-
-.zonasGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.zonasGrid .zonaCard {
-  aspect-ratio: 3 / 4;
-}
-
-.zonaCard {
-  position: relative;
-  overflow: hidden;
-}
-
-.zonaCardImage {
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.6s ease;
-}
-
-.zonaCard:hover .zonaCardImage {
-  transform: scale(1.03);
-}
-
-.zonaCardOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.6) 100%);
-}
-
-.zonaCardLabel {
-  display: block;
-  font-family: var(--font-inter);
-  font-size: 0.65rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 0.5rem;
-}
-
-.zonaCardText {
-  position: absolute;
-  bottom: 20%;
-  left: 0;
-  right: 0;
-  text-align: center;
-  z-index: 1;
-}
-
-.zonaCardName {
-  font-family: var(--font-playfair);
-  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
-  font-weight: 400;
-  color: #fff;
-}
-
-.zonaCardTagline {
-  font-family: var(--font-playfair);
-  font-size: clamp(0.8rem, 1.2vw, 1rem);
-  font-style: italic;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.75);
-  margin-top: 0.4rem;
-}
-
-@media (max-width: 768px) {
-  .zonas {
-    height: auto;
-    overflow: hidden;
-  }
-
-  .zonaCardFull {
-    aspect-ratio: 2 / 3;
-  }
-
-  .zonasGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    flex: none;
-  }
-
-  .zonasGrid .zonaCard {
-    aspect-ratio: 2 / 3;
-  }
-
-  .zonaCardOverlay {
-    background: rgba(0, 0, 0, 0.4);
-  }
-
-  .zonaCardText {
-    bottom: 25%;
-  }
-
-  .zonaCardName {
-    font-size: 1.8rem;
-  }
-}
-
-/* ── Explorar (featured articles) ───────────────────────── */
-
-.explorar {
-  padding: 5rem 2rem;
-}
-
-
-.explorarGrid {
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: 2rem;
-}
-
-.explorarMain {
-  text-decoration: none;
+.section a {
   color: inherit;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  text-decoration: none;
 }
 
-.explorarMainImage {
+/* Rows that slide run off the right edge of the page */
+.bleedRight {
+  max-width: none;
+  padding-right: 0;
+  padding-left: max(2rem, calc((100vw - 1280px) / 2 + 2rem));
+}
+
+.bleedRight .head {
+  padding-right: max(2rem, calc((100vw - 1280px) / 2 + 2rem));
+}
+
+/* Section title over a thin rule, a line with voice under it */
+
+.head {
+  margin-bottom: 2.5rem;
+}
+
+.headRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.headTitle {
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  font-weight: 400;
+  color: var(--color-blue);
+}
+
+.more {
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--color-blue);
+}
+
+.more:hover {
+  color: var(--color-pink);
+}
+
+.headLine {
+  margin-top: 0.9rem;
+  font-family: var(--font-playfair);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #777;
+}
+
+.label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+/* Estos días en Punta: a photo, and an index of text beside it */
+
+.season {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.seasonImage {
   position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 3;
+  display: block;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
 }
 
-.explorarImg {
-  object-fit: cover;
-  transition: transform 0.6s ease;
+.seasonIndex {
+  list-style: none;
 }
 
-.explorarMain:hover .explorarImg,
-.explorarSecondary:hover .explorarImg {
-  transform: scale(1.03);
+.seasonEntry {
+  display: block;
+  padding: 1.3rem 0;
+  border-bottom: 1px solid #ececec;
 }
 
-.explorarMainText {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.explorarType {
-  align-self: flex-start;
-  font-family: var(--font-inter);
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #fff;
-  background-color: rgb(61, 75, 102);
-  padding: 0.3rem 0.7rem;
-}
-
-.explorarMainName {
+.seasonTitle {
+  display: block;
+  margin-top: 0.4rem;
   font-family: var(--font-playfair);
-  font-size: clamp(1.4rem, 2.5vw, 2rem);
-  font-weight: 400;
-  color: #111;
-  line-height: 1.2;
+  font-size: 1.3rem;
+  line-height: 1.25;
+  color: var(--color-blue);
 }
 
-.explorarMainTagline {
-  font-family: var(--font-inter);
-  font-size: 0.925rem;
-  color: #777;
+.seasonLead {
+  padding-top: 0;
+}
+
+.seasonLead .seasonTitle {
+  font-size: clamp(2rem, 3.2vw, 2.8rem);
+  line-height: 1.1;
+}
+
+.seasonText {
+  display: block;
+  margin-top: 0.8rem;
+  color: #555;
   line-height: 1.6;
 }
 
-/* Secondary articles (stacked right) */
-
-.explorarSide {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+.seasonEntry:hover .seasonTitle {
+  color: var(--color-pink);
 }
 
-.explorarSecondary {
+/* Dónde dormir: landscape cards in a sliding row */
+
+.stayRow {
+  display: flex;
+  gap: 1.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-right: 2rem;
+}
+
+.stayRow::-webkit-scrollbar {
+  display: none;
+}
+
+.stayCard {
+  flex: 0 0 520px;
+  scroll-snap-align: start;
+}
+
+.stayImage {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.stayImage img,
+.eatImage img,
+.noteImage img,
+.coffeeImage img {
+  transition: transform 0.8s ease;
+}
+
+.stayCard:hover img,
+.eatEntry:hover img,
+.noteCard:hover img,
+.coffeeCard:hover img {
+  transform: scale(1.03);
+}
+
+.stayName {
+  margin-top: 0.35rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--color-blue);
+}
+
+.stayText {
+  margin-top: 0.4rem;
+  max-width: 44ch;
+  color: #666;
+  line-height: 1.55;
+}
+
+/* Spotlight: one place across the page, its name oversized */
+
+.spotlight {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  height: 92vh;
+  min-height: 520px;
+  margin-top: 8rem;
+  overflow: hidden;
+  color: #fff;
   text-decoration: none;
-  color: inherit;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 }
 
-.explorarSecondaryImage {
+.spotlightShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+.spotlightText {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+.spotlightLabel {
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.spotlightTitle {
+  margin-top: 0.4rem;
+  font-size: clamp(3.5rem, 12vw, 10rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+.spotlightQuote {
+  margin-top: 1.4rem;
+  max-width: 30ch;
+  font-family: var(--font-playfair);
+  font-style: italic;
+  font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+  line-height: 1.4;
+}
+
+/* Dónde comer: an editorial list, two columns, small photos */
+
+.eatList {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 4rem;
+}
+
+.eatEntry {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.8rem;
+  align-items: center;
+  padding: 1.6rem 0;
+  border-bottom: 1px solid #ececec;
+}
+
+.eatImage {
+  position: relative;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
 }
 
-.explorarSecondaryText {
+.eatName {
+  margin-top: 0.35rem;
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--color-blue);
+  line-height: 1.1;
+}
+
+.eatText {
+  margin-top: 0.5rem;
+  color: #666;
+  line-height: 1.55;
+}
+
+/* Para el café: small photos, the name only */
+
+.coffee {
+  margin-top: 4.5rem;
+}
+
+.coffeeTitle {
+  margin-bottom: 1.4rem;
+  font-size: 1.35rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-blue);
+}
+
+.coffeeRow {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.25rem;
+}
+
+.coffeeImage {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.coffeeName {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.coffeeZone {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+/* Qué hacer: tall photos that slide */
+
+.todoRow {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-right: 2rem;
+}
+
+.todoRow::-webkit-scrollbar {
+  display: none;
+}
+
+.todoCard {
+  position: relative;
+  flex: 0 0 320px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+
+.todoShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+.todoTitle {
+  position: absolute;
+  left: 1.3rem;
+  right: 1.3rem;
+  bottom: 1.2rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.1;
+}
+
+/* Zones: names set large, four columns, no photos */
+
+.zones {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.zones li + li {
+  border-left: 1px solid #ececec;
+}
+
+.zone {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  height: 100%;
+  padding: 0.4rem 1.75rem 0.4rem 0;
 }
 
-.explorarSecondaryName {
+.zones li + li .zone {
+  padding-left: 1.75rem;
+}
+
+.zoneName {
   font-family: var(--font-playfair);
-  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
-  font-weight: 400;
-  color: #111;
-  line-height: 1.3;
-}
-
-.explorarSecondaryTagline {
-  font-family: var(--font-inter);
-  font-size: 0.85rem;
-  color: #777;
-  line-height: 1.5;
-}
-
-/* Quiet link to the notes index, below the featured articles */
-.explorarAll {
-  display: inline-block;
-  margin-top: 3rem;
-  font-family: var(--font-inter);
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  line-height: 1.1;
   color: var(--color-blue);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(61, 75, 102, 0.3);
-  padding-bottom: 0.2rem;
-  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-.explorarAll:hover {
+.zoneTagline {
+  margin-top: 0.8rem;
+  color: #777;
+  line-height: 1.55;
+}
+
+.zoneArrow {
+  margin-top: auto;
+  padding-top: 1.2rem;
   color: var(--color-pink);
-  border-color: var(--color-pink);
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.zone:hover .zoneName {
+  color: var(--color-pink);
+}
+
+.zone:hover .zoneArrow {
+  transform: translateX(4px);
+}
+
+/* Notes */
+
+.notes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+
+.noteImage {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  margin-bottom: 0.9rem;
+}
+
+.noteTitle {
+  margin-top: 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--color-blue);
+  line-height: 1.2;
+}
+
+/* Tablets and phones */
+
+@media (max-width: 960px) {
+  .season {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .eatList {
+    grid-template-columns: 1fr;
+  }
+
+  .zones {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 2.5rem;
+  }
+
+  .zones li:nth-child(odd) {
+    border-left: none;
+  }
+
+  .zones li:nth-child(odd) .zone {
+    padding-left: 0;
+  }
+
+  .coffeeRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .notes {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-  .explorarGrid {
-    grid-template-columns: 1fr;
-    gap: 3rem;
+  .intro {
+    padding: 4.5rem 1.25rem 0;
+    font-size: 1.15rem;
   }
 
-  .explorarSide {
-    gap: 3rem;
+  .section {
+    padding: 5rem 1.25rem 0;
+  }
+
+  /* The shorthand above would otherwise drop the space before the footer */
+  .last {
+    padding-bottom: 5rem;
+  }
+
+  .bleedRight {
+    padding-left: 1.25rem;
+  }
+
+  .bleedRight .head {
+    padding-right: 1.25rem;
+  }
+
+  .seasonImage {
+    aspect-ratio: 4 / 3;
+  }
+
+  .stayCard {
+    flex-basis: 85%;
+  }
+
+  .eatEntry {
+    grid-template-columns: 132px 1fr;
+    gap: 1.1rem;
+  }
+
+  .eatName {
+    font-size: 1.4rem;
+  }
+
+  .coffeeRow,
+  .notes {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-right: -1.25rem;
+    gap: 0.9rem;
+  }
+
+  .coffeeRow::-webkit-scrollbar,
+  .notes::-webkit-scrollbar {
+    display: none;
+  }
+
+  .coffeeCard {
+    flex: 0 0 38%;
+    scroll-snap-align: start;
+  }
+
+  .notes > * {
+    flex: 0 0 72%;
+    scroll-snap-align: start;
+  }
+
+  .todoCard {
+    flex-basis: 72%;
+  }
+
+  .spotlight {
+    height: 75vh;
+    margin-top: 5rem;
+  }
+
+  .spotlightText {
+    padding: 0 1.25rem 3rem;
+  }
+
+  .eatEntry .eatImage {
+    width: 100%;
   }
 }

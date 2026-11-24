@@ -106,9 +106,11 @@ export interface Config {
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('es' | 'pt') | ('es' | 'pt')[];
   globals: {
+    home: Home;
     'payload-jobs-stats': PayloadJobsStat;
   };
   globalsSelect: {
+    home: HomeSelect<false> | HomeSelect<true>;
     'payload-jobs-stats': PayloadJobsStatsSelect<false> | PayloadJobsStatsSelect<true>;
   };
   locale: 'es' | 'pt';
@@ -287,6 +289,13 @@ export interface Place {
    * Si está vacío se usa el summary.
    */
   seoDescription?: string | null;
+  /**
+   * Aparece sola en la home entre estas fechas, todos los años. Vacío: nunca.
+   */
+  homeSeason?: {
+    from?: string | null;
+    to?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -493,6 +502,13 @@ export interface Experience {
    * Si está vacío se usa el summary.
    */
   seoDescription?: string | null;
+  /**
+   * Aparece sola en la home entre estas fechas, todos los años. Vacío: nunca.
+   */
+  homeSeason?: {
+    from?: string | null;
+    to?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -659,6 +675,13 @@ export interface Article {
    * Si está vacío se usa el tagline.
    */
   seoDescription?: string | null;
+  /**
+   * Aparece sola en la home entre estas fechas, todos los años. Vacío: nunca.
+   */
+  homeSeason?: {
+    from?: string | null;
+    to?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1045,6 +1068,12 @@ export interface PlacesSelect<T extends boolean = true> {
   relatedArticles?: T;
   seoTitle?: T;
   seoDescription?: T;
+  homeSeason?:
+    | T
+    | {
+        from?: T;
+        to?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1154,6 +1183,12 @@ export interface ArticlesSelect<T extends boolean = true> {
   relatedArticles?: T;
   seoTitle?: T;
   seoDescription?: T;
+  homeSeason?:
+    | T
+    | {
+        from?: T;
+        to?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1267,6 +1302,12 @@ export interface ExperiencesSelect<T extends boolean = true> {
   related?: T;
   seoTitle?: T;
   seoDescription?: T;
+  homeSeason?:
+    | T
+    | {
+        from?: T;
+        to?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1394,6 +1435,71 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home".
+ */
+export interface Home {
+  id: number;
+  /**
+   * Qué muestra la foto. Ej: La bahía.
+   */
+  heroCaption?: string | null;
+  /**
+   * Opcional. Vacío: la home muestra sola lo que tiene fechas en "Estos días en Punta" (barra lateral de cada nota, lugar o experiencia). Si elegís algo acá, manda esto. El primero va grande.
+   */
+  season?:
+    | (
+        | {
+            relationTo: 'articles';
+            value: number | Article;
+          }
+        | {
+            relationTo: 'places';
+            value: number | Place;
+          }
+        | {
+            relationTo: 'experiences';
+            value: number | Experience;
+          }
+      )[]
+    | null;
+  /**
+   * De 3 a 6 hoteles, en este orden. Vacío: los destacados. En portugués, si lo dejás vacío, se usa lo mismo que en español.
+   */
+  stay?: (number | Place)[] | null;
+  /**
+   * Un lugar o experiencia, con su nombre en grande.
+   */
+  spotlight?:
+    | ({
+        relationTo: 'experiences';
+        value: number | Experience;
+      } | null)
+    | ({
+        relationTo: 'places';
+        value: number | Place;
+      } | null);
+  spotlightQuote?: string | null;
+  /**
+   * 4 restaurantes (o 6). Vacío: los destacados. En portugués, si lo dejás vacío, se usa lo mismo que en español.
+   */
+  eat?: (number | Place)[] | null;
+  /**
+   * Hasta 6 cafés. En portugués, si lo dejás vacío, se usa lo mismo que en español.
+   */
+  coffee?: (number | Place)[] | null;
+  /**
+   * Playas, lugares, paseos. Vacío: las destacadas. En portugués, si lo dejás vacío, se usa lo mismo que en español.
+   */
+  todo?: (number | Experience)[] | null;
+  /**
+   * 4 notas. Vacío: las 4 últimas. En portugués, si lo dejás vacío, se usa lo mismo que en español.
+   */
+  notes?: (number | Article)[] | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-jobs-stats".
  */
 export interface PayloadJobsStat {
@@ -1409,6 +1515,24 @@ export interface PayloadJobsStat {
     | null;
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home_select".
+ */
+export interface HomeSelect<T extends boolean = true> {
+  heroCaption?: T;
+  season?: T;
+  stay?: T;
+  spotlight?: T;
+  spotlightQuote?: T;
+  eat?: T;
+  coffee?: T;
+  todo?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

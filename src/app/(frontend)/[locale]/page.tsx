@@ -1,18 +1,19 @@
 import type { Metadata } from 'next'
-import { IMAGE_SIZES } from '@/lib/imageSizes'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import ScrollDrag from '@/components/ScrollDrag'
+import HomeHero from '@/components/HomeHero'
+import JsonLd from '@/components/JsonLd'
 import Reveal from '@/components/Reveal'
+import ScrollDrag from '@/components/ScrollDrag'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { sectionHref } from '@/i18n/routes'
 import { alternatesMetadata, staticAlternates } from '@/lib/alternates'
-import { PUBLISHED } from '@/lib/published'
-import JsonLd from '@/components/JsonLd'
+import { getHomeContent } from '@/lib/home'
+import { IMAGE_SIZES } from '@/lib/imageSizes'
 import { homeSchema } from '@/lib/structuredData'
 import styles from './page.module.css'
 
@@ -49,98 +50,81 @@ export default async function Home({ params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
   const t = getDictionary(locale)
+  const labels = t.home
   const payload = await getPayload({ config })
-  const { docs: allDestinations } = await payload.find({
-    collection: 'destinations',
-    locale,
-    where: PUBLISHED,
-    sort: 'createdAt',
-    depth: 1,
-    limit: 10,
-  })
-  // Punta del Este leads by name: its slug may differ per language
-  const pde = allDestinations.find((d: any) => d.name === 'Punta del Este')
-  const destinations = allDestinations.filter((d: any) => d.name !== 'Punta del Este')
+  const { heroCaption, spotlightQuote, season, stay, spotlight, eat, coffee, todo, zones, notes } = await getHomeContent(payload, locale)
 
-  const { docs: featuredArticles } = await payload.find({
-    collection: 'articles',
-    locale,
-    where: {
-      and: [
-        PUBLISHED,
-        { featured: { equals: true } },
-      ],
-    },
-    sort: 'order',
-    depth: 1,
-    limit: 3,
-  })
+  const Head = ({ title, line, href, link }: { title: string; line?: string; href?: string; link?: string }) => (
+    <Reveal>
+      <header className={styles.head}>
+        <div className={styles.headRow}>
+          <h2 className={styles.headTitle}>{title}</h2>
+          {href && link && (
+            <Link href={href} className={styles.more}>
+              {link}
+            </Link>
+          )}
+        </div>
+        {line && <p className={styles.headLine}>{line}</p>}
+      </header>
+    </Reveal>
+  )
+
   return (
     <main>
       <JsonLd data={homeSchema(locale, t.meta.homeDescription)} />
-      <section className={styles.hero}>
-        <Image
-          src="/images/home-punta-del-este.jpg"
-          alt="Punta del Este"
-          fill sizes={IMAGE_SIZES.full}
-          className={styles.heroImage}
-          priority
-        />
-        <div className={styles.heroOverlay} />
-        <div className={`${styles.heroText} ${styles.heroAnimate}`}>
-          <h1 className={styles.heroTitle}>Punta del Este<br /><span className={styles.heroSmall}>{t.home.heroSmall}</span></h1>
-          <p className={styles.heroSubtitle}>{t.home.heroSubtitle}</p>
-        </div>
-        <a href="#contenido" className={styles.scrollIndicator}>
-          <span className={styles.scrollLine} />
-        </a>
-      </section>
+      <HomeHero
+        image="/images/home-punta-del-este.jpg"
+        alt="Punta del Este"
+        title="Punta del Este"
+        small={t.home.heroSmall}
+        line={t.home.heroSubtitle}
+        caption={heroCaption}
+      />
 
       <Reveal>
-        <section id="contenido" className={styles.intro}>
-          <p className={styles.introText}>{t.home.intro}</p>
-        </section>
+        <p className={styles.intro}>{t.home.intro}</p>
       </Reveal>
 
-      {(pde || destinations.length > 0) && (
-        <section className={styles.zonas}>
-          <Reveal>
-            <h2 className="section-title">{t.home.zonesTitle}</h2>
-          </Reveal>
-          {pde && (
-            <Reveal delay={0.1}>
-              <Link href={localePath(locale, (pde as any).slug)} className={styles.zonaCardFull}>
-                <Image
-                  src={((pde as any).heroImage as any)?.url || ''}
-                  alt={(pde as any).name}
-                  fill sizes={IMAGE_SIZES.full}
-                  className={styles.zonaCardImage}
-                />
-                <div className={styles.zonaCardOverlay} />
-                <div className={styles.zonaCardText}>
-                  <span className={styles.zonaCardLabel}>{t.home.guideLabel}</span>
-                  <h2 className={styles.zonaCardName}>{(pde as any).name}</h2>
-                  {(pde as any).tagline && <p className={styles.zonaCardTagline}>{(pde as any).tagline}</p>}
-                </div>
+      {season.length > 0 && (
+        <section className={styles.section}>
+          <Head title={labels.season} />
+          <div className={styles.season}>
+            <Reveal>
+              <Link href={season[0].href} className={styles.seasonImage}>
+                <Image src={season[0].heroImage} alt={season[0].alt} fill sizes={IMAGE_SIZES.twoThirds} className={styles.cover} />
               </Link>
             </Reveal>
-          )}
-          <Reveal delay={0.2}>
-            <ScrollDrag className={styles.zonasGrid}>
-              {destinations.map((dest: any) => (
-                <Link key={dest.id} href={localePath(locale, dest.slug)} className={styles.zonaCard}>
-                  <Image
-                    src={(dest.heroImage as any)?.url || ''}
-                    alt={dest.name}
-                    fill sizes={IMAGE_SIZES.card3}
-                    className={styles.zonaCardImage}
-                  />
-                  <div className={styles.zonaCardOverlay} />
-                  <div className={styles.zonaCardText}>
-                    <span className={styles.zonaCardLabel}>{t.home.guideLabel}</span>
-                    <h2 className={styles.zonaCardName}>{dest.name}</h2>
-                    {dest.tagline && <p className={styles.zonaCardTagline}>{dest.tagline}</p>}
+            <ol className={styles.seasonIndex}>
+              {season.map((item, index) => (
+                <li key={item.key}>
+                  <Reveal delay={0.05 * index}>
+                    <Link href={item.href} className={`${styles.seasonEntry} ${index === 0 ? styles.seasonLead : ''}`}>
+                      <span className={styles.label}>{item.eyebrow}</span>
+                      <span className={styles.seasonTitle}>{item.title}</span>
+                      {index === 0 && item.text && <span className={styles.seasonText}>{item.text}</span>}
+                    </Link>
+                  </Reveal>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {stay.length > 0 && (
+        <section className={`${styles.section} ${styles.bleedRight}`}>
+          <Head title={labels.stay} line={labels.stayLine} href={sectionHref('stay', locale)} link={labels.seeAll} />
+          <Reveal delay={0.1}>
+            <ScrollDrag className={styles.stayRow}>
+              {stay.map((item) => (
+                <Link key={item.key} href={item.href} className={styles.stayCard}>
+                  <div className={styles.stayImage}>
+                    <Image src={item.image} alt={item.alt} fill sizes="(max-width: 768px) 85vw, 520px" className={styles.cover} />
                   </div>
+                  <span className={styles.label}>{item.eyebrow}</span>
+                  <h3 className={styles.stayName}>{item.title}</h3>
+                  <p className={styles.stayText}>{item.text}</p>
                 </Link>
               ))}
             </ScrollDrag>
@@ -148,98 +132,113 @@ export default async function Home({ params }: Props) {
         </section>
       )}
 
-      <section className={styles.destacados}>
-        <Reveal>
-          <h2 className="section-title">{t.home.enjoyTitle}</h2>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <ScrollDrag className={styles.destacadosGrid}>
-            {[
-              { ...t.home.enjoy.stay, href: sectionHref('stay', locale), img: '/images/dormir.jpg' },
-              { ...t.home.enjoy.eat, href: sectionHref('eat', locale), img: '/images/comer-en-punta.jpg' },
-              { ...t.home.enjoy.explore, href: sectionHref('explore', locale), img: '/images/que-hacer.jpg' },
-            ].map(({ title, subtitle, href, img }) => (
-              <Link key={title} href={href} className={styles.destacadoCard}>
-                <Image
-                  src={img}
-                  alt={title}
-                  fill sizes={IMAGE_SIZES.card3}
-                  className={styles.destacadoImage}
-                />
-                <div className={styles.destacadoOverlay} />
-                <div className={styles.destacadoText}>
-                  <h2 className={styles.destacadoTitle}>{title}</h2>
-                  <p className={styles.destacadoSubtitle}>{subtitle}</p>
-                </div>
-              </Link>
-            ))}
-          </ScrollDrag>
-        </Reveal>
-      </section>
+      {spotlight && (
+        <Link href={spotlight.href} className={styles.spotlight}>
+          <Image src={spotlight.heroImage} alt={spotlight.alt} fill sizes={IMAGE_SIZES.full} className={styles.cover} />
+          <div className={styles.spotlightShade} />
+          <div className={styles.spotlightText}>
+            <span className={styles.spotlightLabel}>{spotlight.eyebrow}</span>
+            <h2 className={styles.spotlightTitle}>{spotlight.title}</h2>
+            {spotlightQuote && <p className={styles.spotlightQuote}>{spotlightQuote}</p>}
+          </div>
+        </Link>
+      )}
 
-      {featuredArticles.length > 0 && (
-        <section className={styles.explorar}>
-          <Reveal>
-            <h2 className="section-title">{t.home.exploreTitle}</h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className={styles.explorarGrid}>
-              {featuredArticles[0] && (
-                <Link href={localePath(locale, featuredArticles[0].slug)} className={styles.explorarMain}>
-                  {(featuredArticles[0].heroImage as any)?.url && (
-                    <div className={styles.explorarMainImage}>
-                      <Image
-                        src={(featuredArticles[0].heroImage as any).url}
-                        alt={featuredArticles[0].title}
-                        fill sizes={IMAGE_SIZES.twoThirds}
-                        className={styles.explorarImg}
-                      />
+      {eat.length > 0 && (
+        <section className={styles.section}>
+          <Head title={labels.eat} line={labels.eatLine} href={sectionHref('eat', locale)} link={labels.seeAll} />
+          <ul className={styles.eatList}>
+            {eat.map((item, index) => (
+              <li key={item.key}>
+                <Reveal delay={0.05 * index}>
+                  <Link href={item.href} className={styles.eatEntry}>
+                    <div className={styles.eatImage}>
+                      <Image src={item.image} alt={item.alt} fill sizes="(max-width: 768px) 30vw, 160px" className={styles.cover} />
                     </div>
-                  )}
-                  <div className={styles.explorarMainText}>
-                    {featuredArticles[0].type && (
-                      <span className={styles.explorarType}>{t.article.types[featuredArticles[0].type] || featuredArticles[0].type}</span>
-                    )}
-                    <h3 className={styles.explorarMainName}>{featuredArticles[0].title}</h3>
-                    {featuredArticles[0].tagline && (
-                      <p className={styles.explorarMainTagline}>{featuredArticles[0].tagline}</p>
-                    )}
-                  </div>
-                </Link>
-              )}
-              <div className={styles.explorarSide}>
-                {featuredArticles.slice(1, 3).map((article: any) => (
-                  <Link key={article.id} href={localePath(locale, article.slug)} className={styles.explorarSecondary}>
-                    {(article.heroImage as any)?.url && (
-                      <div className={styles.explorarSecondaryImage}>
-                        <Image
-                          src={(article.heroImage as any).url}
-                          alt={article.title}
-                          fill sizes={IMAGE_SIZES.card3}
-                          className={styles.explorarImg}
-                        />
-                      </div>
-                    )}
-                    <div className={styles.explorarSecondaryText}>
-                      {article.type && (
-                        <span className={styles.explorarType}>{t.article.types[article.type] || article.type}</span>
-                      )}
-                      <h3 className={styles.explorarSecondaryName}>{article.title}</h3>
-                      {article.tagline && (
-                        <p className={styles.explorarSecondaryTagline}>{article.tagline}</p>
-                      )}
+                    <div>
+                      <span className={styles.label}>{item.eyebrow}</span>
+                      <h3 className={styles.eatName}>{item.title}</h3>
+                      <p className={styles.eatText}>{item.text}</p>
                     </div>
                   </Link>
-                ))}
-              </div>
+                </Reveal>
+              </li>
+            ))}
+          </ul>
+
+          {coffee.length > 0 && (
+            <div className={styles.coffee}>
+              <h3 className={styles.coffeeTitle}>{labels.coffee}</h3>
+              <Reveal delay={0.1}>
+                <ScrollDrag className={styles.coffeeRow}>
+                  {coffee.map((item) => (
+                    <Link key={item.key} href={item.href} className={styles.coffeeCard}>
+                      <div className={styles.coffeeImage}>
+                        <Image src={item.image} alt={item.alt} fill sizes="(max-width: 768px) 40vw, 180px" className={styles.cover} />
+                      </div>
+                      <span className={styles.coffeeName}>{item.title}</span>
+                      <span className={styles.coffeeZone}>{item.eyebrow}</span>
+                    </Link>
+                  ))}
+                </ScrollDrag>
+              </Reveal>
             </div>
+          )}
+        </section>
+      )}
+
+      {todo.length > 0 && (
+        <section className={`${styles.section} ${styles.bleedRight}`}>
+          <Head title={labels.todo} />
+          <Reveal delay={0.1}>
+            <ScrollDrag className={styles.todoRow}>
+              {todo.map((item) => (
+                <Link key={item.key} href={item.href} className={styles.todoCard}>
+                  <Image src={item.image} alt={item.alt} fill sizes={IMAGE_SIZES.slide} className={styles.cover} />
+                  <div className={styles.todoShade} />
+                  <h3 className={styles.todoTitle}>{item.title}</h3>
+                </Link>
+              ))}
+            </ScrollDrag>
           </Reveal>
-          {/* The only way into the notes index: it stays out of the menu */}
-          <Reveal delay={0.15}>
-            <Link href={sectionHref('notes', locale)} className={styles.explorarAll}>
-              {t.home.allNotes}
-            </Link>
-          </Reveal>
+        </section>
+      )}
+
+      {zones.length > 0 && (
+        <section className={styles.section}>
+          <Head title={labels.zones} />
+          <ul className={styles.zones}>
+            {zones.map((zone: any) => (
+              <li key={zone.id}>
+                <Link href={localePath(locale, zone.slug)} className={styles.zone}>
+                  <span className={styles.zoneName}>{zone.name}</span>
+                  {zone.tagline && <span className={styles.zoneTagline}>{zone.tagline}</span>}
+                  <span className={styles.zoneArrow} aria-hidden="true">
+                    →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {notes.length > 0 && (
+        <section className={`${styles.section} ${styles.last}`}>
+          <Head title={labels.notes} href={sectionHref('notes', locale)} link={labels.seeAllNotes} />
+          <div className={styles.notes}>
+            {notes.map((item, index) => (
+              <Reveal key={item.key} delay={0.05 * index}>
+                <Link href={item.href} className={styles.noteCard}>
+                  <div className={styles.noteImage}>
+                    <Image src={item.image} alt={item.alt} fill sizes={IMAGE_SIZES.card4} className={styles.cover} />
+                  </div>
+                  <span className={styles.label}>{item.eyebrow}</span>
+                  <h3 className={styles.noteTitle}>{item.title}</h3>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </section>
       )}
     </main>

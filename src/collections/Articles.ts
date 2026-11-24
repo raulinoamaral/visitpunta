@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { homeSeasonField } from '@/fields/homeSeason'
 import { notifyIndexNow } from '@/lib/indexNow'
 import { ARTICLE_TYPES } from '@/lib/constants'
 import { TextBlock } from '@/blocks/TextBlock'
@@ -180,5 +181,6 @@ export const Articles: CollectionConfig = {
         },
       ],
     },
+    homeSeasonField,
   ],
 }
