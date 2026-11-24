@@ -29,7 +29,8 @@ async function call(auth: Credentials, method: 'GET' | 'POST', pathname: string,
   const { token } = auth
   const body = new URLSearchParams({ ...params, access_token: token })
   const url = method === 'GET' ? `${API}/${pathname}?${body}` : `${API}/${pathname}`
-  const res = await fetch(url, method === 'POST' ? { method, body } : undefined)
+  // Never cached: Next.js caches server fetches, and a cached "IN_PROGRESS" status would repeat forever
+  const res = await fetch(url, method === 'POST' ? { method, body, cache: 'no-store' } : { cache: 'no-store' })
   const json = await res.json()
   if (json.error) throw new Error(json.error.error_user_msg || json.error.message)
   return json
