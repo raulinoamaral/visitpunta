@@ -59,6 +59,8 @@ const es = {
     title: 'Notas',
     intro: 'Lo que escribimos sobre el Este. Pocas notas, elegidas con el mismo criterio que los lugares.',
     // Groups in this order, by article type, each with one line on what it holds
+    latest: 'Lo último',
+    read: 'Leer la nota →',
     groups: { guide: 'Guías', selection: 'Selecciones', season: 'Temporada', experience: 'Experiencias' } as Record<string, string>,
     groupIntros: {
       guide: 'Para recorrer y entender cada lugar.',
@@ -164,6 +166,8 @@ const es = {
   },
   article: {
     keepReading: 'Seguir leyendo',
+    // Under the title: when the note was last updated ({date} = month and year)
+    updated: 'Actualizada en {date}',
     // Title for the places an article points to, by what they are
     placesStay: 'Dónde quedarse cerca',
     placesEat: 'Para comer cerca',
@@ -231,6 +235,8 @@ const pt: Dictionary = {
       'Todas as leituras do Visit Punta: guias para percorrer a região, seleções de lugares e o que acontece em cada temporada em Punta del Este, José Ignacio e La Barra.',
     title: 'Leituras',
     intro: 'O que escrevemos sobre a região. Poucos textos, escolhidos com o mesmo critério dos lugares.',
+    latest: 'O mais recente',
+    read: 'Ler →',
     groups: { guide: 'Guias', selection: 'Seleções', season: 'Temporada', experience: 'Experiências' },
     groupIntros: {
       guide: 'Para percorrer e entender cada lugar.',
@@ -334,6 +340,7 @@ const pt: Dictionary = {
   },
   article: {
     keepReading: 'Continue lendo',
+    updated: 'Atualizado em {date}',
     placesStay: 'Onde ficar por perto',
     placesEat: 'Para comer por perto',
     placesExplore: 'Para explorar',

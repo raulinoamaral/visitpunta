@@ -1,0 +1,51 @@
+.header {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem 2.5rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.eyebrow {
+  margin-bottom: 1.1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.type {
+  color: var(--color-blue);
+  text-decoration: none;
+}
+
+.type:hover {
+  color: var(--color-pink);
+}
+
+.title {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--color-blue);
+}
+
+.tagline {
+  margin-top: 1.2rem;
+  font-family: var(--font-playfair);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  line-height: 1.55;
+  color: #555;
+}
+
+.updated {
+  margin-top: 1.4rem;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 2.5rem 1.25rem 2rem;
+  }
+}

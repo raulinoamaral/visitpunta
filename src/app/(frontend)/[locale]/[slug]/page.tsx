@@ -25,18 +25,21 @@ import GalleryDuo from '@/components/gallery/GalleryDuo'
 import GalleryGrid from '@/components/gallery/GalleryGrid'
 import GalleryFeaturedBottom from '@/components/gallery/GalleryFeaturedBottom'
 import GalleryFeaturedSide from '@/components/gallery/GalleryFeaturedSide'
-import PlaceCard from '@/components/PlaceCard'
 import TrackedLink from '@/components/TrackedLink'
 import JsonLd from '@/components/JsonLd'
 import { absoluteUrl, breadcrumbSchema, pageUrl, publisherRef } from '@/lib/structuredData'
-import ArticleCard2 from '@/components/ArticleCard2'
-import ExpandableGrid from '@/components/ExpandableGrid'
 import Reveal from '@/components/Reveal'
 import Image from 'next/image'
 import styles from './page.module.css'
 import articleStyles from './article.module.css'
 import expStyles from './experience.module.css'
 import ZonePage from './ZonePage'
+import ArticleHeader from '@/components/article/ArticleHeader'
+import CardGrid from '@/components/sections/CardGrid'
+import Section from '@/components/sections/Section'
+import SectionHead from '@/components/sections/SectionHead'
+import { toSectionItems } from '@/lib/sectionItems'
+import { sectionHref } from '@/i18n/routes'
 
 const BOOKING_AID = '7864342'
 
@@ -351,42 +354,17 @@ export default async function SlugPage({ params }: Props) {
             )}
 
             {relItems.length > 0 && (
-              <Reveal>
-                <section className={expStyles.related}>
-                  <h2 className={expStyles.relatedTitle}>{t.experience.nearby}</h2>
-                  <div className={expStyles.relatedGrid}>
-                    {relItems.map((item: any) => (
-                      <PlaceCard
-                        key={`${item.collection}-${item.id}`}
-                        name={item.name || item.title}
-                        description={item.summary || ''}
-                        image={(item.heroImage as any)?.url || ''}
-                        href={href(item.slug)}
-                      />
-                    ))}
-                  </div>
-                </section>
-              </Reveal>
+              <Section last={expArticles.length === 0}>
+                <SectionHead title={t.experience.nearby} />
+                <CardGrid items={toSectionItems(relItems, locale)} variant="places" bookingLabel={t.stay.booking} />
+              </Section>
             )}
 
             {expArticles.length > 0 && (
-              <Reveal>
-                <section className={expStyles.relatedArticles}>
-                  <h2 className={expStyles.relatedTitle}>{t.experience.keepExploring}</h2>
-                  <div className={expStyles.relatedArticlesGrid}>
-                    {expArticles.map((a: any) => (
-                      <ArticleCard2
-                        key={a.id}
-                        title={a.title}
-                        href={href(a.slug)}
-                        typeLabel={t.article.types[a.type] || a.type}
-                        tagline={a.tagline}
-                        image={(a.heroImage as any)?.url}
-                      />
-                    ))}
-                  </div>
-                </section>
-              </Reveal>
+              <Section last>
+                <SectionHead title={t.experience.keepExploring} />
+                <CardGrid items={toSectionItems(expArticles, locale, (a) => t.article.types[a.type] || undefined)} variant="places" />
+              </Section>
             )}
           </main>
         )
@@ -412,14 +390,6 @@ export default async function SlugPage({ params }: Props) {
     const articlePlaces = (article.related || [])
       .filter((r: any) => isPublishedDoc(r?.value))
       .map((r: any) => ({ ...r.value, collection: r.relationTo }))
-    const toArticlePlaceCard = (p: any) => ({
-      id: `${p.collection}-${p.id}`,
-      name: p.name || p.title,
-      destination: (p.destination as any)?.name || '',
-      description: p.summary || '',
-      image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
-      href: href(p.slug),
-    })
     const placeKinds = new Set(
       articlePlaces.map((p: any) => (p.collection === 'experiences' ? 'experiences' : p.type)),
     )
@@ -458,12 +428,17 @@ export default async function SlugPage({ params }: Props) {
         <article>
           {heroUrl && <PageHero image={heroUrl} title="" />}
 
-          <section className={articleStyles.header}>
-            <h1 className={articleStyles.title}>{article.title}</h1>
-            {article.tagline && (
-              <p className={articleStyles.excerpt}>{article.tagline}</p>
-            )}
-          </section>
+          <ArticleHeader
+            locale={locale}
+            title={article.title}
+            tagline={article.tagline}
+            typeLabel={t.article.types[article.type as string]}
+            notesHref={sectionHref('notes', locale)}
+            type={article.type as string}
+            zones={((article.destinations as any[]) || []).filter((zone) => typeof zone === 'object' && zone?.name).map((zone) => zone.name)}
+            updatedTemplate={t.article.updated}
+            updatedAt={article.updatedAt}
+          />
 
           {article.layout && article.layout.length > 0 && (
             <div className={articleStyles.content}>
@@ -543,37 +518,25 @@ export default async function SlugPage({ params }: Props) {
             </div>
           )}
           {articlePlaces.length > 0 && (
-            <Reveal>
-              <section className={articleStyles.places}>
-                <h3 className={articleStyles.relatedTitle}>{articlePlacesTitle}</h3>
-                {/* Four cards, the rest behind "keep looking", as on the zone pages */}
-                <ExpandableGrid
-                  moreLabel={t.common.more}
-                  featured={articlePlaces.slice(0, 4).map(toArticlePlaceCard)}
-                  rest={articlePlaces.slice(4).map(toArticlePlaceCard)}
-                />
-              </section>
-            </Reveal>
+            <Section last={keepReading.length === 0}>
+              <SectionHead title={articlePlacesTitle} />
+              {/* Every place in view, in the format of its kind, as on the section pages */}
+              <CardGrid
+                items={toSectionItems(articlePlaces, locale)}
+                variant={onlyKind === PLACE_TYPES.DORMIR ? 'wide' : onlyKind === PLACE_TYPES.COMER ? 'tall' : 'places'}
+                bookingLabel={t.stay.booking}
+              />
+            </Section>
           )}
 
           {keepReading.length > 0 && (
-            <Reveal>
-              <section className={articleStyles.relatedArticles}>
-                <h3 className={articleStyles.relatedTitle}>{t.article.keepReading}</h3>
-                <div className={articleStyles.relatedGrid}>
-                  {keepReading.map((rel: any) => (
-                    <ArticleCard2
-                      key={rel.id}
-                      title={rel.title}
-                      href={href(rel.slug)}
-                      typeLabel={t.article.types[rel.type] || rel.type}
-                      tagline={rel.tagline}
-                      image={(rel.heroImage as any)?.url}
-                    />
-                  ))}
-                </div>
-              </section>
-            </Reveal>
+            <Section last>
+              <SectionHead title={t.article.keepReading} />
+              <CardGrid
+                items={toSectionItems(keepReading, locale, (rel) => t.article.types[rel.type] || undefined)}
+                variant="places"
+              />
+            </Section>
           )}
         </article>
       </main>
@@ -789,74 +752,34 @@ export default async function SlugPage({ params }: Props) {
         </Reveal>
       )}
 
-      {place.relatedPlaces && place.relatedPlaces.length > 0 && (
-        <Reveal>
-          <section className={styles.recommendations}>
-            {place.relatedPlaces.map((group: any, i: number) => {
-              const items = (group.places || [])
-                .map((r: any) => r?.value ?? r)
-                .filter(isPublishedDoc)
-              if (items.length === 0) return null
-              return (
-                <div key={i} className={styles.recommendation}>
-                  <h3 className={styles.recommendationTitle}>{group.title}</h3>
-                  <div className={styles.relatedGrid}>
-                    {items.map((p: any) => (
-                      <PlaceCard
-                        key={p.id}
-                        name={p.name || p.title}
-                        destination={(p.destination as any)?.name || ''}
-                        description={p.summary || ''}
-                        image={(p.cardImage as any)?.url || (p.heroImage as any)?.url || ''}
-                        href={href(p.slug)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )
-            })}
-          </section>
-        </Reveal>
-      )}
+      {/* Groups the editor titled ("Para quedarse cerca"…), then other places of the zone, then notes */}
+      {(place.relatedPlaces || []).map((group: any, i: number) => {
+        const items = (group.places || []).map((r: any) => r?.value ?? r).filter(isPublishedDoc)
+        if (items.length === 0) return null
+        return (
+          <Section key={i}>
+            <SectionHead title={group.title} />
+            <CardGrid items={toSectionItems(items, locale)} variant="places" bookingLabel={t.stay.booking} />
+          </Section>
+        )
+      })}
 
       {relatedPlaces.length > 0 && (
-        <Reveal>
-          <section className={styles.related}>
-            <h3 className={styles.relatedTitle}>{destinationName ? t.place.otherPlacesIn(destinationName) : t.place.otherPlaces}</h3>
-            <div className={styles.relatedGrid}>
-              {relatedPlaces.map((p: any) => (
-                <PlaceCard
-                  key={p.id}
-                  name={p.name}
-                  destination={(p.destination as any)?.name || ''}
-                  description={p.summary || ''}
-                  image={(p.cardImage as any)?.url || (p.heroImage as any)?.url || ''}
-                  href={href(p.slug)}
-                />
-              ))}
-            </div>
-          </section>
-        </Reveal>
+        <Section last={placeArticles.length === 0}>
+          <SectionHead title={destinationName ? t.place.otherPlacesIn(destinationName) : t.place.otherPlaces} />
+          <CardGrid
+            items={toSectionItems(relatedPlaces, locale, () => undefined)}
+            variant={place.type === PLACE_TYPES.DORMIR ? 'wide' : 'tall'}
+            bookingLabel={t.stay.booking}
+          />
+        </Section>
       )}
 
       {placeArticles.length > 0 && (
-        <Reveal>
-          <section className={styles.relatedArticles}>
-            <h3 className={styles.relatedTitle}>{t.place.keepExploring}</h3>
-            <div className={styles.relatedArticlesGrid}>
-              {placeArticles.map((a: any) => (
-                <ArticleCard2
-                  key={a.id}
-                  title={a.title}
-                  href={href(a.slug)}
-                  typeLabel={t.article.types[a.type] || a.type}
-                  tagline={a.tagline}
-                  image={(a.heroImage as any)?.url}
-                />
-              ))}
-            </div>
-          </section>
-        </Reveal>
+        <Section last>
+          <SectionHead title={t.place.keepExploring} />
+          <CardGrid items={toSectionItems(placeArticles, locale, (a) => t.article.types[a.type] || undefined)} variant="places" />
+        </Section>
       )}
     </main>
   )
