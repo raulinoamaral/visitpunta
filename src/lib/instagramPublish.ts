@@ -40,13 +40,19 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 // A container can only be published once Instagram finished downloading and processing it
 async function waitUntilReady(auth: Credentials, containerId: string) {
+  let last = ''
   for (let attempt = 0; attempt < POLL_ATTEMPTS; attempt++) {
-    const { status_code: status, status: detail } = await call(auth, 'GET', containerId, { fields: 'status_code,status' })
+    const response = await call(auth, 'GET', containerId, { fields: 'status_code,status' })
+    const { status_code: status, status: detail } = response
+    last = JSON.stringify(response)
+    // Logged on the first poll and every minute after it, to see in the server logs what Instagram answers
+    if (attempt % 12 === 0) console.info(`Instagram: container ${containerId}, poll ${attempt + 1}: ${last}`)
     if (status === 'FINISHED') return
     if (status === 'ERROR' || status === 'EXPIRED') throw new Error(`Instagram no pudo procesar el archivo: ${detail ?? status}`)
     await wait(POLL_INTERVAL_MS)
   }
-  throw new Error('Instagram tardó demasiado en procesar el archivo.')
+  // The last answer goes into the error, so it shows in the admin without reading the logs
+  throw new Error(`Instagram tardó demasiado en procesar el archivo. Contenedor ${containerId}, última respuesta: ${last}`)
 }
 
 async function createContainer(auth: Credentials, params: Record<string, string>) {
