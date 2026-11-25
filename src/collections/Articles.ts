@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { appearsInField } from '@/fields/appearsIn'
 import { homeSeasonField } from '@/fields/homeSeason'
 import { notifyIndexNow } from '@/lib/indexNow'
 import { ARTICLE_TYPES } from '@/lib/constants'
@@ -181,6 +182,7 @@ export const Articles: CollectionConfig = {
         },
       ],
     },
+    appearsInField,
     homeSeasonField,
   ],
 }

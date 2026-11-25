@@ -77,6 +77,7 @@ export interface Config {
     experiences: Experience;
     'instagram-posts': InstagramPost;
     'instagram-media': InstagramMedia;
+    placements: Placement;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -95,6 +96,7 @@ export interface Config {
     experiences: ExperiencesSelect<false> | ExperiencesSelect<true>;
     'instagram-posts': InstagramPostsSelect<false> | InstagramPostsSelect<true>;
     'instagram-media': InstagramMediaSelect<false> | InstagramMediaSelect<true>;
+    placements: PlacementsSelect<false> | PlacementsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -789,6 +791,68 @@ export interface InstagramMedia {
   focalY?: number | null;
 }
 /**
+ * Qué aparece destacado en cada lugar del sitio. Para verlo todo junto: Mapa del sitio.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "placements".
+ */
+export interface Placement {
+  id: number;
+  title?: string | null;
+  slot:
+    | 'home.season'
+    | 'home.stay'
+    | 'home.spotlight'
+    | 'home.eat'
+    | 'home.coffee'
+    | 'home.todo'
+    | 'home.notes'
+    | 'stay.first'
+    | 'eat.first'
+    | 'eat.beachNote'
+    | 'eat.coffeeNote'
+    | 'explore.start'
+    | 'explore.bandNote'
+    | 'explore.guides'
+    | 'zone.guide'
+    | 'zone.spotlight'
+    | 'zone.stayFirst'
+    | 'zone.eatFirst';
+  zone?: (number | null) | Destination;
+  item:
+    | {
+        relationTo: 'places';
+        value: number | Place;
+      }
+    | {
+        relationTo: 'articles';
+        value: number | Article;
+      }
+    | {
+        relationTo: 'experiences';
+        value: number | Experience;
+      };
+  /**
+   * 1 va primero.
+   */
+  position?: number | null;
+  /**
+   * Día/mes, opcional.
+   */
+  from?: string | null;
+  /**
+   * Se repite todos los años.
+   */
+  to?: string | null;
+  locale: 'all' | 'es' | 'pt';
+  /**
+   * Por qué está acá, hasta cuándo, lo que haga falta recordar. No se publica.
+   */
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -952,6 +1016,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'instagram-media';
         value: number | InstagramMedia;
+      } | null)
+    | ({
+        relationTo: 'placements';
+        value: number | Placement;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1383,6 +1451,23 @@ export interface InstagramMediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "placements_select".
+ */
+export interface PlacementsSelect<T extends boolean = true> {
+  title?: T;
+  slot?: T;
+  zone?: T;
+  item?: T;
+  position?: T;
+  from?: T;
+  to?: T;
+  locale?: T;
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

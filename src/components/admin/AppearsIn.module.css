@@ -1,0 +1,42 @@
+.box {
+  margin-bottom: 1.5rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 8px;
+}
+
+.title {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--theme-elevation-600);
+}
+
+.box ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.box li {
+  padding: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+.box a {
+  color: var(--theme-text);
+}
+
+.muted {
+  color: var(--theme-elevation-500);
+  font-size: 0.85rem;
+}
+
+.map {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+}

@@ -14,6 +14,7 @@ import { Destinations } from './collections/Destinations'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Places } from './collections/Places'
+import { Placements } from './collections/Placements'
 import { Tags } from './collections/Tags'
 import { Users } from './collections/Users'
 import { Home } from './globals/Home'
@@ -30,6 +31,12 @@ export default buildConfig({
     },
     meta: {
       titleSuffix: '— Visit Punta',
+    },
+    components: {
+      afterNavLinks: ['/components/admin/SiteMapLink#SiteMapLink'],
+      views: {
+        siteMap: { Component: '/components/admin/SiteMap#SiteMap', path: '/mapa' },
+      },
     },
   },
   plugins: [
@@ -58,7 +65,7 @@ export default buildConfig({
       },
     }),
   ],
-  collections: [Users, Media, Places, Tags, Articles, Destinations, Pages, Experiences, InstagramPosts, InstagramMedia],
+  collections: [Users, Media, Places, Tags, Articles, Destinations, Pages, Experiences, InstagramPosts, InstagramMedia, Placements],
   globals: [Home],
   jobs: {
     tasks: [publishInstagramTask],

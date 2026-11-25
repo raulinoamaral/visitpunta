@@ -1,0 +1,12 @@
+.link {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.25rem 0;
+  color: var(--theme-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

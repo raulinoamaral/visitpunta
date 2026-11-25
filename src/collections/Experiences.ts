@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { appearsInField } from '@/fields/appearsIn'
 import { homeSeasonField } from '@/fields/homeSeason'
 import { notifyIndexNow } from '@/lib/indexNow'
 import { TextBlock } from '@/blocks/TextBlock'
@@ -252,6 +253,7 @@ export const Experiences: CollectionConfig = {
         },
       ],
     },
+    appearsInField,
     homeSeasonField,
   ],
 }
