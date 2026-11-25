@@ -101,25 +101,6 @@ export const Destinations: CollectionConfig = {
           ],
         },
         {
-          label: 'Página de la zona',
-          fields: [
-            {
-              name: 'guide',
-              type: 'relationship',
-              relationTo: 'articles',
-              label: 'La guía de la zona',
-              admin: { description: 'Va en la franja de arriba, después del texto. Vacío: la primera guía de la zona.' },
-            },
-            {
-              name: 'spotlight',
-              type: 'relationship',
-              relationTo: ['experiences', 'places'],
-              label: 'Pausa a pantalla completa',
-              admin: { description: 'Un lugar de la zona con el nombre en grande, entre Dónde dormir y Qué hacer. Vacío: no hay pausa.' },
-            },
-          ],
-        },
-        {
           label: 'SEO',
           fields: [
             {

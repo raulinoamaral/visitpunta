@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import Intro from '@/components/sections/Intro'
 import PageCover from '@/components/sections/PageCover'
+import { firstThenByName, getPlacements } from '@/lib/placements'
 import { toSectionItems, zonesOf } from '@/lib/sectionItems'
 import StayList, { type StaySection } from './StayList'
 import { notFound } from 'next/navigation'
@@ -39,8 +40,9 @@ export default async function DormirPage({ params }: Props) {
   const dictionary = getDictionary(locale)
   const t = dictionary.stay
   const payload = await getPayload({ config })
+  const { 'stay.first': first } = await getPlacements(payload, locale, ['stay.first'])
 
-  // Sections are the Spanish tag labels in Payload; every hotel shows, the featured ones first
+  // Sections are the Spanish tag labels in Payload; every hotel shows: "Primeros de la lista" first, then by name
   const sections: StaySection[] = await Promise.all(
     ['Para desconectar', 'Cerca de todo', 'Con más diseño'].map(async (tagLabel) => {
       const title = t.sections[tagLabel] || tagLabel
@@ -58,9 +60,9 @@ export default async function DormirPage({ params }: Props) {
         where: { and: [PUBLISHED, { type: { equals: PLACE_TYPES.DORMIR } }, { tags: { in: [tags[0].id] } }] },
         depth: 1,
         limit: 100,
-        sort: '-featured,name',
+        sort: 'name',
       })
-      return { title, line, items: toSectionItems(docs, locale) }
+      return { title, line, items: toSectionItems(firstThenByName(docs, first), locale) }
     }),
   )
 

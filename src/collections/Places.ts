@@ -1,6 +1,5 @@
 import type { CollectionConfig } from 'payload'
 import { appearsInField } from '@/fields/appearsIn'
-import { homeSeasonField } from '@/fields/homeSeason'
 import { notifyIndexNow } from '@/lib/indexNow'
 import { revalidateOnChange, revalidateOnDelete } from '@/lib/revalidate'
 
@@ -9,7 +8,7 @@ export const Places: CollectionConfig = {
   hooks: { afterChange: [notifyIndexNow, revalidateOnChange], afterDelete: [revalidateOnDelete] },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'type', 'destination', 'featured'],
+    defaultColumns: ['name', 'type', 'destination'],
   },
   fields: [
     {
@@ -63,13 +62,6 @@ export const Places: CollectionConfig = {
           type: 'relationship',
           relationTo: 'destinations',
           admin: { width: '33%' },
-        },
-        {
-          name: 'featured',
-          type: 'checkbox',
-          label: 'Destacado',
-          defaultValue: false,
-          admin: { width: '15%' },
         },
         {
           name: 'published',
@@ -284,6 +276,5 @@ export const Places: CollectionConfig = {
       ],
     },
     appearsInField,
-    homeSeasonField,
   ],
 }

@@ -38,6 +38,11 @@ export const Placements: CollectionConfig = {
       admin: { hidden: true },
     },
     {
+      name: 'prefill',
+      type: 'ui',
+      admin: { components: { Field: '/components/admin/PrefillPlacement#PrefillPlacement' } },
+    },
+    {
       type: 'row',
       fields: [
         {

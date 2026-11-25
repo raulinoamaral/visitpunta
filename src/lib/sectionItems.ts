@@ -6,22 +6,10 @@ import { PLACE_TYPES } from '@/lib/constants'
 
 /**
  * Shared by the section pages (Alojamientos, Gastronomía, Recorridos) and the zone pages.
- * Until the placements system exists, the hand-picked entries live here.
  */
 
 // Zones in the order the filters show them
 export const ZONE_ORDER = ['Punta del Este', 'José Ignacio', 'La Barra', 'Punta Ballena']
-
-export const PICKS = {
-  // Recorridos · Para empezar: Casapueblo, Isla Gorriti, Faro de José Ignacio
-  exploreStart: [20, 7, 13],
-  // Recorridos: the guide on the band, then the guides at the end
-  exploreBreakNote: 5, // Recorrer la península de Punta del Este
-  exploreGuides: [14, 17, 16, 8], // Un día en José Ignacio, Punta Ballena, La Barra, Dónde ver el atardecer
-  // Gastronomía: the notes between sections
-  eatBeachNote: 15, // Paradores de la Mansa
-  eatCoffeeNote: 3, // Cafés de especialidad en Punta del Este
-}
 
 /** A place, experience or article as a card. Null when it has no slug or photo */
 export function toSectionItem(doc: any, locale: Locale, label?: string): SectionItem | null {

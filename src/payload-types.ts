@@ -207,7 +207,6 @@ export interface Place {
   slug: string;
   type: 'dormir' | 'comer' | 'spots';
   destination?: (number | null) | Destination;
-  featured?: boolean | null;
   published?: boolean | null;
   tags?: (number | Tag)[] | null;
   /**
@@ -291,13 +290,6 @@ export interface Place {
    * Si está vacío se usa el summary.
    */
   seoDescription?: string | null;
-  /**
-   * Aparece sola en la home entre estas fechas, todos los años. Vacío: nunca.
-   */
-  homeSeason?: {
-    from?: string | null;
-    to?: string | null;
-  };
   updatedAt: string;
   createdAt: string;
 }
@@ -328,23 +320,176 @@ export interface Destination {
    */
   heroCaption?: string | null;
   /**
-   * Va en la franja de arriba, después del texto. Vacío: la primera guía de la zona.
-   */
-  guide?: (number | null) | Article;
-  /**
-   * Un lugar de la zona con el nombre en grande, entre Dónde dormir y Qué hacer. Vacío: no hay pausa.
-   */
-  spotlight?:
-    | ({
-        relationTo: 'experiences';
-        value: number | Experience;
-      } | null)
-    | ({
-        relationTo: 'places';
-        value: number | Place;
-      } | null);
-  /**
    * Si está vacío se usa el nombre del destino.
+   */
+  seoTitle?: string | null;
+  /**
+   * Si está vacío se usa el summary.
+   */
+  seoDescription?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: number;
+  label: string;
+  type: 'dormir' | 'comer';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "experiences".
+ */
+export interface Experience {
+  id: number;
+  title: string;
+  slug: string;
+  destination?: (number | null) | Destination;
+  /**
+   * Menor = primero.
+   */
+  order?: number | null;
+  published?: boolean | null;
+  /**
+   * Frase corta para cards y listados.
+   */
+  summary?: string | null;
+  /**
+   * Frase corta destacada, tipo subtítulo.
+   */
+  tagline?: string | null;
+  content?:
+    | (
+        | {
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textBlock';
+          }
+        | {
+            images: {
+              image: number | Media;
+              caption?: string | null;
+              id?: string | null;
+            }[];
+            variant?: ('inline' | 'breakout' | 'bleed') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'mediaBlock';
+          }
+        | {
+            /**
+             * El texto de la cita.
+             */
+            text: string;
+            /**
+             * Autor o fuente (opcional).
+             */
+            attribution?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'quoteBlock';
+          }
+        | {
+            place:
+              | {
+                  relationTo: 'places';
+                  value: number | Place;
+                }
+              | {
+                  relationTo: 'experiences';
+                  value: number | Experience;
+                }
+              | {
+                  relationTo: 'destinations';
+                  value: number | Destination;
+                };
+            /**
+             * Línea de contexto. Ej: "Para quedarse cerca" o "Ideal para almorzar después".
+             */
+            context?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'placeBlock';
+          }
+      )[]
+    | null;
+  /**
+   * Puntos destacados de la experiencia.
+   */
+  highlights?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  heroImage?: (number | null) | Media;
+  gallery?:
+    | {
+        layout: 'single' | 'duo';
+        images: {
+          image: number | Media;
+          id?: string | null;
+        }[];
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Título de la sección (ej: "Cuándo ir", "Mejor momento").
+   */
+  timingTitle?: string | null;
+  /**
+   * Momentos del día con una descripción corta.
+   */
+  timing?:
+    | {
+        /**
+         * Ej: Mañana, Tarde, Atardecer
+         */
+        moment: string;
+        /**
+         * Ej: Más tranquila, buen momento para caminar
+         */
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Places y experiencias relacionadas.
+   */
+  related?:
+    | (
+        | {
+            relationTo: 'places';
+            value: number | Place;
+          }
+        | {
+            relationTo: 'experiences';
+            value: number | Experience;
+          }
+      )[]
+    | null;
+  /**
+   * Si está vacío se usa el título.
    */
   seoTitle?: string | null;
   /**
@@ -364,14 +509,6 @@ export interface Article {
   slug: string;
   type: 'guide' | 'selection' | 'experience' | 'season';
   destinations?: (number | Destination)[] | null;
-  /**
-   * Menor = primero.
-   */
-  order?: number | null;
-  /**
-   * Home.
-   */
-  featured?: boolean | null;
   published?: boolean | null;
   /**
    * Frase corta para cards y listados.
@@ -517,193 +654,6 @@ export interface Article {
    * Si está vacío se usa el tagline.
    */
   seoDescription?: string | null;
-  /**
-   * Aparece sola en la home entre estas fechas, todos los años. Vacío: nunca.
-   */
-  homeSeason?: {
-    from?: string | null;
-    to?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "experiences".
- */
-export interface Experience {
-  id: number;
-  title: string;
-  slug: string;
-  destination?: (number | null) | Destination;
-  /**
-   * Menor = primero.
-   */
-  order?: number | null;
-  /**
-   * Sección "Para empezar".
-   */
-  featured?: boolean | null;
-  published?: boolean | null;
-  /**
-   * Frase corta para cards y listados.
-   */
-  summary?: string | null;
-  /**
-   * Frase corta destacada, tipo subtítulo.
-   */
-  tagline?: string | null;
-  content?:
-    | (
-        | {
-            content: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            };
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textBlock';
-          }
-        | {
-            images: {
-              image: number | Media;
-              caption?: string | null;
-              id?: string | null;
-            }[];
-            variant?: ('inline' | 'breakout' | 'bleed') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'mediaBlock';
-          }
-        | {
-            /**
-             * El texto de la cita.
-             */
-            text: string;
-            /**
-             * Autor o fuente (opcional).
-             */
-            attribution?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'quoteBlock';
-          }
-        | {
-            place:
-              | {
-                  relationTo: 'places';
-                  value: number | Place;
-                }
-              | {
-                  relationTo: 'experiences';
-                  value: number | Experience;
-                }
-              | {
-                  relationTo: 'destinations';
-                  value: number | Destination;
-                };
-            /**
-             * Línea de contexto. Ej: "Para quedarse cerca" o "Ideal para almorzar después".
-             */
-            context?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'placeBlock';
-          }
-      )[]
-    | null;
-  /**
-   * Puntos destacados de la experiencia.
-   */
-  highlights?:
-    | {
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  heroImage?: (number | null) | Media;
-  gallery?:
-    | {
-        layout: 'single' | 'duo';
-        images: {
-          image: number | Media;
-          id?: string | null;
-        }[];
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Título de la sección (ej: "Cuándo ir", "Mejor momento").
-   */
-  timingTitle?: string | null;
-  /**
-   * Momentos del día con una descripción corta.
-   */
-  timing?:
-    | {
-        /**
-         * Ej: Mañana, Tarde, Atardecer
-         */
-        moment: string;
-        /**
-         * Ej: Más tranquila, buen momento para caminar
-         */
-        description: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Places y experiencias relacionadas.
-   */
-  related?:
-    | (
-        | {
-            relationTo: 'places';
-            value: number | Place;
-          }
-        | {
-            relationTo: 'experiences';
-            value: number | Experience;
-          }
-      )[]
-    | null;
-  /**
-   * Si está vacío se usa el título.
-   */
-  seoTitle?: string | null;
-  /**
-   * Si está vacío se usa el summary.
-   */
-  seoDescription?: string | null;
-  /**
-   * Aparece sola en la home entre estas fechas, todos los años. Vacío: nunca.
-   */
-  homeSeason?: {
-    from?: string | null;
-    to?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags".
- */
-export interface Tag {
-  id: number;
-  label: string;
-  type: 'dormir' | 'comer';
   updatedAt: string;
   createdAt: string;
 }
@@ -1113,7 +1063,6 @@ export interface PlacesSelect<T extends boolean = true> {
   slug?: T;
   type?: T;
   destination?: T;
-  featured?: T;
   published?: T;
   tags?: T;
   summary?: T;
@@ -1156,12 +1105,6 @@ export interface PlacesSelect<T extends boolean = true> {
   relatedArticles?: T;
   seoTitle?: T;
   seoDescription?: T;
-  homeSeason?:
-    | T
-    | {
-        from?: T;
-        to?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1184,8 +1127,6 @@ export interface ArticlesSelect<T extends boolean = true> {
   slug?: T;
   type?: T;
   destinations?: T;
-  order?: T;
-  featured?: T;
   published?: T;
   tagline?: T;
   layout?:
@@ -1271,12 +1212,6 @@ export interface ArticlesSelect<T extends boolean = true> {
   relatedArticles?: T;
   seoTitle?: T;
   seoDescription?: T;
-  homeSeason?:
-    | T
-    | {
-        from?: T;
-        to?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1293,8 +1228,6 @@ export interface DestinationsSelect<T extends boolean = true> {
   description?: T;
   heroImage?: T;
   heroCaption?: T;
-  guide?: T;
-  spotlight?: T;
   seoTitle?: T;
   seoDescription?: T;
   updatedAt?: T;
@@ -1318,7 +1251,6 @@ export interface ExperiencesSelect<T extends boolean = true> {
   slug?: T;
   destination?: T;
   order?: T;
-  featured?: T;
   published?: T;
   summary?: T;
   tagline?: T;
@@ -1393,12 +1325,6 @@ export interface ExperiencesSelect<T extends boolean = true> {
   related?: T;
   seoTitle?: T;
   seoDescription?: T;
-  homeSeason?:
-    | T
-    | {
-        from?: T;
-        to?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1542,6 +1468,8 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Los textos de la home. Qué aparece en cada sección se elige en el Mapa del sitio.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home".
  */
@@ -1551,58 +1479,7 @@ export interface Home {
    * Qué muestra la foto. Ej: La bahía.
    */
   heroCaption?: string | null;
-  /**
-   * Opcional. Vacío: la home muestra sola lo que tiene fechas en "Estos días en Punta" (barra lateral de cada nota, lugar o experiencia). Si elegís algo acá, manda esto. El primero va grande.
-   */
-  season?:
-    | (
-        | {
-            relationTo: 'articles';
-            value: number | Article;
-          }
-        | {
-            relationTo: 'places';
-            value: number | Place;
-          }
-        | {
-            relationTo: 'experiences';
-            value: number | Experience;
-          }
-      )[]
-    | null;
-  /**
-   * De 3 a 6 hoteles, en este orden. Vacío: los destacados. En portugués, si lo dejás vacío, se usa lo mismo que en español.
-   */
-  stay?: (number | Place)[] | null;
-  /**
-   * Un lugar o experiencia, con su nombre en grande.
-   */
-  spotlight?:
-    | ({
-        relationTo: 'experiences';
-        value: number | Experience;
-      } | null)
-    | ({
-        relationTo: 'places';
-        value: number | Place;
-      } | null);
   spotlightQuote?: string | null;
-  /**
-   * 4 restaurantes (o 6). Vacío: los destacados. En portugués, si lo dejás vacío, se usa lo mismo que en español.
-   */
-  eat?: (number | Place)[] | null;
-  /**
-   * Hasta 6 cafés. En portugués, si lo dejás vacío, se usa lo mismo que en español.
-   */
-  coffee?: (number | Place)[] | null;
-  /**
-   * Playas, lugares, paseos. Vacío: las destacadas. En portugués, si lo dejás vacío, se usa lo mismo que en español.
-   */
-  todo?: (number | Experience)[] | null;
-  /**
-   * 4 notas. Vacío: las 4 últimas. En portugués, si lo dejás vacío, se usa lo mismo que en español.
-   */
-  notes?: (number | Article)[] | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1630,14 +1507,7 @@ export interface PayloadJobsStat {
  */
 export interface HomeSelect<T extends boolean = true> {
   heroCaption?: T;
-  season?: T;
-  stay?: T;
-  spotlight?: T;
   spotlightQuote?: T;
-  eat?: T;
-  coffee?: T;
-  todo?: T;
-  notes?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

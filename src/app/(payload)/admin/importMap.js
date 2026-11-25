@@ -25,6 +25,7 @@ import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f
 import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InstagramPreview as InstagramPreview_1785c43dced33ff40a5d757fb01fc91a } from '../../../components/admin/InstagramPreview'
 import { InstagramCalendar as InstagramCalendar_039fddc685fad44b4fff00efdafb75e6 } from '../../../components/admin/InstagramCalendar'
+import { PrefillPlacement as PrefillPlacement_9aabf5aec585beec2b8782c80b3ccd97 } from '../../../components/admin/PrefillPlacement'
 import { SiteMapLink as SiteMapLink_1b8182f1e9b3e9a869ec4788c8ad6a0c } from '../../../components/admin/SiteMapLink'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { SiteMap as SiteMap_e46f24e33f1b114ddb8ca8bfbddc12c0 } from '../../../components/admin/SiteMap'
@@ -58,6 +59,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/InstagramPreview#InstagramPreview": InstagramPreview_1785c43dced33ff40a5d757fb01fc91a,
   "/components/admin/InstagramCalendar#InstagramCalendar": InstagramCalendar_039fddc685fad44b4fff00efdafb75e6,
+  "/components/admin/PrefillPlacement#PrefillPlacement": PrefillPlacement_9aabf5aec585beec2b8782c80b3ccd97,
   "/components/admin/SiteMapLink#SiteMapLink": SiteMapLink_1b8182f1e9b3e9a869ec4788c8ad6a0c,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "/components/admin/SiteMap#SiteMap": SiteMap_e46f24e33f1b114ddb8ca8bfbddc12c0,

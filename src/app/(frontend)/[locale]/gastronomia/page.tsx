@@ -6,7 +6,8 @@ import { PLACE_TYPES } from '@/lib/constants'
 import { isLocale, localePath } from '@/i18n/config'
 import Intro from '@/components/sections/Intro'
 import PageCover from '@/components/sections/PageCover'
-import { PICKS, toSectionItems, zonesOf } from '@/lib/sectionItems'
+import { firstThenByName, getPlacements } from '@/lib/placements'
+import { toSectionItems, zonesOf } from '@/lib/sectionItems'
 import EatList, { type EatNote } from './EatList'
 import { getDictionary } from '@/i18n/dictionaries'
 import { alternatesMetadata, staticAlternates } from '@/lib/alternates'
@@ -38,8 +39,9 @@ export default async function ComerPage({ params }: Props) {
   const dictionary = getDictionary(locale)
   const t = dictionary.eat
   const payload = await getPayload({ config })
+  const placed = await getPlacements(payload, locale, ['eat.first', 'eat.beachNote', 'eat.coffeeNote'])
 
-  // Each kind of place is a Spanish tag label in Payload; every place shows, the featured ones first
+  // Each kind of place is a Spanish tag label in Payload; every place shows: "Primeros de la lista" first, then by name
   const byTag = async (tagLabel: string) => {
     const { docs: tags } = await payload.find({
       collection: 'tags',
@@ -54,31 +56,21 @@ export default async function ComerPage({ params }: Props) {
       where: { and: [PUBLISHED, { type: { equals: PLACE_TYPES.COMER } }, { tags: { in: [tags[0].id] } }] },
       depth: 1,
       limit: 100,
-      sort: '-featured,name',
+      sort: 'name',
     })
-    return toSectionItems(docs, locale)
+    return toSectionItems(firstThenByName(docs, placed['eat.first']), locale)
   }
 
-  const note = async (id: number): Promise<EatNote | null> => {
-    const { docs } = await payload.find({
-      collection: 'articles',
-      locale,
-      where: { and: [PUBLISHED, { id: { equals: id } }] },
-      depth: 1,
-      limit: 1,
-    })
-    const doc: any = docs[0]
+  // The note on the band, chosen in the site map
+  const note = (slot: 'eat.beachNote' | 'eat.coffeeNote'): EatNote | null => {
+    const doc: any = placed[slot][0]?.doc
     if (!doc?.slug || !doc.heroImage?.url) return null
     return { href: localePath(locale, doc.slug), image: doc.heroImage.url, alt: doc.heroImage.alt || doc.title, title: doc.title, text: doc.tagline }
   }
 
-  const [restaurants, beach, coffee, beachNote, coffeeNote] = await Promise.all([
-    byTag('Restaurant'),
-    byTag('Parador'),
-    byTag('Café'),
-    note(PICKS.eatBeachNote),
-    note(PICKS.eatCoffeeNote),
-  ])
+  const [restaurants, beach, coffee] = await Promise.all([byTag('Restaurant'), byTag('Parador'), byTag('Café')])
+  const beachNote = note('eat.beachNote')
+  const coffeeNote = note('eat.coffeeNote')
 
   return (
     <main>

@@ -14,18 +14,20 @@ export type SlotDefinition = {
   single?: boolean
   /** What the page does when the slot is empty, shown in the site map */
   empty: string
+  /** For places: only hotels, or only places to eat */
+  placeType?: 'dormir' | 'comer'
 }
 
 export const SLOTS = {
   'home.season': { page: 'Home', label: 'Estos días en Punta', accepts: ['articles', 'places', 'experiences'], empty: 'No aparece la sección.' },
-  'home.stay': { page: 'Home', label: 'Dónde dormir', accepts: ['places'], empty: 'No aparece la sección.' },
+  'home.stay': { page: 'Home', label: 'Dónde dormir', accepts: ['places'], empty: 'No aparece la sección.', placeType: 'dormir' },
   'home.spotlight': { page: 'Home', label: 'Destacado a pantalla completa', accepts: ['experiences', 'places'], single: true, empty: 'No hay destacado.' },
-  'home.eat': { page: 'Home', label: 'Dónde comer', accepts: ['places'], empty: 'No aparece la sección.' },
-  'home.coffee': { page: 'Home', label: 'Para el café', accepts: ['places'], empty: 'No aparece la fila de cafés.' },
+  'home.eat': { page: 'Home', label: 'Dónde comer', accepts: ['places'], empty: 'No aparece la sección.', placeType: 'comer' },
+  'home.coffee': { page: 'Home', label: 'Para el café', accepts: ['places'], empty: 'No aparece la fila de cafés.', placeType: 'comer' },
   'home.todo': { page: 'Home', label: 'Qué hacer', accepts: ['experiences'], empty: 'No aparece la sección.' },
   'home.notes': { page: 'Home', label: 'Notas', accepts: ['articles'], empty: 'Las 4 últimas notas.' },
-  'stay.first': { page: 'Alojamientos', label: 'Primeros de la lista', accepts: ['places'], empty: 'Todos los hoteles, en orden alfabético.' },
-  'eat.first': { page: 'Gastronomía', label: 'Primeros de la lista', accepts: ['places'], empty: 'Todos los lugares, en orden alfabético.' },
+  'stay.first': { page: 'Alojamientos', label: 'Primeros de la lista', accepts: ['places'], empty: 'Todos los hoteles, en orden alfabético.', placeType: 'dormir' },
+  'eat.first': { page: 'Gastronomía', label: 'Primeros de la lista', accepts: ['places'], empty: 'Todos los lugares, en orden alfabético.', placeType: 'comer' },
   'eat.beachNote': { page: 'Gastronomía', label: 'Nota antes de los paradores', accepts: ['articles'], single: true, empty: 'No hay franja antes de los paradores.' },
   'eat.coffeeNote': { page: 'Gastronomía', label: 'Nota antes de los cafés', accepts: ['articles'], single: true, empty: 'No hay franja antes de los cafés.' },
   'explore.start': { page: 'Recorridos', label: 'Para empezar', accepts: ['experiences', 'places'], empty: 'No aparece la sección.' },
@@ -33,8 +35,8 @@ export const SLOTS = {
   'explore.guides': { page: 'Recorridos', label: 'Guías del final', accepts: ['articles'], empty: 'No aparece la sección.' },
   'zone.guide': { page: 'Zona', label: 'Guía', accepts: ['articles'], perZone: true, single: true, empty: 'La guía más reciente de la zona.' },
   'zone.spotlight': { page: 'Zona', label: 'Pausa a pantalla completa', accepts: ['experiences', 'places'], perZone: true, single: true, empty: 'No hay pausa.' },
-  'zone.stayFirst': { page: 'Zona', label: 'Primeros en Dónde dormir', accepts: ['places'], perZone: true, empty: 'Todos los hoteles de la zona, en orden alfabético.' },
-  'zone.eatFirst': { page: 'Zona', label: 'Primeros en Dónde comer', accepts: ['places'], perZone: true, empty: 'Todos los lugares de la zona, en orden alfabético.' },
+  'zone.stayFirst': { page: 'Zona', label: 'Primeros en Dónde dormir', accepts: ['places'], perZone: true, empty: 'Todos los hoteles de la zona, en orden alfabético.', placeType: 'dormir' },
+  'zone.eatFirst': { page: 'Zona', label: 'Primeros en Dónde comer', accepts: ['places'], perZone: true, empty: 'Todos los lugares de la zona, en orden alfabético.', placeType: 'comer' },
 } as const satisfies Record<string, SlotDefinition>
 
 export type SlotKey = keyof typeof SLOTS

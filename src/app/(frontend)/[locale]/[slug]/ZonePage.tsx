@@ -14,6 +14,7 @@ import TextIndex from '@/components/sections/TextIndex'
 import { localePath, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { PLACE_TYPES } from '@/lib/constants'
+import { firstThenByName, getPlacements } from '@/lib/placements'
 import { PUBLISHED } from '@/lib/published'
 import { coffeeTagIds, isOnlyCoffee, toSectionItem, toSectionItems } from '@/lib/sectionItems'
 import { absoluteUrl, breadcrumbSchema, pageUrl } from '@/lib/structuredData'
@@ -29,14 +30,14 @@ export default async function ZonePage({ dest, locale }: Props) {
   const payload = await getPayload({ config })
   const inZone = { destination: { equals: dest.id } }
 
-  const [stayDocs, eatDocs, expDocs, articleDocs, coffeeIds] = await Promise.all([
+  const [stayDocs, eatDocs, expDocs, articleDocs, coffeeIds, placed] = await Promise.all([
     payload.find({
       collection: 'places',
       locale,
       where: { and: [PUBLISHED, inZone, { type: { equals: PLACE_TYPES.DORMIR } }] },
       depth: 1,
       limit: 60,
-      sort: '-featured,name',
+      sort: 'name',
     }),
     payload.find({
       collection: 'places',
@@ -44,7 +45,7 @@ export default async function ZonePage({ dest, locale }: Props) {
       where: { and: [PUBLISHED, inZone, { type: { equals: PLACE_TYPES.COMER } }] },
       depth: 1,
       limit: 60,
-      sort: '-featured,name',
+      sort: 'name',
     }),
     payload.find({ collection: 'experiences', locale, where: { and: [PUBLISHED, inZone] }, depth: 1, limit: 40, sort: 'order' }),
     payload.find({
@@ -56,42 +57,31 @@ export default async function ZonePage({ dest, locale }: Props) {
       sort: '-createdAt',
     }),
     coffeeTagIds(payload),
+    getPlacements(payload, locale, ['zone.guide', 'zone.spotlight', 'zone.stayFirst', 'zone.eatFirst'], dest.id),
   ])
 
-  // The zone's guide: chosen in the admin, or the first guide written about this zone
-  const guideId = typeof dest.guide === 'object' ? dest.guide?.id : dest.guide
-  const guide: any =
-    articleDocs.docs.find((doc) => doc.id === guideId) ?? articleDocs.docs.find((doc) => doc.type === 'guide')
+  // The zone's guide: chosen in the site map, or the most recent guide written about this zone
+  const guide: any = placed['zone.guide'][0]?.doc ?? articleDocs.docs.find((doc) => doc.type === 'guide')
   const notes = articleDocs.docs.filter((doc) => doc.id !== guide?.id)
 
-  // The pause: a place or experience chosen in the admin, shown only if published in this language
-  const spotlightRef = dest.spotlight as { relationTo: 'experiences' | 'places'; value: any } | null | undefined
-  let spotlight: any = null
-  if (spotlightRef?.value) {
-    const id = typeof spotlightRef.value === 'object' ? spotlightRef.value.id : spotlightRef.value
-    const { docs } = await payload.find({
-      collection: spotlightRef.relationTo,
-      locale,
-      where: { and: [PUBLISHED, { id: { equals: id } }] },
-      depth: 1,
-      limit: 1,
-    })
-    spotlight = docs[0] ?? null
-  }
+  // The pause: chosen in the site map; without it there is no pause
+  const spotlightEntry = placed['zone.spotlight'][0]
+  const spotlight: any = spotlightEntry?.doc ?? null
 
-  const stay = toSectionItems(stayDocs.docs, locale, () => undefined)
+  const stay = toSectionItems(firstThenByName(stayDocs.docs, placed['zone.stayFirst']), locale, () => undefined)
+  const eatOrdered = firstThenByName(eatDocs.docs, placed['zone.eatFirst'])
   const restaurants = toSectionItems(
-    eatDocs.docs.filter((doc) => !isOnlyCoffee(doc, coffeeIds)),
+    eatOrdered.filter((doc) => !isOnlyCoffee(doc, coffeeIds)),
     locale,
     () => undefined,
   )
   const coffee = toSectionItems(
-    eatDocs.docs.filter((doc) => isOnlyCoffee(doc, coffeeIds)),
+    eatOrdered.filter((doc) => isOnlyCoffee(doc, coffeeIds)),
     locale,
     () => undefined,
   )
   const todo = toSectionItems(
-    expDocs.docs.filter((doc) => !(spotlightRef?.relationTo === 'experiences' && doc.id === spotlight?.id)),
+    expDocs.docs.filter((doc) => !(spotlightEntry?.collection === 'experiences' && doc.id === spotlight?.id)),
     locale,
     () => undefined,
   )

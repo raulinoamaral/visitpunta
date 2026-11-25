@@ -1,6 +1,5 @@
 import type { CollectionConfig } from 'payload'
 import { appearsInField } from '@/fields/appearsIn'
-import { homeSeasonField } from '@/fields/homeSeason'
 import { notifyIndexNow } from '@/lib/indexNow'
 import { ARTICLE_TYPES } from '@/lib/constants'
 import { TextBlock } from '@/blocks/TextBlock'
@@ -17,7 +16,7 @@ export const Articles: CollectionConfig = {
   hooks: { afterChange: [notifyIndexNow, revalidateOnChange], afterDelete: [revalidateOnDelete] },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'type', 'published', 'featured'],
+    defaultColumns: ['title', 'type', 'published'],
   },
   fields: [
     {
@@ -72,25 +71,6 @@ export const Articles: CollectionConfig = {
           relationTo: 'destinations',
           hasMany: true,
           admin: { width: '25%' },
-        },
-        {
-          name: 'order',
-          type: 'number',
-          defaultValue: 0,
-          admin: {
-            width: '15%',
-            description: 'Menor = primero.',
-          },
-        },
-        {
-          name: 'featured',
-          type: 'checkbox',
-          label: 'Destacado',
-          defaultValue: false,
-          admin: {
-            width: '15%',
-            description: 'Home.',
-          },
         },
         {
           name: 'published',
@@ -183,6 +163,5 @@ export const Articles: CollectionConfig = {
       ],
     },
     appearsInField,
-    homeSeasonField,
   ],
 }

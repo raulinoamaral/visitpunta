@@ -1,6 +1,5 @@
 import type { CollectionConfig } from 'payload'
 import { appearsInField } from '@/fields/appearsIn'
-import { homeSeasonField } from '@/fields/homeSeason'
 import { notifyIndexNow } from '@/lib/indexNow'
 import { TextBlock } from '@/blocks/TextBlock'
 import { MediaBlock } from '@/blocks/MediaBlock'
@@ -68,16 +67,6 @@ export const Experiences: CollectionConfig = {
           admin: {
             width: '17%',
             description: 'Menor = primero.',
-          },
-        },
-        {
-          name: 'featured',
-          type: 'checkbox',
-          label: 'Destacado',
-          defaultValue: false,
-          admin: {
-            width: '25%',
-            description: 'Sección "Para empezar".',
           },
         },
         {
@@ -254,6 +243,5 @@ export const Experiences: CollectionConfig = {
       ],
     },
     appearsInField,
-    homeSeasonField,
   ],
 }
