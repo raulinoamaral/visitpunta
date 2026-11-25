@@ -1,4 +1,5 @@
-import { APIError, type CollectionBeforeChangeHook, type CollectionConfig } from 'payload'
+import type { CollectionBeforeChangeHook, CollectionConfig, Endpoint } from 'payload'
+import { assertPublishable, publishPost } from '@/lib/instagramPost'
 import {
   ACCOUNT_LABELS,
   ACCOUNTS,
@@ -9,44 +10,36 @@ import {
   POST_STATUS,
   STATUS_LABELS,
   type AccountHandle,
-  type PostKind,
   type PostStatus,
 } from '@/lib/instagramConstants'
-
-type MediaRow = { file?: number | { id: number } | null }
 
 // An approved piece must be publishable as it is: checked when it gets approved, not on every draft save
 const checkPublishable: CollectionBeforeChangeHook = async ({ data, originalDoc, req }) => {
   const becomingApproved = data.status === POST_STATUS.APPROVED && originalDoc?.status !== POST_STATUS.APPROVED
-  if (!becomingApproved) return data
-
-  const rows: MediaRow[] = data.media ?? []
-  const ids = rows.map((row) => (typeof row.file === 'object' ? row.file?.id : row.file)).filter(Boolean) as number[]
-  if (ids.length === 0) throw new APIError('Falta la imagen o el video.', 400)
-
-  const { docs } = await req.payload.find({
-    collection: 'instagram-media',
-    where: { id: { in: ids } },
-    depth: 0,
-    limit: ids.length,
-    req,
-  })
-  const videos = docs.filter((doc) => doc.mimeType?.startsWith('video/')).length
-  const kind = data.kind as PostKind
-
-  if (kind === POST_KINDS.REEL && (ids.length !== 1 || videos !== 1)) {
-    throw new APIError('Un reel lleva un solo video.', 400)
-  }
-  if (kind === POST_KINDS.STORY && ids.length !== 1) {
-    throw new APIError('Una historia lleva una sola imagen o un solo video.', 400)
-  }
-  if (kind === POST_KINDS.POST && videos > 0) {
-    throw new APIError('Un post lleva solo imágenes. Para video, elegí Reel.', 400)
-  }
-  if (kind !== POST_KINDS.STORY && (data.caption ?? '').length > MAX_CAPTION) {
-    throw new APIError(`El texto pasa los ${MAX_CAPTION} caracteres.`, 400)
-  }
+  if (becomingApproved) await assertPublishable(data, req)
   return data
+}
+
+// "Publicar ahora": publishes the saved piece right away and answers when Instagram has it (logged-in users only)
+const publishNowEndpoint: Endpoint = {
+  path: '/:id/publish',
+  method: 'post',
+  handler: async (req) => {
+    if (!req.user) return Response.json({ error: 'No autorizado' }, { status: 401 })
+    const post = await req.payload.findByID({ collection: 'instagram-posts', id: String(req.routeParams?.id), depth: 2 })
+    if (post.status === POST_STATUS.PUBLISHING || post.status === POST_STATUS.PUBLISHED) {
+      return Response.json({ error: 'Esta pieza ya se está publicando o ya salió.' }, { status: 409 })
+    }
+    try {
+      await assertPublishable(post, req)
+    } catch (error) {
+      return Response.json({ error: error instanceof Error ? error.message : String(error) }, { status: 400 })
+    }
+    // The calendar shows it on the day it actually went out
+    await req.payload.update({ collection: 'instagram-posts', id: post.id, data: { scheduledAt: new Date().toISOString() } })
+    const result = await publishPost(req.payload, post)
+    return Response.json(result, { status: result.published ? 200 : 502 })
+  },
 }
 
 export const InstagramPosts: CollectionConfig = {
@@ -63,6 +56,7 @@ export const InstagramPosts: CollectionConfig = {
   },
   defaultSort: '-scheduledAt',
   hooks: { beforeChange: [checkPublishable] },
+  endpoints: [publishNowEndpoint],
   fields: [
     {
       name: 'preview',

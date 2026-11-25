@@ -1,6 +1,6 @@
 'use client'
 
-import { useAllFormFields, useField, useForm } from '@payloadcms/ui'
+import { useAllFormFields, useDocumentInfo, useField, useForm, useFormModified } from '@payloadcms/ui'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   ACCOUNTS,
@@ -55,8 +55,10 @@ function useMediaIds(fields: Record<string, { value?: unknown }>) {
 export function InstagramPreview() {
   const [fields] = useAllFormFields()
   const { submit } = useForm()
+  const modified = useFormModified()
+  const { id } = useDocumentInfo()
+  const [sending, setSending] = useState(false)
   const { setValue: setStatus } = useField<PostStatus>({ path: 'status' })
-  const { setValue: setScheduledAt } = useField<string>({ path: 'scheduledAt' })
   const [files, setFiles] = useState<Record<number, FileInfo>>({})
   const [slide, setSlide] = useState(0)
   const slidesRef = useRef<HTMLDivElement>(null)
@@ -93,13 +95,19 @@ export function InstagramPreview() {
   const isVertical = kind !== POST_KINDS.POST
   const isClosed = status === POST_STATUS.PUBLISHED || status === POST_STATUS.PUBLISHING
 
-  // Approved with the current time: the next run of the clock (within 10 minutes) publishes it
-  const publishNow = () => {
-    if (!window.confirm('¿Publicar ahora? Sale en Instagram en los próximos 10 minutos.')) return
-    const now = new Date().toISOString()
-    setScheduledAt(now)
-    setStatus(POST_STATUS.APPROVED)
-    void submit({ overrides: { status: POST_STATUS.APPROVED, scheduledAt: now } })
+  // Publishes right away: saves pending edits, then waits for Instagram (a few seconds per image)
+  const publishNow = async () => {
+    if (!id || !window.confirm(`¿Publicar ahora en @${account}? Sale en Instagram en el momento.`)) return
+    setSending(true)
+    try {
+      if (modified) await submit()
+      const res = await fetch(`/api/instagram-posts/${id}/publish`, { method: 'POST', credentials: 'include' })
+      const body = await res.json().catch(() => ({}))
+      if (!res.ok && res.status !== 502) window.alert(body.error ?? 'No se pudo publicar.')
+    } catch {
+      // The connection can drop on a long carousel while the server keeps publishing: the reload shows where it is
+    }
+    window.location.reload()
   }
 
   const changeStatus = (next: PostStatus) => {
@@ -226,10 +234,12 @@ export function InstagramPreview() {
             )}
           </p>
         )}
-        {status === POST_STATUS.PUBLISHING && <p className={styles.done}>Publicando ahora…</p>}
+        {(sending || status === POST_STATUS.PUBLISHING) && (
+          <p className={styles.done}>Publicando en Instagram… puede tardar unos segundos por imagen.</p>
+        )}
         {status === POST_STATUS.FAILED && error && <p className={styles.error}>No se pudo publicar: {error}</p>}
 
-        {!isClosed && (
+        {!isClosed && !sending && (
           <div className={styles.actions}>
             {status !== POST_STATUS.APPROVED ? (
               <button type="button" className={styles.approve} onClick={() => changeStatus(POST_STATUS.APPROVED)}>
@@ -243,7 +253,7 @@ export function InstagramPreview() {
             <button type="button" className={styles.button} onClick={askForChanges}>
               Pedir cambio
             </button>
-            <button type="button" className={styles.button} onClick={publishNow}>
+            <button type="button" className={styles.button} onClick={publishNow} disabled={!id}>
               Publicar ahora
             </button>
             {status !== POST_STATUS.DISCARDED && (
