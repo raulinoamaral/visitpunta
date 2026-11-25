@@ -7,6 +7,46 @@ export const INSTAGRAM_QUEUE = 'instagram'
 // Seconds field first: second 0 of every 10th minute
 export const INSTAGRAM_CRON = '0 */10 * * * *'
 
+// A run that has been "processing" this long was cut off (a deploy restarts the server mid-run)
+const STALE_MS = 30 * 60 * 1000
+
+/**
+ * Payload only queues the next run when no run of this task is waiting or processing, so a run cut off
+ * by a restart would block the clock forever. Before scheduling, stale runs are removed and the piece
+ * they were publishing is marked as failed, to be checked on Instagram and retried by hand.
+ */
+type BeforeSchedule = NonNullable<NonNullable<NonNullable<TaskConfig['schedule']>[number]['hooks']>['beforeSchedule']>
+
+const clearStaleRuns: BeforeSchedule = async (args) => {
+  const { payload } = args.req
+  const staleBefore = new Date(Date.now() - STALE_MS).toISOString()
+  const { docs: stale } = await payload.find({
+    collection: 'payload-jobs',
+    where: {
+      and: [
+        { taskSlug: { equals: 'publishInstagram' } },
+        { processing: { equals: true } },
+        { updatedAt: { less_than: staleBefore } },
+      ],
+    },
+    depth: 0,
+    limit: 10,
+  })
+  if (stale.length > 0) {
+    await payload.delete({ collection: 'payload-jobs', where: { id: { in: stale.map((job) => job.id) } } })
+    await payload.update({
+      collection: 'instagram-posts',
+      where: { and: [{ status: { equals: POST_STATUS.PUBLISHING } }, { updatedAt: { less_than: staleBefore } }] },
+      data: {
+        status: POST_STATUS.FAILED,
+        result: { error: 'La publicación se cortó (el servidor se reinició). Fijate en Instagram si salió antes de reintentar.' },
+      },
+    })
+    payload.logger.warn(`Instagram: cleared ${stale.length} stale run(s)`)
+  }
+  return args.defaultBeforeSchedule(args)
+}
+
 /**
  * Every 10 minutes: publishes the approved pieces whose time has come.
  * A piece is marked "publishing" before it goes out, so an overlapping run never posts it twice;
@@ -15,7 +55,7 @@ export const INSTAGRAM_CRON = '0 */10 * * * *'
 export const publishInstagramTask: TaskConfig<{ input: Record<string, never>; output: { published: number } }> = {
   slug: 'publishInstagram',
   label: 'Publicar en Instagram',
-  schedule: [{ cron: INSTAGRAM_CRON, queue: INSTAGRAM_QUEUE }],
+  schedule: [{ cron: INSTAGRAM_CRON, queue: INSTAGRAM_QUEUE, hooks: { beforeSchedule: clearStaleRuns } }],
   retries: 0,
   handler: async ({ req }) => {
     const { payload } = req
