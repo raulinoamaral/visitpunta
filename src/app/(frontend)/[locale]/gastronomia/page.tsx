@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import PageHero from '@/components/PageHero'
-import ExpandableGastroGrid from '@/components/ExpandableGastroGrid'
-import Reveal from '@/components/Reveal'
-import styles from '@/styles/interior-page.module.css'
 import { notFound } from 'next/navigation'
 import { PLACE_TYPES } from '@/lib/constants'
 import { isLocale, localePath } from '@/i18n/config'
+import Intro from '@/components/sections/Intro'
+import PageCover from '@/components/sections/PageCover'
+import { PICKS, toSectionItems, zonesOf } from '@/lib/sectionItems'
+import EatList, { type EatNote } from './EatList'
 import { getDictionary } from '@/i18n/dictionaries'
 import { alternatesMetadata, staticAlternates } from '@/lib/alternates'
 import { PUBLISHED } from '@/lib/published'
@@ -32,110 +32,67 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const sections = [
-  { tagLabel: 'Restaurant' },
-  { tagLabel: 'Café' },
-  { tagLabel: 'Parador' },
-]
-
 export default async function ComerPage({ params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
-  const t = getDictionary(locale).eat
+  const dictionary = getDictionary(locale)
+  const t = dictionary.eat
   const payload = await getPayload({ config })
 
-  const tagSections = await Promise.all(
-    sections.map(async ({ tagLabel }) => {
-      const title = t.sections[tagLabel] || tagLabel
-      const { docs: tags } = await payload.find({
-        collection: 'tags',
-        // Sections are defined by the Spanish tag label
-        locale: 'es',
-        where: {
-          and: [
-            { type: { equals: PLACE_TYPES.COMER } },
-            { label: { equals: tagLabel } },
-          ],
-        },
-        limit: 1,
-      })
-      const tag = tags[0]
-      if (!tag) return { title, featured: [], rest: [] }
-
-      const { docs: featuredPlaces } = await payload.find({
-        collection: 'places',
-        locale,
-        where: {
-          and: [
-            PUBLISHED,
-            { type: { equals: PLACE_TYPES.COMER } },
-            { tags: { in: [tag.id] } },
-            { featured: { equals: true } },
-          ],
-        },
-        depth: 1,
-        limit: 6,
-      })
-      const { docs: otherPlaces } = await payload.find({
-        collection: 'places',
-        locale,
-        where: {
-          and: [
-            PUBLISHED,
-            { type: { equals: PLACE_TYPES.COMER } },
-            { tags: { in: [tag.id] } },
-            { featured: { not_equals: true } },
-          ],
-        },
-        depth: 1,
-      })
-      return { title, featured: featuredPlaces, rest: otherPlaces }
+  // Each kind of place is a Spanish tag label in Payload; every place shows, the featured ones first
+  const byTag = async (tagLabel: string) => {
+    const { docs: tags } = await payload.find({
+      collection: 'tags',
+      locale: 'es',
+      where: { and: [{ type: { equals: PLACE_TYPES.COMER } }, { label: { equals: tagLabel } }] },
+      limit: 1,
     })
-  )
+    if (!tags[0]) return []
+    const { docs } = await payload.find({
+      collection: 'places',
+      locale,
+      where: { and: [PUBLISHED, { type: { equals: PLACE_TYPES.COMER } }, { tags: { in: [tags[0].id] } }] },
+      depth: 1,
+      limit: 100,
+      sort: '-featured,name',
+    })
+    return toSectionItems(docs, locale)
+  }
+
+  const note = async (id: number): Promise<EatNote | null> => {
+    const { docs } = await payload.find({
+      collection: 'articles',
+      locale,
+      where: { and: [PUBLISHED, { id: { equals: id } }] },
+      depth: 1,
+      limit: 1,
+    })
+    const doc: any = docs[0]
+    if (!doc?.slug || !doc.heroImage?.url) return null
+    return { href: localePath(locale, doc.slug), image: doc.heroImage.url, alt: doc.heroImage.alt || doc.title, title: doc.title, text: doc.tagline }
+  }
+
+  const [restaurants, beach, coffee, beachNote, coffeeNote] = await Promise.all([
+    byTag('Restaurant'),
+    byTag('Parador'),
+    byTag('Café'),
+    note(PICKS.eatBeachNote),
+    note(PICKS.eatCoffeeNote),
+  ])
 
   return (
     <main>
-      <PageHero
-        image="/images/gastronomia.jpg"
-        title={t.title}
-        subtitle={t.subtitle}
+      <PageCover image="/images/gastronomia.jpg" alt={t.heading} title={t.heading} line={t.subtitle} />
+      <Intro text={t.intro} />
+      <EatList
+        restaurants={{ title: t.restaurants, line: t.restaurantsLine, items: restaurants }}
+        beach={{ title: t.beach, line: t.beachLine, items: beach }}
+        coffee={{ title: t.coffee, line: t.coffeeLine, items: coffee }}
+        beachNote={beachNote}
+        coffeeNote={coffeeNote}
+        zones={zonesOf([...restaurants, ...beach, ...coffee])}
+        labels={{ all: dictionary.common.allZones, zones: dictionary.common.zones, noteLabel: t.noteLabel, readNote: t.readNote }}
       />
-
-      <Reveal>
-        <section className={styles.intro}>
-          <p className={styles.introText}>{t.intro}</p>
-        </section>
-      </Reveal>
-
-      {tagSections.map(({ title, featured, rest }) =>
-        (featured.length > 0 || rest.length > 0) ? (
-          <Reveal key={title}>
-            <section className={styles.section}>
-              <h2 className="section-title">{title}</h2>
-              <ExpandableGastroGrid
-                moreLabel={getDictionary(locale).common.more}
-                featured={featured.map((p) => ({
-                  id: String(p.id),
-                  name: p.name,
-                  destination: (p.destination as any)?.name || '',
-                  description: p.summary || '',
-                  image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
-                  href: localePath(locale, p.slug),
-                }))}
-                rest={rest.map((p) => ({
-                  id: String(p.id),
-                  name: p.name,
-                  destination: (p.destination as any)?.name || '',
-                  description: p.summary || '',
-                  image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
-                  href: localePath(locale, p.slug),
-                }))}
-              />
-            </section>
-          </Reveal>
-        ) : null
-      )}
-
     </main>
   )
 }

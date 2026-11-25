@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import PageHero from '@/components/PageHero'
-import ExpandableGrid from '@/components/ExpandableGrid'
-import Reveal from '@/components/Reveal'
-import styles from '@/styles/interior-page.module.css'
+import Intro from '@/components/sections/Intro'
+import PageCover from '@/components/sections/PageCover'
+import { toSectionItems, zonesOf } from '@/lib/sectionItems'
+import StayList, { type StaySection } from './StayList'
 import { notFound } from 'next/navigation'
 import { PLACE_TYPES } from '@/lib/constants'
-import { isLocale, localePath } from '@/i18n/config'
+import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { alternatesMetadata, staticAlternates } from '@/lib/alternates'
 import { PUBLISHED } from '@/lib/published'
@@ -36,106 +36,43 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function DormirPage({ params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
-  const t = getDictionary(locale).stay
+  const dictionary = getDictionary(locale)
+  const t = dictionary.stay
   const payload = await getPayload({ config })
-  const sections = [
-    { tagLabel: 'Para desconectar' },
-    { tagLabel: 'Cerca de todo' },
-    { tagLabel: 'Con más diseño' },
-  ]
 
-  const tagSections = await Promise.all(
-    sections.map(async ({ tagLabel }) => {
+  // Sections are the Spanish tag labels in Payload; every hotel shows, the featured ones first
+  const sections: StaySection[] = await Promise.all(
+    ['Para desconectar', 'Cerca de todo', 'Con más diseño'].map(async (tagLabel) => {
       const title = t.sections[tagLabel] || tagLabel
+      const line = t.lines[tagLabel]
       const { docs: tags } = await payload.find({
         collection: 'tags',
-        // Sections are defined by the Spanish tag label
         locale: 'es',
-        where: {
-          and: [
-            { type: { equals: PLACE_TYPES.DORMIR } },
-            { label: { equals: tagLabel } },
-          ],
-        },
+        where: { and: [{ type: { equals: PLACE_TYPES.DORMIR } }, { label: { equals: tagLabel } }] },
         limit: 1,
       })
-      const tag = tags[0]
-      if (!tag) return { title, featured: [], rest: [] }
-
-      const { docs: featuredPlaces } = await payload.find({
+      if (!tags[0]) return { title, line, items: [] }
+      const { docs } = await payload.find({
         collection: 'places',
         locale,
-        where: {
-          and: [
-            PUBLISHED,
-            { type: { equals: PLACE_TYPES.DORMIR } },
-            { tags: { in: [tag.id] } },
-            { featured: { equals: true } },
-          ],
-        },
+        where: { and: [PUBLISHED, { type: { equals: PLACE_TYPES.DORMIR } }, { tags: { in: [tags[0].id] } }] },
         depth: 1,
-        limit: 6,
+        limit: 100,
+        sort: '-featured,name',
       })
-      const { docs: otherPlaces } = await payload.find({
-        collection: 'places',
-        locale,
-        where: {
-          and: [
-            PUBLISHED,
-            { type: { equals: PLACE_TYPES.DORMIR } },
-            { tags: { in: [tag.id] } },
-            { featured: { not_equals: true } },
-          ],
-        },
-        depth: 1,
-      })
-      return { title, featured: featuredPlaces, rest: otherPlaces }
-    })
+      return { title, line, items: toSectionItems(docs, locale) }
+    }),
   )
 
   return (
     <main>
-      <PageHero
-        image="/images/alojamientos.jpg"
-        title={t.title}
-        subtitle={t.subtitle}
+      <PageCover image="/images/alojamientos.jpg" alt={t.heading} title={t.heading} line={t.subtitle} />
+      <Intro text={t.intro} />
+      <StayList
+        sections={sections}
+        zones={zonesOf(sections.flatMap((section) => section.items))}
+        labels={{ all: dictionary.common.allZones, zones: dictionary.common.zones, booking: t.booking }}
       />
-
-      <Reveal>
-        <section className={styles.intro}>
-          <p className={styles.introText}>{t.intro}</p>
-        </section>
-      </Reveal>
-
-      {tagSections.map(({ title, featured, rest }) =>
-        (featured.length > 0 || rest.length > 0) ? (
-          <Reveal key={title}>
-            <section className={styles.section}>
-              <h2 className="section-title">{title}</h2>
-              <ExpandableGrid
-                moreLabel={getDictionary(locale).common.more}
-                featured={featured.map((p) => ({
-                  id: String(p.id),
-                  name: p.name,
-                  destination: (p.destination as any)?.name || '',
-                  description: p.summary || '',
-                  image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
-                  href: localePath(locale, p.slug),
-                }))}
-                rest={rest.map((p) => ({
-                  id: String(p.id),
-                  name: p.name,
-                  destination: (p.destination as any)?.name || '',
-                  description: p.summary || '',
-                  image: (p.cardImage as any)?.url || (p.heroImage as any)?.url || '',
-                  href: localePath(locale, p.slug),
-                }))}
-              />
-            </section>
-          </Reveal>
-        ) : null
-      )}
-
     </main>
   )
 }

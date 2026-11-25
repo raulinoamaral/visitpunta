@@ -3,6 +3,7 @@ import * as migration_20261103_112844_localization_es_pt from './20261103_112844
 import * as migration_20261112_152254_place_gallery_position from './20261112_152254_place_gallery_position';
 import * as migration_20261124_224556_instagram from './20261124_224556_instagram';
 import * as migration_20261124_235019_home_and_season from './20261124_235019_home_and_season';
+import * as migration_20261125_002948_zone_page_fields from './20261125_002948_zone_page_fields';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20261124_235019_home_and_season.up,
     down: migration_20261124_235019_home_and_season.down,
-    name: '20261124_235019_home_and_season'
+    name: '20261124_235019_home_and_season',
+  },
+  {
+    up: migration_20261125_002948_zone_page_fields.up,
+    down: migration_20261125_002948_zone_page_fields.down,
+    name: '20261125_002948_zone_page_fields'
   },
 ];

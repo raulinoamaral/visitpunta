@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import PageHero from '@/components/PageHero'
-import MiniCard from '@/components/MiniCard'
-import Reveal from '@/components/Reveal'
-import styles from '@/styles/interior-page.module.css'
-import pageStyles from './page.module.css'
+import Intro from '@/components/sections/Intro'
+import PageCover from '@/components/sections/PageCover'
+import type { IndexEntry } from '@/components/sections/TextIndex'
+import { PICKS, ZONE_ORDER, isBeach, toSectionItem, withoutBeachWord, zonesOf } from '@/lib/sectionItems'
+import ExploreList, { type ExploreNote } from './ExploreList'
 import { notFound } from 'next/navigation'
-import { isLocale, localePath, type Locale } from '@/i18n/config'
+import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { alternatesMetadata, staticAlternates } from '@/lib/alternates'
 import { PUBLISHED } from '@/lib/published'
@@ -32,136 +32,77 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const renderCard = (locale: Locale) => (exp: any) => {
-  return (
-    <MiniCard
-      key={exp.id}
-      name={exp.title}
-      image={(exp.heroImage as any)?.url || ''}
-      href={localePath(locale, exp.slug)}
-    />
-  )
-}
-
 export default async function ExperienciasPage({ params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
-  const t = getDictionary(locale).explore
-  const card = renderCard(locale)
+  const dictionary = getDictionary(locale)
+  const t = dictionary.explore
   const payload = await getPayload({ config })
 
-  const { docs: experiences } = await payload.find({
-    collection: 'experiences',
-    locale,
-    where: PUBLISHED,
-    sort: 'order',
-    depth: 1,
-    limit: 100,
-  })
+  const [{ docs: experiences }, { docs: articles }] = await Promise.all([
+    payload.find({ collection: 'experiences', locale, where: PUBLISHED, sort: 'order', depth: 1, limit: 100 }),
+    payload.find({
+      collection: 'articles',
+      locale,
+      where: { and: [PUBLISHED, { id: { in: [PICKS.exploreBreakNote, ...PICKS.exploreGuides] } }] },
+      depth: 1,
+      limit: 10,
+    }),
+  ])
 
-  // Punta del Este: featured → "Para empezar", rest → 4+2+4 blocks
-  const pdeExps = experiences.filter((e) => {
-    const dest = typeof e.destination === 'object' ? e.destination : null
-    return (dest as any)?.name === 'Punta del Este'
-  })
-  const pdeFeatured = pdeExps.filter((e) => e.featured)
-  const pdeRest = pdeExps.filter((e) => !e.featured)
-
-  // Other destinations: simple card grid
-  const otherExps = experiences.filter((e) => {
-    const dest = typeof e.destination === 'object' ? e.destination : null
-    return (dest as any)?.name !== 'Punta del Este'
-  })
-
-  const grouped = new Map<string, { destName: string; items: typeof otherExps }>()
-
-  for (const exp of otherExps) {
-    const dest = typeof exp.destination === 'object' ? exp.destination : null
-    const destName = dest?.name || t.others
-    const destId = dest?.id?.toString() || 'otros'
-
-    if (!grouped.has(destId)) {
-      grouped.set(destId, { destName, items: [] })
-    }
-    grouped.get(destId)!.items.push(exp)
+  const zoneRank = (doc: any) => {
+    const rank = ZONE_ORDER.indexOf(doc.destination?.name)
+    return rank === -1 ? ZONE_ORDER.length : rank
   }
+  const startDocs = PICKS.exploreStart.map((id) => experiences.find((doc) => doc.id === id)).filter(Boolean)
+  const beachDocs = experiences.filter((doc) => isBeach(doc.title)).sort((a, b) => zoneRank(a) - zoneRank(b))
+  const placeDocs = experiences.filter((doc) => !isBeach(doc.title) && !startDocs.includes(doc))
+
+  const items = (docs: any[], plainBeachNames = false) =>
+    docs
+      .map((doc) => toSectionItem(doc, locale))
+      .filter((item): item is NonNullable<typeof item> => Boolean(item))
+      .map((item) => (plainBeachNames ? { ...item, title: withoutBeachWord(item.title) } : item))
+  const start = items(startDocs)
+  const beaches = items(beachDocs, true)
+  const places = items(placeDocs)
+
+  const breakDoc: any = articles.find((doc) => doc.id === PICKS.exploreBreakNote)
+  const breakNote: ExploreNote | null =
+    breakDoc?.slug && breakDoc.heroImage?.url
+      ? { href: localePath(locale, breakDoc.slug), image: breakDoc.heroImage.url, alt: breakDoc.heroImage.alt || breakDoc.title, title: breakDoc.title, text: breakDoc.tagline }
+      : null
+  const guides: IndexEntry[] = PICKS.exploreGuides
+    .map((id) => articles.find((doc) => doc.id === id) as any)
+    .filter((doc) => doc?.slug)
+    .map((doc) => ({ id: String(doc.id), href: localePath(locale, doc.slug), title: doc.title, text: doc.tagline }))
 
   return (
     <main>
-      <PageHero
-        image="/images/recorridos.jpg"
-        title={t.title}
-        subtitle={t.subtitle}
+      <PageCover image="/images/recorridos.jpg" alt={t.heading} title={t.heading} line={t.subtitle} />
+      <Intro text={t.intro} />
+      <ExploreList
+        start={start}
+        beaches={beaches}
+        places={places}
+        breakNote={breakNote}
+        guides={guides}
+        zones={zonesOf([...start, ...beaches, ...places])}
+        labels={{
+          all: dictionary.common.allZones,
+          zones: dictionary.common.zones,
+          start: t.start,
+          startLine: t.startLine,
+          beaches: t.beaches,
+          beachesLine: t.beachesLine,
+          places: t.places,
+          placesLine: t.placesLine,
+          guides: t.guides,
+          guidesLine: t.guidesLine,
+          guideLabel: t.guideLabel,
+          readGuide: t.readGuide,
+        }}
       />
-
-      <Reveal>
-        <section className={styles.intro}>
-          <p className={styles.introText}>{t.intro}</p>
-        </section>
-      </Reveal>
-
-      {pdeFeatured.length > 0 && (
-        <Reveal>
-          <section className={styles.section}>
-            <h2 className="section-title">{t.start}</h2>
-            <div className={pageStyles.verticalGrid}>
-              {pdeFeatured.slice(0, 3).map(card)}
-            </div>
-          </section>
-        </Reveal>
-      )}
-
-      {pdeRest.length > 0 && (() => {
-        const first4 = pdeRest.slice(0, 4)
-        const featured2 = pdeRest.slice(4, 6)
-        const last4 = pdeRest.slice(6, 10)
-
-        return (
-          <>
-            {first4.length > 0 && (
-              <Reveal>
-                <section className={styles.section}>
-                  <h2 className="section-title">Punta del Este</h2>
-                  <div className={styles.destacadosGrid}>
-                    {first4.map(card)}
-                  </div>
-                </section>
-              </Reveal>
-            )}
-
-            {featured2.length > 0 && (
-              <Reveal>
-                <section className={styles.section}>
-                  <div className={pageStyles.featuredGrid}>
-                    {featured2.map(card)}
-                  </div>
-                </section>
-              </Reveal>
-            )}
-
-            {last4.length > 0 && (
-              <Reveal>
-                <section className={styles.section}>
-                  <div className={styles.destacadosGrid}>
-                    {last4.map(card)}
-                  </div>
-                </section>
-              </Reveal>
-            )}
-          </>
-        )
-      })()}
-
-      {[...grouped.values()].map(({ destName, items }) => (
-        <Reveal key={destName}>
-          <section className={styles.section}>
-            <h2 className="section-title">{destName}</h2>
-            <div className={styles.destacadosGrid}>
-              {items.map(card)}
-            </div>
-          </section>
-        </Reveal>
-      ))}
     </main>
   )
 }

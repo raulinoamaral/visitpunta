@@ -322,6 +322,26 @@ export interface Destination {
   description?: string | null;
   heroImage?: (number | null) | Media;
   /**
+   * Qué muestra la foto, en pocas palabras. Ej: El faro.
+   */
+  heroCaption?: string | null;
+  /**
+   * Va en la franja de arriba, después del texto. Vacío: la primera guía de la zona.
+   */
+  guide?: (number | null) | Article;
+  /**
+   * Un lugar de la zona con el nombre en grande, entre Dónde dormir y Qué hacer. Vacío: no hay pausa.
+   */
+  spotlight?:
+    | ({
+        relationTo: 'experiences';
+        value: number | Experience;
+      } | null)
+    | ({
+        relationTo: 'places';
+        value: number | Place;
+      } | null);
+  /**
    * Si está vacío se usa el nombre del destino.
    */
   seoTitle?: string | null;
@@ -334,12 +354,174 @@ export interface Destination {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags".
+ * via the `definition` "articles".
  */
-export interface Tag {
+export interface Article {
   id: number;
-  label: string;
-  type: 'dormir' | 'comer';
+  title: string;
+  slug: string;
+  type: 'guide' | 'selection' | 'experience' | 'season';
+  destinations?: (number | Destination)[] | null;
+  /**
+   * Menor = primero.
+   */
+  order?: number | null;
+  /**
+   * Home.
+   */
+  featured?: boolean | null;
+  published?: boolean | null;
+  /**
+   * Frase corta para cards y listados.
+   */
+  tagline?: string | null;
+  layout?:
+    | (
+        | {
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textBlock';
+          }
+        | {
+            images: {
+              image: number | Media;
+              caption?: string | null;
+              id?: string | null;
+            }[];
+            variant?: ('inline' | 'breakout' | 'bleed') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'mediaBlock';
+          }
+        | {
+            /**
+             * El texto de la cita.
+             */
+            text: string;
+            /**
+             * Autor o fuente (opcional).
+             */
+            attribution?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'quoteBlock';
+          }
+        | {
+            place:
+              | {
+                  relationTo: 'places';
+                  value: number | Place;
+                }
+              | {
+                  relationTo: 'experiences';
+                  value: number | Experience;
+                }
+              | {
+                  relationTo: 'destinations';
+                  value: number | Destination;
+                };
+            /**
+             * Línea de contexto. Ej: "Para quedarse cerca" o "Ideal para almorzar después".
+             */
+            context?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'placeBlock';
+          }
+        | {
+            /**
+             * Título opcional. Ej: "5 cosas que saber antes de ir".
+             */
+            title?: string | null;
+            slides: {
+              image: number | Media;
+              /**
+               * Frase corta, máximo 80 caracteres.
+               */
+              text: string;
+              id?: string | null;
+            }[];
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'socialCarousel';
+          }
+        | {
+            source: 'embed' | 'upload';
+            /**
+             * URL del video de TikTok, Instagram Reel o YouTube Shorts.
+             */
+            embedUrl?: string | null;
+            videoFile?: (number | null) | Media;
+            /**
+             * Texto debajo del video (opcional).
+             */
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'socialVideo';
+          }
+        | {
+            images: {
+              image: number | Media;
+              caption?: string | null;
+              id?: string | null;
+            }[];
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'socialGallery';
+          }
+      )[]
+    | null;
+  heroImage?: (number | null) | Media;
+  /**
+   * Places y experiencias relacionadas.
+   */
+  related?:
+    | (
+        | {
+            relationTo: 'places';
+            value: number | Place;
+          }
+        | {
+            relationTo: 'experiences';
+            value: number | Experience;
+          }
+      )[]
+    | null;
+  /**
+   * Otros artículos relacionados.
+   */
+  relatedArticles?: (number | Article)[] | null;
+  /**
+   * Si está vacío se usa el título del artículo.
+   */
+  seoTitle?: string | null;
+  /**
+   * Si está vacío se usa el tagline.
+   */
+  seoDescription?: string | null;
+  /**
+   * Aparece sola en la home entre estas fechas, todos los años. Vacío: nunca.
+   */
+  homeSeason?: {
+    from?: string | null;
+    to?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -514,174 +696,12 @@ export interface Experience {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles".
+ * via the `definition` "tags".
  */
-export interface Article {
+export interface Tag {
   id: number;
-  title: string;
-  slug: string;
-  type: 'guide' | 'selection' | 'experience' | 'season';
-  destinations?: (number | Destination)[] | null;
-  /**
-   * Menor = primero.
-   */
-  order?: number | null;
-  /**
-   * Home.
-   */
-  featured?: boolean | null;
-  published?: boolean | null;
-  /**
-   * Frase corta para cards y listados.
-   */
-  tagline?: string | null;
-  layout?:
-    | (
-        | {
-            content: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            };
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textBlock';
-          }
-        | {
-            images: {
-              image: number | Media;
-              caption?: string | null;
-              id?: string | null;
-            }[];
-            variant?: ('inline' | 'breakout' | 'bleed') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'mediaBlock';
-          }
-        | {
-            /**
-             * El texto de la cita.
-             */
-            text: string;
-            /**
-             * Autor o fuente (opcional).
-             */
-            attribution?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'quoteBlock';
-          }
-        | {
-            place:
-              | {
-                  relationTo: 'places';
-                  value: number | Place;
-                }
-              | {
-                  relationTo: 'experiences';
-                  value: number | Experience;
-                }
-              | {
-                  relationTo: 'destinations';
-                  value: number | Destination;
-                };
-            /**
-             * Línea de contexto. Ej: "Para quedarse cerca" o "Ideal para almorzar después".
-             */
-            context?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'placeBlock';
-          }
-        | {
-            /**
-             * Título opcional. Ej: "5 cosas que saber antes de ir".
-             */
-            title?: string | null;
-            slides: {
-              image: number | Media;
-              /**
-               * Frase corta, máximo 80 caracteres.
-               */
-              text: string;
-              id?: string | null;
-            }[];
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'socialCarousel';
-          }
-        | {
-            source: 'embed' | 'upload';
-            /**
-             * URL del video de TikTok, Instagram Reel o YouTube Shorts.
-             */
-            embedUrl?: string | null;
-            videoFile?: (number | null) | Media;
-            /**
-             * Texto debajo del video (opcional).
-             */
-            caption?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'socialVideo';
-          }
-        | {
-            images: {
-              image: number | Media;
-              caption?: string | null;
-              id?: string | null;
-            }[];
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'socialGallery';
-          }
-      )[]
-    | null;
-  heroImage?: (number | null) | Media;
-  /**
-   * Places y experiencias relacionadas.
-   */
-  related?:
-    | (
-        | {
-            relationTo: 'places';
-            value: number | Place;
-          }
-        | {
-            relationTo: 'experiences';
-            value: number | Experience;
-          }
-      )[]
-    | null;
-  /**
-   * Otros artículos relacionados.
-   */
-  relatedArticles?: (number | Article)[] | null;
-  /**
-   * Si está vacío se usa el título del artículo.
-   */
-  seoTitle?: string | null;
-  /**
-   * Si está vacío se usa el tagline.
-   */
-  seoDescription?: string | null;
-  /**
-   * Aparece sola en la home entre estas fechas, todos los años. Vacío: nunca.
-   */
-  homeSeason?: {
-    from?: string | null;
-    to?: string | null;
-  };
+  label: string;
+  type: 'dormir' | 'comer';
   updatedAt: string;
   createdAt: string;
 }
@@ -1204,6 +1224,9 @@ export interface DestinationsSelect<T extends boolean = true> {
   summary?: T;
   description?: T;
   heroImage?: T;
+  heroCaption?: T;
+  guide?: T;
+  spotlight?: T;
   seoTitle?: T;
   seoDescription?: T;
   updatedAt?: T;

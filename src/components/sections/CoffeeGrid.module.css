@@ -1,0 +1,70 @@
+.heading {
+  margin-bottom: 1.4rem;
+  font-size: 1.35rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-blue);
+}
+
+/* As a sub-block under restaurants it keeps its distance */
+.heading:first-child {
+  margin-top: 4.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem 1.4rem;
+}
+
+.card {
+  color: inherit;
+  text-decoration: none;
+}
+
+.image {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.photo {
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.card:hover .photo {
+  transform: scale(1.03);
+}
+
+.name {
+  display: block;
+  margin: 0.75rem 0 0.2rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.card:hover .name {
+  color: var(--color-pink);
+}
+
+.label {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem 1rem;
+  }
+}
