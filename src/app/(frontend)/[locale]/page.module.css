@@ -16,9 +16,9 @@
 }
 
 .section {
-  max-width: 1280px;
+  max-width: var(--page-width);
   margin: 0 auto;
-  padding: 7rem 2rem 0;
+  padding: 7rem var(--page-gutter) 0;
 }
 
 .last {
@@ -34,11 +34,11 @@
 .bleedRight {
   max-width: none;
   padding-right: 0;
-  padding-left: max(2rem, calc((100vw - 1280px) / 2 + 2rem));
+  padding-left: var(--page-inset);
 }
 
 .bleedRight .head {
-  padding-right: max(2rem, calc((100vw - 1280px) / 2 + 2rem));
+  padding-right: var(--page-inset);
 }
 
 /* Section title over a thin rule, a line with voice under it */
@@ -221,9 +221,9 @@
 .spotlightText {
   position: relative;
   width: 100%;
-  max-width: 1280px;
+  max-width: var(--page-width);
   margin: 0 auto;
-  padding: 0 2rem 4rem;
+  padding: 0 var(--page-gutter) 4rem;
 }
 
 .spotlightLabel {

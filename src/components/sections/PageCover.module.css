@@ -26,9 +26,9 @@
   left: 0;
   right: 0;
   bottom: 3.5rem;
-  max-width: 1280px;
+  max-width: var(--page-width);
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--page-gutter);
 }
 
 .withCaption {
@@ -54,9 +54,9 @@
   left: 0;
   right: 0;
   bottom: 1.8rem;
-  max-width: 1280px;
+  max-width: var(--page-width);
   margin: 0 auto;
-  padding: 1rem 2rem 0;
+  padding: 1rem var(--page-gutter) 0;
   font-family: var(--font-playfair);
   font-style: italic;
 }
@@ -65,8 +65,8 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 2rem;
-  right: 2rem;
+  left: var(--page-gutter);
+  right: var(--page-gutter);
   border-top: 1px solid rgba(255, 255, 255, 0.45);
 }
 

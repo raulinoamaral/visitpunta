@@ -1,7 +1,7 @@
 .section {
-  max-width: 1280px;
+  max-width: var(--page-width);
   margin: 0 auto;
-  padding: 7rem 2rem 0;
+  padding: 7rem var(--page-gutter) 0;
 }
 
 .last {
@@ -11,12 +11,12 @@
 .bleed {
   max-width: none;
   padding-right: 0;
-  padding-left: max(2rem, calc((100vw - 1280px) / 2 + 2rem));
+  padding-left: var(--page-inset);
 }
 
 /* The title of a bleeding section keeps the page's right margin */
 .bleed > header {
-  padding-right: max(2rem, calc((100vw - 1280px) / 2 + 2rem));
+  padding-right: var(--page-inset);
 }
 
 @media (max-width: 768px) {
