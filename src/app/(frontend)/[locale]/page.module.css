@@ -524,7 +524,6 @@
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    margin-right: -1.25rem;
     gap: 0.9rem;
   }
 

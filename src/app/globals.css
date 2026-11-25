@@ -26,10 +26,15 @@ html {
   --mobile-header-height: calc(4.5rem + env(safe-area-inset-bottom));
 }
 
+/* Safety net: nothing may make the page move sideways on a phone (iOS ignores overflow-x: hidden on body) */
+html,
+body {
+  overflow-x: clip;
+}
+
 body {
   font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 /* Set by MenuOverlay while the phone menu is open */
