@@ -3,36 +3,55 @@ import { IMAGE_SIZES } from '@/lib/imageSizes'
 import Link from 'next/link'
 import styles from './RenderPlaceBlock.module.css'
 
+type Image = { url: string; alt?: string | null }
+
 type Props = {
   href: string
   place: {
     name: string
-    summary?: string | null
-    heroImage?: { url: string; alt?: string } | null
-    destination?: { name: string } | null
+    heroImage?: Image | null
+    gallery?: Image[]
   }
   context?: string | null
+  moreLabel: string
 }
 
-export default function RenderPlaceBlock({ href, place, context }: Props) {
+/**
+ * A place recommended inside a note: the note's own text names it and tells the story,
+ * so this block only shows the place (one big clean photo, plus two more from its gallery
+ * when it has them) and a quiet link to its page. No overlay, no second description.
+ */
+export default function RenderPlaceBlock({ href, place, context, moreLabel }: Props) {
+  const extra = (place.gallery ?? []).filter((image) => image?.url).slice(0, 2)
+
   return (
-    <Link href={href} className={styles.card}>
+    <figure className={styles.block}>
       {place.heroImage?.url && (
-        <div className={styles.imageWrapper}>
+        <Link href={href} className={styles.main} aria-label={`${moreLabel} ${place.name}`}>
           <FadeImage
             src={place.heroImage.url}
             alt={place.heroImage.alt || place.name}
-            fill sizes={IMAGE_SIZES.content}
+            fill
+            sizes={IMAGE_SIZES.content}
             className={styles.image}
           />
-          <div className={styles.overlay} />
-          <div className={styles.imageText}>
-            {context && <span className={styles.context}>{context}</span>}
-            <h3 className={styles.name}>{place.name}</h3>
-            {place.summary && <p className={styles.summary}>{place.summary}</p>}
-          </div>
+        </Link>
+      )}
+      {extra.length === 2 && (
+        <div className={styles.pair}>
+          {extra.map((image) => (
+            <Link key={image.url} href={href} className={styles.side} tabIndex={-1} aria-hidden>
+              <FadeImage src={image.url} alt={image.alt || place.name} fill sizes={IMAGE_SIZES.content} className={styles.image} />
+            </Link>
+          ))}
         </div>
       )}
-    </Link>
+      <figcaption className={styles.caption}>
+        {context && <span className={styles.context}>{context}</span>}
+        <Link href={href} className={styles.more}>
+          {moreLabel} {place.name} <span aria-hidden>→</span>
+        </Link>
+      </figcaption>
+    </figure>
   )
 }

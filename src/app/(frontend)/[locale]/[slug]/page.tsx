@@ -145,6 +145,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {}
 }
 
+
+// What a place block inside a note shows: the cover and, from the place's gallery, its first photos
+function placeBlockData(doc: any) {
+  const gallery = (doc.gallery ?? [])
+    .flatMap((group: any) => group?.images ?? [])
+    .map((row: any) => row?.image)
+    .filter((image: any) => image && typeof image === 'object' && image.url)
+  return { name: doc.name || doc.title, heroImage: doc.heroImage, gallery }
+}
+
 export default async function SlugPage({ params }: Props) {
   const { locale, slug } = await params
   if (!isLocale(locale)) notFound()
@@ -304,15 +314,14 @@ export default async function SlugPage({ params }: Props) {
                     if (block.blockType === 'placeBlock') {
                       const placeData = block.place?.value ?? block.place
                       if (isPublishedDoc(placeData)) {
-                        const p = {
-                          name: placeData.name || placeData.title,
-                          summary: placeData.summary,
-                          heroImage: placeData.heroImage,
-                          destination: placeData.destination,
-                        }
                         return (
-                          <div key={block.id} className={expStyles.contentText}>
-                            <RenderPlaceBlock href={href(placeData.slug)} place={p} context={block.context} />
+                          <div key={block.id} className={expStyles.contentBreakout}>
+                            <RenderPlaceBlock
+                              href={href(placeData.slug)}
+                              place={placeBlockData(placeData)}
+                              context={block.context}
+                              moreLabel={t.article.moreAbout}
+                            />
                           </div>
                         )
                       }
@@ -474,15 +483,14 @@ export default async function SlugPage({ params }: Props) {
                 if (block.blockType === 'placeBlock') {
                   const placeData = block.place?.value ?? block.place
                   if (isPublishedDoc(placeData)) {
-                    const p = {
-                      name: placeData.name || placeData.title,
-                      summary: placeData.summary,
-                      heroImage: placeData.heroImage,
-                      destination: placeData.destination,
-                    }
                     return (
-                      <div key={block.id} className={articleStyles.contentText}>
-                        <RenderPlaceBlock href={href(placeData.slug)} place={p} context={block.context} />
+                      <div key={block.id} className={articleStyles.contentBreakout}>
+                        <RenderPlaceBlock
+                          href={href(placeData.slug)}
+                          place={placeBlockData(placeData)}
+                          context={block.context}
+                          moreLabel={t.article.moreAbout}
+                        />
                       </div>
                     )
                   }

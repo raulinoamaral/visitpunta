@@ -1,15 +1,27 @@
-.card {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  margin: 3rem 0;
+.block {
+  margin: 2.5rem 0 3.5rem;
 }
 
-.imageWrapper {
+.main,
+.side {
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
+  display: block;
   overflow: hidden;
+}
+
+.main {
+  aspect-ratio: 3 / 2;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.side {
+  aspect-ratio: 4 / 5;
 }
 
 .image {
@@ -17,61 +29,47 @@
   transition: transform 0.6s ease;
 }
 
-.card:hover .image {
-  transform: scale(1.03);
+.main:hover .image,
+.side:hover .image {
+  transform: scale(1.02);
 }
 
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.6) 100%);
-}
-
-.imageText {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  right: 1.5rem;
-  z-index: 1;
+.caption {
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-top: 1rem;
 }
 
 .context {
-  font-family: var(--font-inter);
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.name {
   font-family: var(--font-playfair);
-  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-  font-weight: 400;
-  color: #fff;
-  line-height: 1.2;
-}
-
-.summary {
-  font-family: var(--font-playfair);
-  font-size: clamp(0.85rem, 1.5vw, 1rem);
   font-style: italic;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.75);
-  line-height: 1.5;
+  font-size: 0.95rem;
+  color: #777;
+}
+
+.more {
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--color-blue);
+  text-decoration: none;
+  margin-left: auto;
+}
+
+.more:hover {
+  color: var(--color-pink);
 }
 
 @media (max-width: 768px) {
-  .imageWrapper {
-    aspect-ratio: 4 / 3;
+  .main {
+    aspect-ratio: 4 / 5;
   }
 
-  .imageText {
-    bottom: 1.25rem;
-    left: 1.25rem;
-    right: 1.25rem;
+  .pair {
+    gap: 0.5rem;
+    margin-top: 0.5rem;
   }
 }

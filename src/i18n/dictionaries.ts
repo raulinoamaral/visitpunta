@@ -173,6 +173,8 @@ const es = {
     placesEat: 'Para comer cerca',
     placesExplore: 'Para recorrer',
     placesMixed: 'Lugares de esta nota',
+    // Link under a place shown inside a note ("Más sobre Rizoma →")
+    moreAbout: 'Más sobre',
     types: { guide: 'Guía', selection: 'Selección', experience: 'Experiencia', season: 'Temporada' } as Record<string, string>,
   },
   notFound: {
@@ -345,6 +347,7 @@ const pt: Dictionary = {
     placesEat: 'Para comer por perto',
     placesExplore: 'Para explorar',
     placesMixed: 'Lugares deste texto',
+    moreAbout: 'Mais sobre',
     types: { guide: 'Guia', selection: 'Seleção', experience: 'Experiência', season: 'Temporada' },
   },
   notFound: {
