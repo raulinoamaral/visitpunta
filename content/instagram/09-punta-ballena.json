@@ -1,0 +1,13 @@
+{
+  "out": "~/Downloads/visitpunta-instagram/09-punta-ballena",
+  "format": "feed",
+  "slides": [
+    { "file": "fotos/punta-ballena/5E84350A-21E6-45E0-9F4E-9E6188B2C4A5.jpg", "position": "50% 50%", "style": "cover", "eyebrow": "A minutos de Punta del Este", "title": "Punta Ballena", "text": "Cerca, pero más lenta." },
+    { "file": "fotos/punta-ballena/33328972-D050-4C77-BE78-A29F91CB10BD.jpg", "position": "50% 50%", "style": "clean" },
+    { "style": "card", "title": "El día se ordena alrededor del sol.", "text": "Las Grutas de mañana, el mirador al final." },
+    { "file": "fotos/punta-ballena/F714BB26-536C-4EAC-879F-D6D892237743.jpg", "position": "45% 50%", "style": "clean" },
+    { "file": "fotos/punta-ballena/66FC1679-6494-4272-BDBD-33CDAE30273C.jpg", "position": "50% 50%", "style": "caption", "text": "Del lado de la Mansa, el sol cae sobre el agua." },
+    { "style": "card", "title": "En verano, la vuelta lleva su tiempo.", "text": "Mejor tomársela con calma." },
+    { "style": "sign" }
+  ]
+}

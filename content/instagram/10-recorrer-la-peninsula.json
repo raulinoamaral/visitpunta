@@ -1,0 +1,14 @@
+{
+  "out": "~/Downloads/visitpunta-instagram/10-recorrer-la-peninsula",
+  "format": "feed",
+  "slides": [
+    { "file": "fotos/puerto/DJI_0104.jpg", "position": "40% 50%", "style": "cover", "eyebrow": "Punta del Este", "title": "Recorrer la península", "text": "Se hace caminando, sin demasiado plan." },
+    { "style": "card", "title": "Empezá por la rambla.", "text": "De un lado el agua calma, del otro el mar abierto." },
+    { "style": "card", "title": "Frená en el muelle La Pastora.", "text": "Sobre todo hacia el final de la tarde." },
+    { "file": "fotos/puerto/IMG_0803.jpeg", "position": "50% 50%", "style": "caption", "text": "El puerto. Barcos y, muchas veces, lobos marinos cerca de la orilla." },
+    { "file": "fotos/centro-punta/IMG_7628.jpeg", "position": "50% 50%", "style": "caption", "text": "El faro. Calles tranquilas y casas bajas." },
+    { "style": "card", "title": "Terminá en Punta Salinas.", "text": "Ahí se cruzan el río y el océano." },
+    { "file": "fotos/centro-punta/DJI_0319.jpg", "position": "18% 50%", "style": "caption", "text": "No hace falta hacerlo entero. Con empezar, alcanza." },
+    { "style": "sign" }
+  ]
+}

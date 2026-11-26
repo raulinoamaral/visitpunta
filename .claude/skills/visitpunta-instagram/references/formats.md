@@ -4,7 +4,7 @@ Todas las imágenes se arman con `scripts/instagram/render.mjs` (Playfair Displa
 
 | Formato | Tamaño | `format` | Estilos de slide |
 |---|---|---|---|
-| Feed (foto o carrusel) | 1080 × 1350 (4:5) | `feed` | `clean`, `cover`, `caption`, `card`, `sign` |
+| Feed (foto o carrusel) | 1080 × 1350 (4:5) | `feed` | `clean`, `cover`, `caption`, `card`, `list`, `place`, `sign` |
 | Historia | 1080 × 1920 (9:16) | `story` | `story`, `clean` |
 | Tapa de destacada | 1080 × 1920 | `story` | `highlight` |
 
@@ -55,3 +55,9 @@ POST NN · TEMA (formato, cantidad de imágenes)
 ── LINK ── (historias) URL exacta + en qué historia va el sticker
 ── FECHA SUGERIDA ── día y hora
 ```
+
+## Lista de lugares (`list`)
+Para cerrar un carrusel de ambiente con "nuestros recomendados" (pedido del usuario, 25/11/2026): fotos del tema sin nombrar el lugar en cada una, y al final una placa `list` con título y 4 a 6 lugares (`"items": [{ "name": "Borneo", "place": "La Barra" }]`). Solo lugares de la web. Así ninguna foto queda presentada como de un lugar que no es.
+
+## Guía de lugares (`place`)
+Formato elegido por el usuario (26/11/2026, referencia: Softer Volumes): portada, después **una foto por lugar** con el nombre en Playfair y la zona en Inter chica en mayúsculas, centrados abajo, sin placas, y la firma al final. La foto muestra el lugar (salón, terraza, fachada) antes que una taza o un plato. Las horizontales o chicas van con `"fit": "inset"` (enmarcadas sobre navy, sin recortar). En el texto, una línea por lugar con su zona y su @; si la foto es del lugar, "Foto: @…".

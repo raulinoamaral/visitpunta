@@ -1,0 +1,15 @@
+{
+  "out": "~/Downloads/visitpunta-instagram/08-cafes",
+  "format": "feed",
+  "slides": [
+    { "file": "fotos/cafe/FullSizeRender_VSCO.jpg", "position": "50% 50%", "style": "cover", "eyebrow": "Punta del Este", "title": "Cafés de especialidad", "text": "Para frenar un rato, más que para pasar rápido." },
+    { "style": "card", "title": "Mostrador Santa Teresita", "text": "En José Ignacio. Más de verano, y se llena rápido." },
+    { "style": "card", "title": "Rizoma", "text": "En La Juanita. Libros, madera y luz entre los árboles." },
+    { "file": "fotos/cafe/rizoma.jpg", "position": "50% 50%", "style": "clean" },
+    { "style": "card", "title": "La Panadería", "text": "En La Juanita. Lo más pedido se agota temprano." },
+    { "style": "card", "title": "La Bici Café", "text": "En la península. Un patio con sol de mañana." },
+    { "file": "fotos/cafe/PHOTO-2026-05-02-21-29-59 2.jpg", "position": "50% 50%", "style": "clean" },
+    { "style": "card", "title": "Borneo", "text": "En La Barra. Sigue abierto cuando baja la temporada." },
+    { "style": "sign" }
+  ]
+}

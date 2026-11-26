@@ -1,0 +1,20 @@
+{
+  "out": "~/Downloads/visitpunta-instagram/08-cafe-sin-apuro",
+  "format": "feed",
+  "slides": [
+    { "file": "fotos/cafe/PHOTO-2026-05-02-21-22-17.jpg", "position": "50% 50%", "style": "cover", "eyebrow": "Punta del Este", "title": "Un café, sin apuro", "text": "En el Este, el café no es para llevar." },
+    { "file": "fotos/cafe/PHOTO-2026-05-02-21-29-58.jpg", "position": "50% 50%", "style": "caption", "text": "En verano, con el mar enfrente." },
+    { "file": "fotos/cafe/PHOTO-2026-05-02-21-22-15 2.jpg", "position": "50% 50%", "style": "clean" },
+    { "file": "fotos/cafe/PHOTO-2026-05-02-21-22-15.jpg", "position": "50% 50%", "style": "caption", "text": "En invierno, cerca del fuego." },
+    { "file": "fotos/cafe/PHOTO-2026-05-02-21-22-22 2.jpg", "position": "50% 50%", "style": "clean" },
+    { "file": "fotos/cafe/PHOTO-2026-05-02-21-22-01 2.jpg", "position": "50% 60%", "style": "clean" },
+    { "style": "list", "title": "Para el café", "items": [
+      { "name": "La Bici Café", "place": "Península" },
+      { "name": "Borneo", "place": "La Barra" },
+      { "name": "Rizoma", "place": "La Juanita" },
+      { "name": "La Panadería", "place": "La Juanita" },
+      { "name": "Mostrador Santa Teresita", "place": "José Ignacio" }
+    ] },
+    { "style": "sign" }
+  ]
+}

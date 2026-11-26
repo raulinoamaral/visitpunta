@@ -22,6 +22,9 @@
  *   and room for the link sticker under the text.
  * - highlight: highlight cover, no photo: navy background and one word centered (Instagram crops it to a circle).
  * - caption: the photo with one short line at the bottom, small, on a soft gradient. No boxes over photos.
+ * - place: the photo with the place's name and its area, small and centered at the bottom (place guides).
+ *   "fit": "inset" keeps a horizontal or small photo whole, framed on the navy background instead of cropped.
+ * - list: no photo. Navy background, a title and a short list of places ("items": [{ "name", "place" }]), at most ~6.
  * - card: no photo. Navy background, a white title and at most one short pink line. Text lives here, not on photos.
  * - sign: the last slide of a carousel. Navy background, the pe avatar and the site address.
  * Photos are embedded as data URIs (the headless browser blocks file:// from a set page).
@@ -59,6 +62,8 @@ const css = `
   *{margin:0;padding:0;box-sizing:border-box}
   body{width:${size.width}px;height:${size.height}px;position:relative;overflow:hidden;background:#3d4b66;color:#ffffff}
   .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .photo.inset{inset:auto;left:72px;top:50%;width:936px;height:auto;transform:translateY(-58%)}
+  .inset ~ .soft{display:none}
   .shade{position:absolute;inset:auto 0 0 0;height:55%;background:linear-gradient(to top,rgba(20,18,15,.72),rgba(20,18,15,0))}
   .veil{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,18,15,.15),rgba(20,18,15,.55) 45%,rgba(20,18,15,.55) 65%,rgba(20,18,15,.15))}
   .bottom{position:absolute;left:72px;right:72px;bottom:92px}
@@ -77,6 +82,14 @@ const css = `
   .card{position:absolute;inset:0;background:#3d4b66;color:#ffffff;display:flex;flex-direction:column;justify-content:center;padding:0 110px}
   .card .title{font-size:92px;line-height:1.05}
   .card .italic{color:#fa9683;opacity:1;font-size:42px;margin-top:34px}
+  .placeName{position:absolute;left:72px;right:72px;bottom:76px;text-align:center;text-shadow:0 1px 16px rgba(0,0,0,.35)}
+  .placeName .name{font-family:'Playfair Display',serif;font-size:58px;line-height:1.1}
+  .placeName .area{font-family:'Inter',sans-serif;font-weight:500;font-size:22px;letter-spacing:.2em;text-transform:uppercase;margin-top:14px}
+  .list{position:absolute;inset:0;background:#3d4b66;color:#ffffff;display:flex;flex-direction:column;justify-content:center;padding:0 110px}
+  .list .title{font-size:84px;line-height:1.05;margin-bottom:64px}
+  .list .item{margin-top:38px}
+  .list .name{font-family:'Playfair Display',serif;font-size:54px;line-height:1.1}
+  .list .place{font-family:'Inter',sans-serif;font-weight:500;font-size:22px;letter-spacing:.2em;text-transform:uppercase;color:#fa9683;margin-top:10px}
   .sign{position:absolute;inset:0;background:#3d4b66;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px}
   .sign img{width:220px;height:220px}
   .sign span{font-family:'Inter',sans-serif;font-weight:500;font-size:34px;letter-spacing:.06em;color:#ffffff}
@@ -98,6 +111,14 @@ function body(slide) {
       return `<div class="soft"></div><div class="caption">${escapeHtml(slide.text)}</div>`
     case 'card':
       return `<div class="card">${title}${italic}</div>`
+    case 'place':
+      return `<div class="soft"></div><div class="placeName"><div class="name">${escapeHtml(slide.title)}</div><div class="area">${escapeHtml(slide.text)}</div></div>`
+    case 'list': {
+      const items = (slide.items ?? [])
+        .map((item) => `<div class="item"><div class="name">${escapeHtml(item.name)}</div><div class="place">${escapeHtml(item.place)}</div></div>`)
+        .join('')
+      return `<div class="list">${title}${items}</div>`
+    }
     case 'sign': {
       const avatar = fs.readFileSync(path.join(ROOT, 'public/brand/avatar.svg')).toString('base64')
       return `<div class="sign"><img src="data:image/svg+xml;base64,${avatar}"><span>${escapeHtml(SITE)}</span></div>`
@@ -113,7 +134,7 @@ const browser = await chromium.launch({ executablePath: BROWSER })
 const page = await browser.newPage({ viewport: size, deviceScaleFactor: 1 })
 for (const [index, slide] of spec.slides.entries()) {
   const html = `<!doctype html><html><head><meta charset="utf-8">${fonts}<style>${css} .photo{object-position:${slide.position ?? '50% 50%'}}</style></head>
-    <body class="format-${spec.format ?? 'feed'}">${slide.file ? `<img class="photo" src="${await dataUri(slide.file)}">` : ''}${body(slide)}</body></html>`
+    <body class="format-${spec.format ?? 'feed'}">${slide.file ? `<img class="photo${slide.fit === 'inset' ? ' inset' : ''}" src="${await dataUri(slide.file)}">` : ''}${body(slide)}</body></html>`
   await page.setContent(html, { waitUntil: 'networkidle' })
   await page.evaluate(() => document.fonts.ready)
   const name = `${String(index + 1).padStart(2, '0')}.jpg`
